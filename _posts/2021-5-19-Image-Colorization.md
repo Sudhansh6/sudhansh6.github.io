@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Image Colorization
+categories: SoC_2021
 ---
 # Image Colorization
 
