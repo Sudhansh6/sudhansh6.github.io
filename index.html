@@ -1,91 +1,49 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Bungee&family=Hind&display=swap" rel="stylesheet">
-	<link rel = "stylesheet" href = style.css>
-	<link rel = "stylesheet" href = index.css>
-	<link rel="icon" href = Pictures/s.png>
-	<script src = script.js></script>
-	<script src="float-panel.js"></script>
-	<style>
-		#Home { color:rgb(226,226,126); }
-	</style>
-	<title>Home</title>
-</head>
-<body>
-	<nav>
-		<div class="burger">
-			<div class ="line1"></div>
-			<div class ="line2"></div>
-			<div class ="line3"></div>
-		</div>
-		<ul class = "links">
-			<li><a href='index.html' id=Home>Home</a></li>
-			<li><a href='academics.html' id=Academics>Academics</a></li>
-			<li><a href='projects.html' id=Projects>Projects</a></li>
-			<li><a href='contact.html' id=Contact> Contact me</a></li>
-		</ul>
-		<div class = "logo">
-			<h2> Sudhansh </h2>
-		</div>	
-	</nav>
-	<div class = content>
-		This is my homepage.
-		Hi! You've reached my website. Feel free to explore! <br>
-		PS. Do not hesitate from providing suggestions to make it better.<br> 
-	</div>
- 	<div class = intro>
-		<div class = "left content">
-		I'm Sudhansh, a 2nd year undergraduate pursuing Computer Science at IIT Bombay. 
-		</div>
-		<img src="Pictures/pic.jpg" height=300px class = image>
-	</div>
-		<div class = content style="text-transform: uppercase; text-align: center;"><h2> You can find more about me here</h2></div>
-		<div class = "cards content">
-			<div class="card slideanim">
-			    <img src="Pictures/music.png" style="height:200px" class = thumbnail>
-			    <div class="container">
-				    <h4><b>Music</b></h4>
-				    <p>I like listening to music and I play the keyboard at times. Here's the <a href = https://open.spotify.com/playlist/0mx6Em7zHKUVn8FCnC44d0?si=T9tEeXbtS-SHfDKcS0T8fA>link</a> to my playlist on Spotify.</p>
-				</div>
-			</div>
-			<div class="card slideanim">
-				<div class="container">
-				    <h4><b>TV Shows</b></h4>
-				    <p>I watch a lot of TV shows. Some of the shows I've watched are Sherlock, TBBT, Brooklyn 99, The Office, Suits, Flash, The Mentalist, Daredevil ..<br> I would love to discuss about these shows.</p>
-				</div>
-			    <img src="Pictures/tv.png" style="height:200px" class = thumbnail>    
-			</div>
-			<div class="card slideanim">
-			    <img src="Pictures/games.png" style="height:200px" class = thumbnail>
-			    <div class="container">
-				    <h4><b>Games</b></h4>
-				    <p>I love those old DOS games. Currently spending a lot of time on Minecraft.</p>
-				</div>
-			</div>
-			<div class="card slideanim">
-				<div class="container">
-				    <h4><b>Movies</b></h4>
-				    <p>A huge Marvel fan. Keep the spoilers to yourself :D. </p>
-				</div>
-			    <img src="Pictures/movies.png" style="height:200px" class = thumbnail>
-			</div>
-			<div class="card slideanim">
-			    <img src="Pictures/sports.png" style="height:200px" class = thumbnail>
-			    <div class="container">
-				    <h4><b>Sports</b></h4>
-				    <p>I play badminton, chess, basketball and volleyball. I love cycling too.</p>
-				</div>
-			</div>
-		</div>
-		
-	</div> 
-	<footer>
-		All rights reserved
-	</footer>
+---
+layout: default
+---
 
-</body>
-</html>
+<div class="posts">
+  {% for post in paginator.posts %}
+    <article class="post">
+      <a href="{{ site.baseurl }}{{ post.url }}">
+        <h1>{{ post.title }}</h1>
 
+        <!-- <div>
+          <p class="post_date">{{ post.date | date: "%B %e, %Y" }}</p>
+        </div> -->
+      </a>
+      <div class="entry">
+        {{ post.excerpt }}
+      </div>
+
+      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
+    </article>
+  {% endfor %}
+
+  <!-- pagination -->
+  {% if paginator.total_pages > 1 %}
+  <div class="pagination">
+    {% if paginator.previous_page %}
+      <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; Prev</a>
+    {% else %}
+      <span>&laquo; Prev</span>
+    {% endif %}
+
+    {% for page in (1..paginator.total_pages) %}
+      {% if page == paginator.page %}
+        <span class="webjeda">{{ page }}</span>
+      {% elsif page == 1 %}
+        <a href="{{ '/' | prepend: site.baseurl | replace: '//', '/' }}">{{ page }}</a>
+      {% else %}
+        <a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if paginator.next_page %}
+      <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Next &raquo;</a>
+    {% else %}
+      <span>Next &raquo;</span>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
