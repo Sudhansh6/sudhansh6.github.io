@@ -89,7 +89,7 @@ For the following analysis, we shall be using the *superscript* notation to deno
 
 > The Jacobian is non-zero over a region $$U$$ in $$\mathbb R^n$$ iff the corresponding transformation $$\mathcal{T}$$ is locally bijective in that region $$U$$.
 >
-> The Jacobian matrix of the inverse transformation $$\mathcal{T}^{-1}$$ is the inverse of the Jacobian matrix of $$\mathcal{T}$$
+> The Jacobian matrix of the inverse transformation $$\mathcal{T}^{-1}$$ is the inverse of the Jacobian matrix of  $$\mathcal{T}$$
 
 The above was taken from [here](https://www.youtube.com/playlist?list=PLdgVBOaXkb9D6zw47gsrtE5XqLeRPh27_)
 
@@ -100,22 +100,37 @@ The above was taken from [here](https://www.youtube.com/playlist?list=PLdgVBOaXk
 #### Canonical Polyadic Decomposition
 
 If an $$N$$-way tensor $$X \in \mathbb R^{I_1 \times I_2 \times \cdots \times I_N}$$ has Canonical Polyadic rank $$F$$, it can be written as 
+
+<div style="text-align: center">
+
 $$
 X(i_1, i_2, \cdots, i_N) = \sum_{f = 1}^{F} \lambda(f) \prod_{n = 1}^N A_n(i_n, f)
 $$
- where $$A_n \in \mathbb R^{I_n \times F}$$ is called the mode-$$n$$ latent factor. In the above, $$\lambda = [\lambda(1), \cdots, \lambda(F)]^T$$ with $$||\lambda||_0 = F$$ is employed to 'absorb' the norms of columns. In other words an $$N$$-way tensor $$\mathcal{Z} \in \mathbb{R}^{I_1 \times I_2 \times  \cdots \times I_N}$$ representing the joint PMF of $$N$$ discrete RVs where  $$\mathcal{Z}(x_1, x_2, \cdots, x_N) = p(X_1 = x_1 , X_2 = x_2, \cdots, X_N = x_N$$, admits a CPD if it can be decomposed as a sum of $$F$$ rank-$$1$$ tensors. Denoting $$a \otimes b$$ as the outer-product (Kronecker Product) of two vectors, the CPD model is:
+</div>
+
+where $$A_n \in \mathbb R^{I_n \times F}$$ is called the mode-$$n$$ latent factor. In the above, $$\lambda = [\lambda(1), \cdots, \lambda(F)]^T$$ with $$\|\lambda\|_0 = F$$ is employed to 'absorb' the norms of columns. 
+
+In other words an $$N$$-way tensor $$\mathcal{Z} \in \mathbb{R}^{I_1 \times I_2 \times  \cdots \times I_N}$$ representing the joint PMF of $$N$$ discrete RVs where  $$\mathcal{Z}(x_1, x_2, \cdots, x_N) = p(X_1 = x_1 , X_2 = x_2, \cdots, X_N = x_N)$$, admits a CPD if it can be decomposed as a sum of $$F$$ rank-$$1$$ tensors. Denoting $$a \otimes b$$ as the outer-product (Kronecker Product) of two vectors, the CPD model is:
+
+<div style="text-align: center">
+
 $$
 \mathcal{Z} = \sum_{f = 1}^F \lambda(f)A_1(:,f)\otimes A_2(:,f) \otimes \cdots \otimes A_N(:,f)
 $$
+</div>
+
 Here, $$F$$ is the rank of the tensor.
 
 ### Joint PMF Recovery: A Tensor Perspective
 
 Any joint PMF admits a naive Bayes (NB) model representation; i.e., any joint PMF can be generated from a latent variable model with just one hidden variable. It follows that the joint PMF of $$\{Z_n\}^N_{n=1}$$ can always be decomposed as:
+
+<div style="text-align: center">
+
 $$
 Pr(i_1, i_2, \cdots, i_N) = \sum_{f = 1}^F Pr(f) \prod_{n=1}^N Pr(i_n | f)
 $$
-where $$Pr(f) := Pr(H = f)$$ is the prior distribution of a latent variable $$H$$ and $$Pr(i_n|f) := Pr(Z_n = z_n^{(i_n)} | H = f)$$ are the condition distributions.
+</div> where $$Pr(f) := Pr(H = f)$$ is the prior distribution of a latent variable $$H$$ and $$Pr(i_n|f) := Pr(Z_n = z_n^{(i_n)} | H = f)$$ are the conditional distributions.
 
 
 
