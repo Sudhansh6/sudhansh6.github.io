@@ -2,11 +2,11 @@
 layout: post
 title: Stock Analysis
 categories: [Projects, SoS_2020]
----
-
+excerpt: A report on Stock Markets, Options Trading and Technical Analysis.  Fundamental analysis to be added soon.
 ---
 
 # Contents
+
 ## 1. [Need to invest and investments](need-to-invest-and-investments)
 ## 2. [Stock Market introduction](stock-market-introduction)
 ## 3. [Stages of a Business](stages-of-a-business)
@@ -245,7 +245,7 @@ options are always more expensive compared to OTM options.
 
 > ### Random Walk :   
 > ![Random Walk Simulation](https://zerodha.com/varsity/wp-content/uploads/2015/08/M5-C17-GaltonBoard2.png)
-    
+
 > ![Standard Deviation in Gaussian](https://zerodha.com/varsity/wp-content/uploads/2015/08/M5-C17-ND-graph1.png)
 
 The daily returns of a stock or an index cannot be predicted.However if I collect the daily returns of the stock for a certain period and see the distribution of these returns – I get to see a normal(Gaussian) distribution.
@@ -294,7 +294,7 @@ We can conclude the following (written for call options)-
 The above can be summarised as follows - 
 The price is 2210 and the expectation is a 30 point change in the underlying (which means we are expecting spot price to hit
 2240). We will also assume there is plenty of time to expiry; hence time is not really a concern.  
-| Moneyness | Strike | Delta | Old Premium | Change in Premium | New Premium | % Change |  
+| Moneyness | Strike | Delta | Old Premium | Change in Premium | New Premium | % Change |
 | --- | --- | --- | --- | --- | --- | --- |
 | Deep OTM  |  2400  | 0.05  |   Rs.3/-    |   30* 0.05 = 1.5  | 3+1.5 = 4.5 |   50%    |
 |Slightly OTM| 2275| 0.3| Rs.7/-| 30*0.3 = 9| 7 +9 = 16| 129%|
@@ -378,7 +378,7 @@ A Spinning top has a short body and almost equal upper and lower shadows.
 
 **Thoughts**: The market may continue to be bearish or it may reverse ending up in bullish sessions with equal probability.  
 **Recommended Actions**: The trader needs to be prepared for both scenarios. They may place half of their investment for trading.  
- 
+
 ### The Dojis
 A Doji has negligible or nil body and there are no restrictions on the shadows. Explanations are similar to that of Spinning Top.  
 
@@ -470,7 +470,7 @@ Volumes indicate how many shares are bought and sold over a given period of time
 |01| Increases| Increases| Bullish|
 |02| Increases| Decreases| Caution – weak hands buying|
 |03| Decreases| Increases| Bearish|
-|04| Decreases| Decreases| Caution – weak hands selling|  
+|04| Decreases| Decreases| Caution – weak hands selling|
 
 Generally the rule of thumb is as follows:
 - High Volume = Today’s volume > last 10 days average volume
@@ -619,7 +619,7 @@ With these two events (i.e price rally, and price decline) occurring consecutive
 A flag forms due to many market participants booking profits due to the rally. The stock rallies up after a flag because 'smart money' is still invested and market sentiment is positive.
 ### Reward to Risk Ratio
  The RRR is higher than 1.3 for good trades.
- 
+
 ## Final Checklist
 1. The stock should form a recognisable candlestick pattern
 2. S&R should confirm the trade. The stop loss price should be around S&R
