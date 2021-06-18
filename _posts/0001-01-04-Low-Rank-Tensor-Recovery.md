@@ -13,7 +13,7 @@ excerpt: An introduction to Tensors and notation. Summary of a few papers.
 
 - A scalar can be represented by a **single** component with **zero** basis vectors for each component.
 - A vector of 3 dimensions can be specified using **three** components and **one** basis vector for each component.
-- A stress matrix can be represented by **nine** components (we are considering 3 dimensions). That is, **two** basis vectors for each component.
+- A stress matrix can be represented by **nine** components (we are considering 3 dimensions). That is **two** basis vectors for each component.
 
 All of the above mathematical objects fall under a broad class of **Tensors**.
 
@@ -28,7 +28,7 @@ Generally, $$m=3$$ in real-life scenarios. $$m=4$$ is used while discussing rela
 - A tensor is an object that transforms like a tensor
 - A tensor is an object that is an object that is invariant under a change of coordinate system with components that change according to a special set of mathematical formulae
 
-In simpler terms, the actual tensor is invariant to a change in the coordinate systems. For example, the displacement vector pointing from $$A$$ to $$B$$ ( a $$1$$ rank tensor) does not change when coordinates change. The vector will still be pointing from $$A$$ to $$B$$. However, the way we represent the vector, i.e., the components change. 
+In simpler terms, the actual tensor is invariant to a change in the coordinate systems. For example, the displacement vector pointing from $$A$$ to $$B$$ ( a $$1$$ rank tensor) does not change when coordinates change. The vector will still be pointing from $$A$$ to $$B$$. However, the way we represent the vector, i.e., the components changes. 
 
 ### Matrices $$\neq$$ Tensors
 
@@ -44,7 +44,7 @@ Both subscripts and superscripts are used for indices in tensors.
 
   Here, $$j$$ is a *dummy* variable and $$i$$ is a *free* variable.
 
-  Dummy indices can be replaced whereas free indices can't be. A free index takes only **one** value in an expression.
+  Dummy indices can be replaced, whereas free indices can't be. A free index takes only **one** value in an expression.
 
 - No index may occur $$3$$ or more times in a given term.
 
@@ -59,7 +59,7 @@ Both subscripts and superscripts are used for indices in tensors.
 #### Brackets in Einstein Notation
 
 1. Combine terms outside parentheses with each term inside parentheses separately.
-2. From each of the combined terms, use the largest counts of each index as the final count in the overall term.
+2. From each of the combined terms, use the largest count of each index as the final count in the overall term.
 
 ### Kronecker Delta
 
