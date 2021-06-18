@@ -60,7 +60,7 @@ title: Random
 
 I converted RGB images into colored text [here](https://pixels-to-text.herokuapp.com/)  
 
-Are you hungry? Order totally authentic food from [Cravings!](sudhansh.pythonanywhere.com/)  
+Are you hungry? Order totally authentic food from [Cravings!](https://sudhansh.pythonanywhere.com/)  
 
 
 
