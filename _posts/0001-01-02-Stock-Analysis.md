@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Stock Analysis
+comments: true
 categories: [Projects, SoS_2020]
 excerpt: A report on Stock Markets, Options Trading and Technical Analysis.  Fundamental analysis to be added soon.
 ---

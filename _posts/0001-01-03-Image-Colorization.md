@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Image Colorization
+comments: true
 categories: [Projects, SoC_2021]
 excerpt: A project where I try to build a Machine Learning Model that is capable of converting grayscale images to colored ones. 
 ---
