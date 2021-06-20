@@ -25,15 +25,15 @@ permalink: /contact/
 <form action="https://formspree.io/xyynbvap" class = form method="POST">
 	<div class = section>
 		<label> Name </label><br>
-		<input class = input type="text" name="name">
+		<input class = input type="text" name="name" required>
 	</div>
 	<div class = section>
 		<label>Email</label><br>
-		<input class = input type="text" name="_replyto">
+		<input class = input type="text" name="_replyto" required>
 	</div>
 	<div class = section>
 		<label>Message</label><br>
-		<textarea class = input name="message"></textarea>
+		<textarea class = input name="message" required></textarea>
 	</div>
 	<div class = section>
 	  	<button class = subscribeBtn type="submit">Send</button>
