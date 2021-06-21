@@ -132,5 +132,12 @@ sudo rm -R /usr/lib/python3
 sudo mv -R foo/usr/lib/python3 /usr/lib
 ```
 
+Change the ownership of the copied files to root using:
+
+```bash
+sudo chown root:root /usr/bin/python3.8
+sudo chown -R root:root /usr/bin/python3
+```
+
 After transferring the files, repeat [these](#standard) to patch everything up. You're done!
 
