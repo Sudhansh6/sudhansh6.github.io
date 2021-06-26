@@ -47,24 +47,42 @@ You can test the performance of the models here
 		ctx = document.getElementById(str).getContext("2d");
 	    model = str;
 	    str = "#" + str;
-	    $(str).mousedown(function (e) {
-	        mousePressed = true;
+
+	    $(document).on('touchstart mousedown', str ,function (e) {
+	    	 mousePressed = true;
 	        Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false, model);
 	    });
-
-	    $(str).mousemove(function (e) {
+	    $(document).on('touchmove mousemove', str ,function (e){
 	        if (mousePressed) {
 	            Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, true, model);
 	        }
 	    });
-
-	    $(str).mouseup(function (e) {
+	    $(document).on('touchend mouseup', str ,function (e) {
 	        mousePressed = false;
 	        getPrediction();
 	    });
-		$(str).mouseleave(function (e) {
+	    $(document).on('touchend mouseleave', str ,function (e) {
 	        mousePressed = false;
 	    });
+
+	 //    $(str).mousedown(function (e) {
+	 //        mousePressed = true;
+	 //        Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false, model);
+	 //    });
+
+	 //    $(str).mousemove(function (e) {
+	 //        if (mousePressed) {
+	 //            Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, true, model);
+	 //        }
+	 //    });
+
+	 //    $(str).mouseup(function (e) {
+	 //        mousePressed = false;
+	 //        getPrediction();
+	 //    });
+		// $(str).mouseleave(function (e) {
+	 //        mousePressed = false;
+	 //    });
 	}
 
 	function Draw(x, y, isDown, str) {
@@ -96,15 +114,16 @@ You can test the performance of the models here
     	var flag = true;
     	Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "");
 		let model = $("#models option:selected").val();
-		console.log("Sent a request");
+		let url = "https://soc2021.herokuapp.com/CNN";
+		// let url = "http://0.0.0.0:5000/CNN";
+		// let url = "http://127.0.0.1:5000/CNN";
+		console.log("Sent a request to " + url);
 		let res = document.getElementById('result');
 		if(flag)
 			res.innerHTML = '<img width = 50 height = 50 src = "/assets/loading.gif">';
 		$.ajax({
         type: 'POST',
-        url : "https://soc2021.herokuapp.com/CNN",
-        // url: "http://0.0.0.0:5000/CNN",
-        // url: "http://127.0.0.1:5000/CNN",
+        url: url,
         data: JSON.stringify({"imageData" : Pic, "model" : model}),
         contentType: 'application/json',
         xhrFields: {
