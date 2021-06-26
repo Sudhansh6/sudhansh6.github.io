@@ -1,0 +1,11 @@
+## Linear Programming and primal-dual methods
+
+Consider the linear program
+
+$$ \min c^Tx \\ \text{ s.t. } Ax \geq b \\ \hspace{2em} x \geq 0$$
+
+Its dual is given by 
+
+$$ \min c^Tx \\ \text{ s.t. } Ax \geq b \\ \hspace{2em} x \geq 0$$
+
+https://www.coursera.org/lecture/advanced-algorithms-and-complexity/duality-N5N2W
