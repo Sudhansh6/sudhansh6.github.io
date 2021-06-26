@@ -7,7 +7,7 @@ excerpt: A project where I try to build a Machine Learning Model that is capable
 ---
 <!-- Special thanks to https://www.codicode.com/art/how_to_draw_on_a_html5_canvas_with_a_mouse.aspx -->
 
-Check out the repository [here](https://github.com/Sudhansh6/Image-Colorization)
+Check out the repository [here](https://github.com/Sudhansh6/ImageColorization)
 
 You can test the performance of the models here
 
@@ -19,7 +19,7 @@ You can test the performance of the models here
 	  <option value = "resnet" selected>ResNet</option>
 	</select> <br>
     <canvas id="Canvas" width="300" height="300" style = "padding: 0px; border: 2px solid black;"></canvas> <br>
-    <button class = subscribeBtn style = "width: 300px;" onclick="javascript:clearArea('Canvas');return false;">Clear Area</button>
+    <button class = subscribeBtn style = "width: 300px;" id = "clear" onclick="javascript:clearArea('Canvas');return false;">Clear Area</button>
 	<!-- <img height = 200 width = 200 style = "padding: 0px; border: 2px solid black;" id="frame"> -->
 	<div> The predicted value is : <span id = result> --- </span> </div> 
 </div>
@@ -38,77 +38,115 @@ You can test the performance of the models here
 }
 </style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
 <script>
-	InitThis("Canvas");
-	var mousePressed = false;
-	var ctx;
-	
-	function InitThis(str) {
-		ctx = document.getElementById(str).getContext("2d");
-	    model = str;
-	    str = "#" + str;
+// =============
+// == Globals ==
+// =============
+const canvas = document.getElementById('Canvas');
+const canvasContext = canvas.getContext('2d');
+const clearButton = document.getElementById('clear');
+const state = {
+  mousedown: false
+};
 
-	    $(document).on('touchstart mousedown', str ,function (e) {
-	    	 mousePressed = true;
-	        Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false, model);
-	    });
-	    $(document).on('touchmove mousemove', str ,function (e){
-	        if (mousePressed) {
-	            Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, true, model);
-	        }
-	    });
-	    $(document).on('touchend mouseup', str ,function (e) {
-	        mousePressed = false;
-	        getPrediction();
-	    });
-	    $(document).on('touchend mouseleave', str ,function (e) {
-	        mousePressed = false;
-	    });
+// ===================
+// == Configuration ==
+// ===================
+const lineWidth = 20;
+const halfLineWidth = lineWidth / 2;
+const fillStyle = '#333';
+const lineJoin = "round";
+const strokeStyle = "red";
+const shadowColor = '#333';
+const shadowBlur = lineWidth / 4;
 
-	 //    $(str).mousedown(function (e) {
-	 //        mousePressed = true;
-	 //        Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, false, model);
-	 //    });
+// =====================
+// == Event Listeners ==
+// =====================
+canvas.addEventListener('mousedown', handleWritingStart);
+canvas.addEventListener('mousemove', handleWritingInProgress);
+canvas.addEventListener('mouseup', handleDrawingEnd);
+canvas.addEventListener('mouseout', handleDrawingEnd);
 
-	 //    $(str).mousemove(function (e) {
-	 //        if (mousePressed) {
-	 //            Draw(e.pageX - $(this).offset().left, e.pageY - $(this).offset().top, true, model);
-	 //        }
-	 //    });
+canvas.addEventListener('touchstart', handleWritingStart);
+canvas.addEventListener('touchmove', handleWritingInProgress);
+canvas.addEventListener('touchend', handleDrawingEnd);
 
-	 //    $(str).mouseup(function (e) {
-	 //        mousePressed = false;
-	 //        getPrediction();
-	 //    });
-		// $(str).mouseleave(function (e) {
-	 //        mousePressed = false;
-	 //    });
-	}
+clearButton.addEventListener('click', handleClearButtonClick);
 
-	function Draw(x, y, isDown, str) {
-		
-		str = "#" + str;
-		lastX = $(str).data('lastX'); lastY = $(str).data('lastY');
-	    if (isDown) {
-	        ctx.beginPath();
-	        ctx.strokeStyle = "red";
-	        ctx.lineWidth = 12;
-	        ctx.lineJoin = "round";
-	        ctx.moveTo(lastX, lastY);
-	        ctx.lineTo(x, y);
-	        ctx.closePath();
-	        ctx.stroke();
-	    }
-	    $(str).data('lastX', x); $(str).data('lastY', y);
-	}
-		
-	function clearArea(str) {
-	    // Use the identity matrix while clearing the canvas
-	    ctx.setTransform(1, 0, 0, 1, 0, 0);
-	    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-	}
+// ====================
+// == Event Handlers ==
+// ====================
+function handleWritingStart(event) {
+  event.preventDefault();
 
-	function getPrediction()
+  const mousePos = getMousePositionOnCanvas(event);
+  
+  canvasContext.beginPath();
+
+  canvasContext.moveTo(mousePos.x, mousePos.y);
+
+  canvasContext.lineJoin = lineJoin;
+  canvasContext.lineWidth = lineWidth;
+  canvasContext.strokeStyle = strokeStyle;
+  canvasContext.shadowColor = null;
+  canvasContext.shadowBlur = null;
+
+  canvasContext.fill();
+  
+  state.mousedown = true;
+}
+
+function handleWritingInProgress(event) {
+  event.preventDefault();
+  
+  if (state.mousedown) {
+    const mousePos = getMousePositionOnCanvas(event);
+
+    canvasContext.lineTo(mousePos.x, mousePos.y);
+    canvasContext.stroke();
+  }
+}
+
+function handleDrawingEnd(event) {
+  event.preventDefault();
+  getPrediction();
+  if (state.mousedown) {
+    canvasContext.shadowColor = shadowColor;
+    canvasContext.shadowBlur = shadowBlur;
+
+    canvasContext.stroke();
+  }
+  
+  state.mousedown = false;
+}
+
+function handleClearButtonClick(event) {
+  event.preventDefault();
+  
+  clearCanvas();
+}
+
+// ======================
+// == Helper Functions ==
+// ======================
+function getMousePositionOnCanvas(event) {
+  const clientX = event.clientX || event.touches[0].clientX;
+  const clientY = event.clientY || event.touches[0].clientY;
+  const rect = event.target.getBoundingClientRect();
+  const offsetLeft = rect.left;
+  const offsetTop = rect.top;
+  const canvasX = clientX - offsetLeft;
+  const canvasY = clientY - offsetTop;
+
+  return { x: canvasX, y: canvasY };
+}
+
+function clearCanvas() {
+  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+}
+function getPrediction()
 	{
 		var Pic = document.getElementById("Canvas").toDataURL();
     	var flag = true;

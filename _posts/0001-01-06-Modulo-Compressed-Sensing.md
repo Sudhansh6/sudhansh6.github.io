@@ -10,13 +10,13 @@ excerpt: An introduction to recovery methods for measurements using fixed dynami
 ## Compressed Sensing
 
 Recover a high dimensional vector $$x$$ with a very few non-zero values. 
- - $$Supp(x) \leq k << N$$.
+ - $$\operatorname{Supp(x)} \leq k << N$$.
  - Plethora of algorithms
 
 ### Sensors and Measurements
  - Sensors have Finite Dynamic Range 
 
- - $$ \text{dynamic range} = 20\log(\frac{\text{ADC range}}{\text{Step size}}) = 20\log(\frac{2\lambda}{ \delta}) $$ 
+ - $$ \text{dynamic range} = 20\log\left(\frac{\text{ADC range}}{\text{Step size}}\right) = 20\log\left(\frac{2\lambda}{ \delta}\right) $$ 
  - Loss of information due to clipping. One potential approach to fix this is to wrap around the signal.
 
    ![image-20210610112718042](/images/0001-01-01-Modulo-Compressed-Sensing/image-20210610112718042.png)​
