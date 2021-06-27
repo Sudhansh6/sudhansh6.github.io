@@ -9,8 +9,9 @@ excerpt: A project where I try to build a Machine Learning Model that is capable
 
 Check out the repository [here](https://github.com/Sudhansh6/ImageColorization)
 
-You can test the performance of the models here
+While working on this project, I have also built digit recognition models. You can test the performance of the models here
 
+Select a model from the list of models. Draw a digit in the canvas, and the predicted value is displayed below.
 <div align = center >
 	 <label for="models">Choose a Model:</label>	 	
 	<select id = "models" name="models" id="models">
