@@ -27,16 +27,16 @@ There is an inherent quantization step involved during measurements. Therefore, 
 
 # Modulo Compressed Sensing
 
-Typically, the real world sensors have a **finite** dynamic range. They have a **clipping** effect where the measurements become **saturated** once the values cross the range of the sensor. High dynamic range systems are affected by *high quantization noise*. To counter this problem, a new approach for measurements called **self-reset analog to deigital converters (SR-ADCs)** have been proposed.
+Typically, the real world sensors have a **finite** dynamic range. They have a **clipping** effect where the measurements become **saturated** once the values cross the range of the sensor. High dynamic range systems are affected by *high quantization noise*. To counter this problem, a new approach for measurements called **self-reset analog to digital converters (SR-ADCs)** have been proposed.
 
 These sensors fold the amplitudes back into the dynamic range of the ADCs using the modulo arithmetic. However, these systems encounter loss due to the modulo operation. The *transfer* function of the SR_ADC with parameter $$\lambda$$ is given by  
 <div style="text-align: center;">
+
 $$
 \mathcal M_\lambda = 2\lambda \left( \left[ \left[ \frac{t}{2\lambda} + \frac{1}{2} \right]\right] - \frac{1}{2}\right)
-$$  
-</div>
+$$
 
-Here, $$[[t]] \triangleq t = \lfloor t \rfloor $$. Now, we need to consider how we shall sample the values. A sampling theory called *unlimited sampling framework* was developed which provides sufficient conditions on the sampling rate for guaranteeing the recovery of band-limited signals from the folded samples. SR-ADC is applied individually to multiple linear measurements of the images, and is termed as modulo compressed sensing.
+</div>Here, $$[[t]] \triangleq t = \lfloor t \rfloor $$. Now, we need to consider how we shall sample the values. A sampling theory called *unlimited sampling framework* was developed which provides sufficient conditions on the sampling rate for guaranteeing the recovery of band-limited signals from the folded samples. SR-ADC is applied individually to multiple linear measurements of the images, and is termed as modulo compressed sensing.
 
 **Note.** The measured values may lie *outside* the dynamic range due to **sensor noise**. 
 
@@ -47,8 +47,6 @@ $$
 z_i = [[ \langle a_i, x \rangle ]], i = 1,2, \cdots, m
 $$
 
-
-
 </div>Usually, $$m \leq N$$ in the compressed sensing paradigm. Stacking these projections, we get
 
 <div style="text-align: center;">
@@ -57,14 +55,10 @@ $$
 z = [[y]] = [[Ax]]
 $$
 
-
-
 </div>The non-linearity introduced by the modulo operation along with the undetermined compressive measurements could lead to an indeterminate system.
 
 
 > $$\mathbf{P_0}$$: Any real valued vector $$y \in \mathbb{R}^m$$ can be uniquely decomposed as $$y = z + v$$ where $$z \in [0, 1)^m$$ and $$v \in \mathbb{Z}^m$$ denote the fractional and integral part of $$y$$ respectively. The following optimization problem is defined as $$P_0$$ 
-
-
 
 <div style="text-align: center;">
 
@@ -76,9 +70,9 @@ $$
 
 
 > - Notice that $$v$$ is the integral part and not $$z$$, which may be confusing.
-> - The optimization equation does not oblige $$z$$ to belong to $$[0, 1)^m$$. Infact, this condition is implicitly taken care when we impose minimality over $$z$$.
+> - The optimization equation does not oblige $$z$$ to belong to $$[0, 1)^m$$. In fact, this condition is implicitly taken care when we impose minimality over $$z$$.
 > - The $$\|w_0\|$$ condition comes due to the sparsity of $$w$$.
-> - Any $$s'$$ sparse solution to $$P_0$$ s.t. $$s' \leq s$$ is also $$s$$ sparse.
+> - Any $$s'$$ sparse solution to $$P_0$$ such that $$s' \leq s$$ is also $$s$$ sparse.
 
 ## Identifiability
 
@@ -104,11 +98,9 @@ $$
 Ax_1 = Ay - Ax = w - (z + v)
 $$
 
-</div> 
+</div> Therefore, $$-x_1$$ and $$x$$ are both solutions of $$P_0$$. This is a contradiction. This proves sufficiency.
 
-Therefore, $$-x_1$$ and $$x$$ are both solutions of $$P_0$$. This is a contradiction. This proves sufficiency.
-
-($$\leftarrow$$)	Let $$z \in (0, 1)^m$$ and $$ v, v_1 \in \mathbb{Z}^m$$ such that $$Ax = z + v$$  and $$ Ax_1 = z + v_1$$ where $$\|x\|_0, \|x_1\|_0 \leq s$$. Now, the size of the support of $$x - x_1$$ is atmost $$2s$$. Consequently, 
+($$\leftarrow$$)	Let $$z \in (0, 1)^m$$ and $$ v, v_1 \in \mathbb{Z}^m$$ such that $$Ax = z + v$$  and $$ Ax_1 = z + v_1$$ where $$\|x\|_0, \|x_1\|_0 \leq s$$. Now, the size of the support of $$x - x_1$$ is at most $$2s$$. Consequently, 
 
 <div align = center>
 
@@ -116,15 +108,15 @@ $$
 A(x - x_1) = v - v_1 \in \mathbb{Z}^m
 $$
 
-</div>
-
-This is a contradiction as any $$2s$$ columns of $$A$$ are linearly independent of all $$v \in \mathbb{Z}^m$$. This proves necessity.   
+</div>This is a contradiction as any $$2s$$ columns of $$A$$ are linearly independent of all $$v \in \mathbb{Z}^m$$. This proves necessity.   
 
 ---
 
 >  ***Corollary.*** Any vector $$x$$ satisfying $$\|x\|_0 \geq \frac{N}{2}$$ is a unique solutions to $$P_0$$ iff columns of $$A$$ are linearly independent. Consequently, the minimum number of measurements required for unique recovery is m = $$N + 1$$ (not $$N$$, see below)
 
-### Conditions for recovery
+## Conditions for recovery
+
+### Signals in spacial domain
 
 To compare the modulo-CS problem to the standard CS problem, we state the two necessary conditions for modulo-CS recovery.
 
@@ -154,6 +146,32 @@ Now, consider $$\cup_{S \in \mathcal{G}}\cup_{u \in \mathcal{V}} \{ A \vert det(
 
 - If the entries of $$A$$ are drawn independently from any continuous distribution, $$A$$ lies outside the set of Lebesgue measure 0 described in the above theorem.
 - Integer matrices cannot be used as candidate measurement matrices for modulo CS (why?)
+
+### Signals in Temporal domain
+
+**Unlimited Sampling Theorem**  -  A band-limited signal can be recovered from modulo samples provided that a certain sampling density criterion is satisfied. This criterion must be independent of the ADC threshold. 
+
+> **Theorem.** Let $$f(t)$$ be a function with no frequencies higher than $$\Omega$$(rad/s), then a sufficient condition for recovery of $$f(t)$$ from its modulo samples $$y_k = \mathcal M_\lambda(f(t)), t = kT, k \in \mathbb Z$$ is,
+>
+> <div align = center>
+>
+> $$
+> T \leq \frac{1}{2\Omega e}
+> $$
+>
+> </div>
+
+The above guarantees the recovery of the signal. Now, we discuss the conditions for unique recovery. There is a one-to-one mapping between a band-limited function and its modulo samples provided that the sampling rate is higher than the *Nyquist Rate*, $$T < \pi/\Omega$$.
+
+> **Theorem.** Let $$f(t)$$ be a finite-energy function with no frequencies higher than $$\Omega$$ (rad/s). Then the function $$f(t)$$ is *uniquely* determined by its modulo samples $$y_k  = \mathcal M_\lambda(f(t_k))$$ taken on grid $$t = kT_\epsilon, k \in \mathbb Z$$ where 
+>
+> <div align = center>
+>
+> $$
+> 0 < T_\epsilon < \frac{\pi}{\Omega + \epsilon}, \epsilon > 0
+> $$
+>
+> </div>
 
 ## Convex Relaxation
 

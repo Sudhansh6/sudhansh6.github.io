@@ -34,8 +34,9 @@ The **Projected Gradient Descent (PGD)** approach shows substantial improvements
 Let $$x^* \in \mathbb R^n$$ denote the ground truth image, $$A$$ denote the measurement matrix, and $$y = Ax^* + v \in \mathbb R^m$$ denote the noisy measurement with noise $$v \sim \mathcal N(0, \sigma^2I) $$. We assume the ground truth images lie in a *non-convex* set $$S = R(G)$$, the range of the generator $$G$$. The maximum likelihood estimator of $$x^*$$, $$\hat x _{MLE}$$, can be formulated as:
 
 <div style="text-align:centre">
-
-$$ \hat x_{MLE} = \arg \min_ {x\in R(G)} -\log p(y|x) = \arg \min_{x\in R(G)} \|y - Ax \|^2_2 $$ 
+$$
+\begin{align} \hat x_{MLE} &= \arg \min_ {x\in R(G)} -\log p(y|x) \\ &= \arg \min_{x\in R(G)} \|y - Ax \|^2_2 \end{align}
+$$
 
 </div>
 
@@ -54,18 +55,21 @@ in the latent space($$z$$), and set $$\hat x = G(\hat z)$$. Formally, a generati
 In other words, we generate $$z$$ from a known distribution, say a Gaussian. The GAN $$G$$ takes $$z$$ as input and produces an output $$x = G(z)$$ in $$R(G)$$. This $$x$$ is supposed to model the distribution of the training data of images. Then, by using any optimization procedure, $$\hat z$$ is estimated. We are simply optimizing in the representation space instead of the sample space. The results significantly outperform Lasso with relatively fewer measurements.
 
 The problem with this approach is that, the gradient descent algorithm often gets stuck at local optima. To resolve this problem, Shah and Hegde proposed a projected gradient descent (PGD)- based method (we shall refer to this as PGD-GAN). They perform gradient descent in the ambient $$(x)$$-space and project the updated term onto $$R(G)$$. This projection involves solving another non-convex minimization problem using the *Adam optimizer*. Their algorithm can be summarised as:
+
+<div align = center>
+
 $$
-x_k \longrightarrow \fbox{$I - \eta\nabla_xf$} \overset{x'_k}{\longrightarrow}\fbox{$\hat z_{k+1} \gets \arg\min_z \|G(z) - x'_k\|^2$} \overset{\hat z_{k+1}}{\longrightarrow} \fbox{$G$} \longrightarrow x_{k+1}
+x_k \rightarrow \fbox{$I - \eta\nabla_xf$} \\ x'_k \downarrow  \\ \fbox{$\hat z_{k+1} \gets \arg\min_z \|G(z) - x'_k\|^2$} \\ \begin{align} \hat z_{k+1} &\downarrow \\  &\fbox{ $G$ } \rightarrow x_{k+1} \end{align}
 $$
 
-**Note.** <span style="color:red"> The GAN is trained separately. We are just trying to reconstruct the original image using the above algorithm </span>
+</div>**Note.** <span style="color:red"> The GAN is trained separately. We are just trying to reconstruct the original image using the above algorithm </span>
 
 Now our aim is to replace this iterative scheme in the inner-loop (Estimation of $$\hat z$$) with a learning based approach. A network architecture can be carefully designed using a suitable training strategy that can project onto $$R(G)$$. This does away with the inner loop in the above algorithm. The inner loop is the most expensive computational step in the algorithm. The new approach is summarised as:
 
 <div style="text-align:centre">
 
 $$
-x_k \longrightarrow \fbox{$I - \eta\nabla_x f$} \overset{x'_k}{\longrightarrow} \fbox{$ P_G = GG^\dagger$} \longrightarrow x_{k+1}
+x_k \rightarrow \fbox{$I - \eta\nabla_x f$} \overset{x'_k}{\rightarrow} \fbox{$ P_G = GG^\dagger$} \rightarrow x_{k+1}
 $$
 
 </div>
@@ -75,7 +79,7 @@ $$P_G$$ is the network based projector. The following architecture is used to tr
 <div style="text-align:centre">
 
 $$
-z \sim \mathcal N(0, I) \longrightarrow \fbox{$G$} \overset{\text{Noise added}}{\longrightarrow} \fbox{$G^\dagger_\theta$} \longrightarrow \fbox{G} \longrightarrow \text{output}
+\begin{align}   z \sim \mathcal N(0, I) \rightarrow \; &\fbox{ $G$ } \\ &\downarrow \text{Noise added} \\ \text{output} \leftarrow \fbox{ G } \leftarrow \; &\fbox{$G^\dagger_\theta$} \end{align}
 $$
 
 </div>
@@ -97,14 +101,50 @@ The multi-task loss to train the projector is
 <div style="text-align:centre">
 
 $$
-\mathcal L(\theta) = \mathbb E_{z, \nu} \left[ \| G\left(G^\dagger_\theta(G(z) + \nu)\right) - G(z)\|^2 \right] + \mathbb E_{z, \nu} \left[\lambda \| G^\dagger_\theta(G(z) + \nu) - z \|^2 \right]
+\begin{equation} \mathcal L(\theta) = \mathbb E_{z, \nu} \left[ \| G\left(G^\dagger_\theta(G(z) + \nu)\right) - G(z)\|^2 \right] \\ + \mathbb E_{z, \nu} \left[\lambda \| G^\dagger_\theta(G(z) + \nu) - z \|^2 \right] \end{equation}
 $$
 
 </div>
 
-where $$G$$ is a generator obtained from the GAN trained on a particular dataset. Operator $$G^\dagger_\theta : \mathbb R^n \to \mathbb R ^k $$, parametrized by $$\theta$$, approximated a non-linear least squares pseudo-inverse of $$G$$ (Hence the usage of $$G^\dagger$$ for representation) and $$\nu \sim \mathcal N(0, I_n)$$ indicated noise added to the generator's output for different $$z \sim \mathcal N(0, I_k) $$  <span style="color:red"> so that the projector network denotesd by $P_G = GG^\dagger_\theta$ is trained on points outside $R(G)$ and learns how to projects them onto $R(G)$ </span>. 
+where $$G$$ is a generator obtained from the GAN trained on a particular dataset. Operator $$G^\dagger_\theta : \mathbb R^n \to \mathbb R ^k $$, parametrized by $$\theta$$, approximated a non-linear least squares pseudo-inverse of $$G$$ (Hence the usage of $$G^\dagger$$ for representation) and $$\nu \sim \mathcal N(0, I_n)$$ indicated noise added to the generator's output for different $$z \sim \mathcal N(0, I_k) $$  <span style="color:red"> so that the projector network denoted by $P_G = GG^\dagger_\theta$ is trained on points outside $R(G)$ and learns how to projects them onto $R(G)$ </span>. 
 
 The objective function consists of two parts. 
 
 - The first is similar to the standard *Encoder-Decoder* framework, however the loss function is minimized over $$\theta$$, while keeping the parameters of $$G$$ fixed. This ensures that $$R(G)$$ does not change and $$P_G$$ is a mapping onto $$R(G)$$.
 - The second part is used to keep $$G^\dagger(G(z))$$ close to true $$z$$ used to generate training image $$G(z)$$. This can be regarded as the regularizer.
+
+## Theoretical Study
+
+### Convergence Analysis
+
+> **Restricted Eigenvalue Constraint (REC)**  - Let $$S \subset \mathbb R^n$$. For some parameters $$0 < \alpha < \beta$$, matrix $$A \in \mathbb R^{m \times n}$$ is said to satisfy the *REC($$S, \alpha, \beta$$)* if the following holds for all $$x_1, x_2 \in S$$.
+>
+> <div align = center>
+>
+> $$
+> \alpha\|x_1 - x_2\|^2 \leq \|A(x_1 - x_2) \|^2 \leq \beta\|x_1 - x_2\|^2
+> $$
+>
+> </div>
+>
+> **Approximate Projection using GAN** - A concatenated network $$G(G^\dagger(.)) : \mathbb R^n \rightarrow R(G)$$ is a $$\delta$$-approximate projector, if the following holds for all $$ x\in \mathbb R^n$$.
+>
+> <div align = center>
+>
+> $$
+> \|x - G(G^\dagger(x))\|^2 \leq \min_{z \in \mathbb R^k} \|x - G(z)\|^2 + \delta
+> $$
+>
+> </div>
+
+> **Theorem** Let matrix $$ A \in \mathbb R^{m \times n}$$ satisfy the $$REC(S, \alpha, \beta)$$ with $$\beta/\alpha < 2$$, and let the concatenated network $$G(G^\dagger(.))$$ be a $$\delta$$-approximate projects. Then for every $$ x^* \in R(G)$$ and measurement $$y = Ax^*$$, executing the algorithm with step size $$\eta = 1/\beta$$, will yield 
+>
+> <div align = center>
+>
+> $$
+> f(x_n) \leq \left(\frac{\beta}{\alpha} - 1\right)^nf(x_0) + \frac{\beta\delta}{2 - \beta/\alpha}
+> $$
+>
+> </div>
+>
+> Furthermore, the algorithm achieves $$\|x_n - x^* \|^2 \leq \left(C + \frac{1}{2\alpha/\beta - 1}\right)\delta$$ after $$\frac{1}{2 - \beta/\alpha}\log\left(\frac{f(x_0)}{C\alpha\delta}\right)$$ steps. When $$n \rightarrow \infty$$, $$\|x^* - x_\infty\|^2 \leq \frac{\delta}{2\alpha/\beta - 1}$$.
