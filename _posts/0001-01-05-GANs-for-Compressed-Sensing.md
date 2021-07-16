@@ -54,7 +54,7 @@ in the latent space($$z$$), and set $$\hat x = G(\hat z)$$. Formally, a generati
 
 In other words, we generate $$z$$ from a known distribution, say a Gaussian. The GAN $$G$$ takes $$z$$ as input and produces an output $$x = G(z)$$ in $$R(G)$$. This $$x$$ is supposed to model the distribution of the training data of images. Then, by using any optimization procedure, $$\hat z$$ is estimated. We are simply optimizing in the representation space instead of the sample space. The results significantly outperform Lasso with relatively fewer measurements.
 
-The problem with this approach is that, the gradient descent algorithm often gets stuck at local optima. To resolve this problem, Shah and Hegde proposed a projected gradient descent (PGD)- based method (we shall refer to this as PGD-GAN). They perform gradient descent in the ambient $$(x)$$-space and project the updated term onto $$R(G)$$. This projection involves solving another non-convex minimization problem using the *Adam optimizer*. Their algorithm can be summarised as:
+The problem with this approach is that the gradient descent algorithm often gets stuck at local optima. To resolve this problem, Shah and Hegde proposed a projected gradient descent (PGD)- based method (we shall refer to this as PGD-GAN). They perform gradient descent in the ambient $$(x)$$-space and project the updated term onto $$R(G)$$. This projection involves solving another non-convex minimization problem using the *Adam optimizer*. Their algorithm can be summarised as:
 
 <div align = center>
 
@@ -64,7 +64,7 @@ $$
 
 </div>**Note.** <span style="color:red"> The GAN is trained separately. We are just trying to reconstruct the original image using the above algorithm </span>
 
-Now our aim is to replace this iterative scheme in the inner-loop (Estimation of $$\hat z$$) with a learning based approach. A network architecture can be carefully designed using a suitable training strategy that can project onto $$R(G)$$. This does away with the inner loop in the above algorithm. The inner loop is the most expensive computational step in the algorithm. The new approach is summarised as:
+Our aim is to replace this iterative scheme in the inner-loop (estimation of $$\hat z$$) with a learning-based approach. A network architecture can be carefully designed using a suitable training strategy that can project onto $$R(G)$$. This does away with the inner loop in the above algorithm. The inner loop is the most expensive computational step in the algorithm. The new approach is summarised as:
 
 <div style="text-align:centre">
 
@@ -94,7 +94,7 @@ This approach has the following advantages:
 The goal is to train a network that projects an image $$x \in \mathbb R^n$$  onto $$R(G)$$. The projector, $$P_S$$ onto a set $$S$$ should satisfy two main properties:
 
 1. *Idempotence*, for any point $$x$$, $$P_S(P_S(x)) = P_S(x) $$
-2. *Least distance*, for any point $\tilde x$, $$P_S(\tilde x) = \arg\min_{x \in S}\|x - \tilde x\|^2 $$ . 
+2. *Least distance*, for any point $$\tilde x$$, $$P_S(\tilde x) = \arg\min_{x \in S}\|x - \tilde x\|^2 $$ . 
 
 The multi-task loss to train the projector is 
 
