@@ -9,14 +9,13 @@ excerpt: A project where I try to build a Machine Learning Model that is capable
 
 Check out the repository [here](https://github.com/Sudhansh6/ImageColorization)
 
-While working on this project, I have also built digit recognition models. You can test the performance of the models here.  
+While working on this project, I have also built digit recognition models. You can test the performance of the models here. *Note.* The model may take above 30 seconds to load as the backend Heroku app needs to boot up. 
 
-## Digit Recognition
-Select a model from the list of models. Draw a digit in the canvas, and the predicted value is displayed below. *Note.* The model may take above 30 seconds to load as the backend Heroku app needs to boot up.
+Select a model from the list of models. Draw a digit in the canvas, and the predicted value is displayed below.
 <div align = center >
 	 <label for="models">Choose a Model:</label>	 	
 	<select id = "models" name="models" id="models">
-	  <!-- <option value = "alexnet">AlexNet</option> -->
+	  <option value = "alexnet">AlexNet</option>
 	  <!-- <option value = "vgg">VGG</option> -->
 	  <option value = "resnet" selected>ResNet</option>
 	</select> <br>
@@ -25,24 +24,6 @@ Select a model from the list of models. Draw a digit in the canvas, and the pred
 	<!-- <img height = 200 width = 200 style = "padding: 0px; border: 2px solid black;" id="frame"> -->
 	<div> The predicted value is : <span id = result> --- </span> </div> 
 </div>
-
-I could not upload more models due to space constraints on Heroku.
-
-## Image Colorization
-
-I'm skipping rest of the models due to space constraints. Here is the main model that I have worked on. Upload a **B/W** image and my model will add color to it!  
-**Note.** Upload images of size 128\*128 for the best results. If you upload larger images, it may just show a black image.
-
-<div align = center >
-  <!-- <form onsubmit="return colorize(); return false;"> -->
-    <input id="colorfile" type="file" name="imageData" /> <br>
-    <button class = subscribeBtn id = colorbutton onclick="colorize()"> Colorize! </button> <br>
-  <!-- </form> -->
-  <img id = "colorized" width = 300 height = 300> <br>
-</div>
-
-I was lazy and therefore didn't bother to verify the file uploaded. Make sure you upload an image, else the app can crash!
-
 <style>
 #models{
 	font-size: 20px;
@@ -166,47 +147,24 @@ function getMousePositionOnCanvas(event) {
 function clearCanvas() {
   canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 }
-
-// $(function() {
-//     // let url = "https://soc2021.herokuapp.com/CNN";
-//     // let url = "http://0.0.0.0:5000/CNN";
-//     let url = "http://127.0.0.1:5000/CNN";
-//     $('#colorbutton').click(function() {
-//         var form_data = new FormData($('#colorform')[0]);
-//         $.ajax({
-//             type: 'POST',
-//             url: url,
-//             data: form_data,
-//             contentType: false,
-//             cache: false,
-//             processData: false,
-//             success: function(data) {
-//                 console.log('Success!');
-//             },
-//         });
-//     });
-// });
-
-
-function colorize()
+function getPrediction()
 	{
-    
-    // var form_data = new FormData($('#colorimage')[0]);
-    let Pic = $("#colorfile")[0].files[0];
-    console.log(Pic);
-    let form_data = new FormData();
-    form_data.append("imageData", Pic);
-		let url = "https://blooming-reaches-54484.herokuapp.com/CNN";
+		var Pic = document.getElementById("Canvas").toDataURL();
+    	var flag = true;
+    	Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "");
+		let model = $("#models option:selected").val();
+		let url = "https://soc2021.herokuapp.com/CNN";
 		// let url = "http://0.0.0.0:5000/CNN";
 		// let url = "http://127.0.0.1:5000/CNN";
 		console.log("Sent a request to " + url);
-
+		let res = document.getElementById('result');
+		if(flag)
+			res.innerHTML = '<img width = 50 height = 50 src = "/assets/loading.gif">';
 		$.ajax({
         type: 'POST',
         url: url,
-        data: form_data,
-        processData: false,
-        contentType: false,
+        data: JSON.stringify({"imageData" : Pic, "model" : model}),
+        contentType: 'application/json',
         xhrFields: {
        	withCredentials: true
     	},
@@ -214,7 +172,7 @@ function colorize()
         success: function(result) {
         			flag = false;
         			if(result.result == "")
-        			document.getElementById('colorized').src = 'data:;base64,' + result['image'];
+        			document.getElementById('frame').src = 'data:;base64,' + result['image'];
         			else
         			res.innerHTML = result.result;
                     // document.getElementById('frame').src = 'data:image/jpg;base64,'+ result;
@@ -223,42 +181,5 @@ function colorize()
         	console.log("error");
         }
     	})
-    return false;
 	}
-
-  function getPrediction()
-  {
-    var Pic = document.getElementById("Canvas").toDataURL();
-    let flag = true;
-      Pic = Pic.replace(/^data:image\/(png|jpg);base64,/, "");
-      let model = $("#models option:selected").val();
-      let res = document.getElementById('result');
-    let url = "https://soc2021.herokuapp.com/CNN";
-    // let url = "http://0.0.0.0:5000/CNN";
-    // let url = "http://127.0.0.1:5000/CNN";
-    console.log("Sent a request to " + url);
-    if(flag)
-     res.innerHTML = '<img width = 50 height = 50 src = "/assets/loading.gif">';
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: JSON.stringify({"imageData" : Pic, "model" : model}),
-        contentType: 'application/json',
-        xhrFields: {
-        withCredentials: true
-      },
-        crossDomain: true,
-        success: function(result) {
-              flag = false;
-              if(result.result == "")
-              document.getElementById('frame').src = 'data:;base64,' + result['image'];
-              else
-              res.innerHTML = result.result;
-                    // document.getElementById('frame').src = 'data:image/jpg;base64,'+ result;
-                },
-         error: function(error) {
-          console.log("error");
-        }
-      })
-  }
 </script>
