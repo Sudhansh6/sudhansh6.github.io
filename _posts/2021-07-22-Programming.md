@@ -159,7 +159,7 @@ bool validate(TreeNode* root, long m, long M)
 
 **BSTs** **don't have** **duplicate values**. Using a Balanced Search Tree (**BST**), we can do the following:
 
-```pseudocode
+```
 	1. Insert in O(log n)
         2. Delete in O(log n)
         3. Search for an element in O(log n)
@@ -171,7 +171,7 @@ bool validate(TreeNode* root, long m, long M)
 
 [Hashmaps](#ashing) are also a great way to store elements but the following operations cannot be done efficiently in hash tables:
 
-```pseudocode
+```
         1. the min / max query in reasonable time
         2. Iterating through the element in sorted order in linear time
         3. Find an element closes to x in logarithmic time.
