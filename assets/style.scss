@@ -92,6 +92,8 @@ p {
 
 table {
 	padding: 0;
+	    margin-left:auto; 
+    margin-right:auto;
 }
 
 table tr {
@@ -193,7 +195,7 @@ ul, ol {
 }
 
 ul {
-  list-style-type: disc;
+  list-style-type: square;
 }
 
 ol {
