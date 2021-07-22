@@ -169,7 +169,7 @@ bool validate(TreeNode* root, long m, long M)
         7. Find an element closest in value to x O(log n)
 ```
 
-[Hashmaps](#ashing) are also a great way to store elements but the following operations cannot be done efficiently in hash tables:
+[Hashmaps](#hashing) are also a great way to store elements but the following operations cannot be done efficiently in hash tables:
 
 ```
         1. the min / max query in reasonable time
@@ -777,4 +777,4 @@ Dijkstra_Algorithm(source, G):
 - Make sure you initialise **flag** variables.
 - When you declare pointers, put a star `*` in front of every variable. That is, use `int *p, *q` and not `int* p, q`.
 - Sometimes, arithmetic operations may cause the result to cross the datatype boundary. Take care of these. For example, instead of `(l + r)/2`, use `(l/2 + r/2 + (l%2+ r%2)/2`.
-- Missing number from range - Use `xor` instead of `sum`
+- Missing number from range - Use `xor` instead of `sum`as
