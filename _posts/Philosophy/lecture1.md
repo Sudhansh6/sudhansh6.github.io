@@ -6,11 +6,11 @@ Moving further, we enter the Socratic period. Here, we shall study Socrates (obv
 
 Then, we shall learn about Modern Philosophy - Thomas Hobbes and Rene Descartes (Why are we studying mathematicians?).
 
-> *karios* - Universal truth
+> *kairos* - Universal truth, the right, critical, or opportune moment.
 
 We will also look into Indian Philosophy. It consists of 6 major realms, but we will cover Charvaka, Samkhya (Numbers?), and Buddhism.
 
-From what I understand, we will read a book called "The Courage to Exist: A Philosophy of Life and Death in the Age of Coronavirus" by Ramin Jahanbegloo. Reading the book will reduce the syllabus in Modern philosophy.
+From what I understand, we will read a book called ["The Courage to Exist: A Philosophy of Life and Death in the Age of Coronavirus" by Ramin Jahanbegloo](https://www.goodreads.com/book/show/55517106-the-courage-to-exist). Reading the book will reduce the syllabus in Modern philosophy.
 
 ### Evaluation policy
 
