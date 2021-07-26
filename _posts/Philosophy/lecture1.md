@@ -25,8 +25,4 @@ From what I understand, we will read a book called "The Courage to Exist: A Phil
 
 The underlying principle of human existence or the existence of the entire cosmos or the reality brings out the discourse on ***metaphysics***. Philosophy in fact began with metaphysics. Philosophical inquiry was metaphysical inquiry.
 
-Does something exist or not? Is something meaningful or not? Philosophy is an endless quest for gaining an understanding of reality. Humans have cultivated the value of seeking knowledge. **Metaphysics** talks about what really exists in the universe.
-
-Helem theorised *water* is the fundamental element of the universe. 
-
-"What is life?" Philosophy tries to 
+Does something exist or not? Is something meaningful or not? Philosophy is an endless quest for gaining an understanding of reality. Humans have cultivated the value of seeking knowledge. **Metaphysics** talks about what really exists in the universe. [Thales](http://abyss.uoregon.edu/~js/glossary/thales.html) theorised *water* is the fundamental element of the universe. 
