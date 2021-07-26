@@ -1,3 +1,5 @@
+# Lecture 1 - Introduction
+
 ## What is an operating system?
 
 An operating system is a **middleware** between user programs and system hardware.
