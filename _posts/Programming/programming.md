@@ -874,4 +874,4 @@ Dijkstra_Algorithm(source, G):
 - Sometimes, arithmetic operations may cause the result to cross the datatype boundary. Take care of these. For example, instead of `(l + r)/2`, use `(l/2 + r/2 + (l%2+ r%2)/2`.
 - Missing number from range - Use `xor` instead of `sum`
 - Define a macro using `typedef pair<int, int> ipair` in **C++**.
-
+- You can find the $$n$$th Fibonacci number in `O(log n)` time. Think about it. 
