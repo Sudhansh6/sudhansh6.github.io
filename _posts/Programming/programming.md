@@ -1,12 +1,3 @@
----
-layout: post
-title: Programming Cheatsheet
-categories: [Articles]
-excerpt: A quick overview of all the important concepts in DSA.
----
-
-<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
-
 # Data Structures
 
 ## Arrays
@@ -400,9 +391,113 @@ Consider the time analysis of this code. `i` only moves forward and `j` only mov
 In general, all two pointer approach work similarly. You look at the  naive solution involving multiple loops and then you start analyzing the pattern on each loop. 
 Try to look for monotonicity in one of the loops as other loops move  forward. If you find that, you have found your optimization.
 
-## Dijkstra's Algorithm - Graphs
+## Graph Algorithms
 
-Refer [here](#dijkstra's-algorithm).
+### Dijkstra's Algorithm - Graphs
+
+This algorithm finds the shortest distance from the source vertex to all other vertices in the graph. Refer [here](#dijkstra's-algorithm). 
+
+**Caution**. Dijkstra's does not work in *negative* weighted graphs.
+
+### Floyd Warshall Algorithm - `O(V^3)`
+
+This algorithm finds the shortest distance between **every pair** of nodes in the graph. We initialise the solution matrix equal to the adjacency matrix. Then we perform the following update:
+
+```
+dist[i][k] + dist[k][j] if dist[i][j] > dist[i][k] + dist[k][j]
+```
+
+The C++ code is given as follows:
+
+```cpp
+for (k = 0; k < V; k++) {
+        // Pick all vertices as source one by one
+        for (i = 0; i < V; i++) {
+            // Pick all vertices as destination for the
+            // above picked source
+            for (j = 0; j < V; j++) {
+                // If vertex k is on the shortest path from
+                // i to j, then update the value of
+                // dist[i][j]
+                if (dist[i][j] > (dist[i][k] + dist[k][j])
+                    && (dist[k][j] != INF
+                        && dist[i][k] != INF))
+                    dist[i][j] = dist[i][k] + dist[k][j];
+            }
+        }
+    }
+```
+
+We can modify the solution to print the shortest paths also by storing the predecessor information in a separate 2D matrix. [Here](https://imada.sdu.dk/~jbj/DM85/lec6a.pdf) is the proof of the algorithm.
+
+### MST - Prim's Algorithm
+
+The basic idea is to maintain a set `S` and choose the edge with **minimum** cost connecting `S` and `V\S` in each iteration. This is implemented via priority queues, similar to Dijkstra's.
+
+```cpp
+    // Create a priority queue to store vertices that
+    // are being preinMST. This is weird syntax in C++.
+    // Refer below link for details of this syntax
+    // http://geeksquiz.com/implement-min-heap-using-stl/
+    priority_queue< iPair, vector <iPair> , greater<iPair> > pq; //greater<iPair> for reverse
+    int src = 0; // Taking vertex 0 as source
+    // Create a vector for keys and initialize all
+    // keys as infinite (INF)
+    vector<int> key(V, INF);
+    // To store parent array which in turn store MST
+    vector<int> parent(V, -1);
+    // To keep track of vertices included in MST
+    vector<bool> inMST(V, false);
+    // Insert source itself in priority queue and initialize
+    // its key as 0.
+    pq.push(make_pair(0, src));
+    key[src] = 0;
+    /* Looping till priority queue becomes empty */
+    while (!pq.empty())
+    {
+        // The first vertex in pair is the minimum key
+        // vertex, extract it from priority queue.
+        // vertex label is stored in second of pair (it
+        // has to be done this way to keep the vertices
+        // sorted key (key must be first item
+        // in pair)
+        int u = pq.top().second;
+        pq.pop();
+          //Different key values for same vertex may exist in the priority queue.
+          //The one with the least key value is always processed first.
+          //Therefore, ignore the rest.
+          if(inMST[u] == true){
+            continue;
+        }
+        inMST[u] = true;  // Include vertex in MST
+        // 'i' is used to get all adjacent vertices of a vertex
+        list< pair<int, int> >::iterator i;
+        for (i = adj[u].begin(); i != adj[u].end(); ++i)
+        {
+            // Get vertex label and weight of current adjacent
+            // of u.
+            int v = (*i).first;
+            int weight = (*i).second;
+            //  If v is not in MST and weight of (u,v) is smaller
+            // than current key of v
+            if (inMST[v] == false && key[v] > weight)
+            {
+                // Updating key of v
+                key[v] = weight;
+                pq.push(make_pair(key[v], v));
+                parent[v] = u;
+            }
+        }
+    }
+```
+
+### MST - Kruskal's Algorithm
+
+The idea is much simpler compared to Prim's. Although, the implementation is involved. We sort all the edges in the decreasing order of their weights, and add edges sequentially such that **no cycles** are formed. We use something known as the **Union-Find** algorithm to detect cycles.
+
+#### Union-Find algorithm
+
+
 
 # Sorting
 
@@ -627,7 +722,7 @@ In simple words, here, it is believed that the locally best choices made would b
 
 # Graphs
 
-## Breadth First Search
+## Breadth First Search - `O(V + E)`
 
 **Shortest Path:** In an unweighted graph, the shortest path is the path with least number of edges. With BFS, we **always** reach a node from given source in shortest possible path. Example: Dijkstra’s Algorithm.
 
@@ -709,7 +804,7 @@ iterativeBFS(Graph graph, int s, boolean[] visited, int key){
 
 **Dijkstra's in an unweighted graph is BFS**.
 
-## Depth First Search
+## Depth First Search - `O(V + E)`
 
 The code is much simpler in this case
 
@@ -778,3 +873,5 @@ Dijkstra_Algorithm(source, G):
 - When you declare pointers, put a star `*` in front of every variable. That is, use `int *p, *q` and not `int* p, q`.
 - Sometimes, arithmetic operations may cause the result to cross the datatype boundary. Take care of these. For example, instead of `(l + r)/2`, use `(l/2 + r/2 + (l%2+ r%2)/2`.
 - Missing number from range - Use `xor` instead of `sum`as
+- Define a macro using `typedef pair<int, int> ipair` in **C++**.
+
