@@ -1,4 +1,4 @@
-## Lecture 1 - Introduction
+# Lecture 1 - Introduction
 
 We will start by studying Western (Classical Greek) philosophy. In particular, we shall look into Thales, Pythagoras, and Heraclitus's philosophy.
 
@@ -19,7 +19,7 @@ From what I understand, we will read a book called ["The Courage to Exist: A Phi
 - Midsem - **30%** - Short questions (1 line answers) or Objective (Yay!) and 1 Essay question
 - Endsem - **50%** - 2 Essays, Short questions and Objective.
 
-### What is Philosophy?
+## What is Philosophy?
 
 **Philosophy** is a humanistic discipline. Philosophy is related to human life. This relation is ***epistemological***. By epistemology, we mean study of knowledge - theory of knowledge. Its epistemological relation unfolds human aspiration for higher knowledge concerning the reality, or the ***underlying principle of the reality***.
 
