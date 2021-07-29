@@ -845,7 +845,7 @@ Dijkstra_Algorithm(source, G):
     parameters: source node--> source, graph--> G
     return: List of cost from source to all other nodes--> cost
     """
-    unvisited_list = []			// List of unvisited verticesvertices
+    unvisited_list = []			// List of unvisited vertices
     cost = []
     cost[source] = 0              // Distance (cost) from source to source will be 0
     for each vertex v in G:       // Assign cost as INFINITY to all vertices
@@ -875,3 +875,9 @@ Dijkstra_Algorithm(source, G):
 - Missing number from range - Use `xor` instead of `sum`
 - Define a macro using `typedef pair<int, int> ipair` in **C++**.
 - You can find the $$n$$th Fibonacci number in `O(log n)` time. Think about it. 
+- Don't assume *positive* numbers when an integer input is mentioned.
+- Initialise `vector<vector<int>>` properly. Specifically, ensure you **allocate** memory before accessing.
+- When you write code for a DP problem, make sure you write the **base cases** first.
+- Checking boxes in Sudoku grid using `1-9` loop of `i` and `j` : `int x = (i/3)*3 + j/3, y = (i%3)*3 + j%3;` 
+- In sequence problems, make sure you test your algorithm in the beginning, the middle and the end.
+- Continuously check the range of values reached by the variables you declare. It may happen that the value of a `int` is going beyond `32` bits. 
