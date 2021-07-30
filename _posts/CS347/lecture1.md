@@ -39,7 +39,7 @@ Most recently used instructions and data are in CPU **cache** (instruction cache
 
 It initializes program counter (PC) and other registers to begin execution. OS provides the **process abstraction**. 
 
-> Process: A running program
+***Process:*** A running program
 
 OS creates and manages processes. Each process has the illusion of having the complete CPU, i.e., OS ***virtualizes*** CPU. It *timeshares* the CPU between processes. It also enables coordination between processes.
 
@@ -55,9 +55,9 @@ Hence, the process does not have to worry about where its memory is allocated in
 
 OS helps in reading/writing files from the disk. OS has code to manage disk, network card, and other external devices: ***device drivers***. 
 
-> Device driver: Talks the language of the hardware devices.
->
-> It issues instructions to devices (fetching data from a file). It also responds to interrupt events from devices (pressing a key on the keyboard).
+***Device driver:*** Talks the language of the hardware devices.
+
+It issues instructions to devices (fetching data from a file). It also responds to interrupt events from devices (pressing a key on the keyboard).
 
 The persistent (ROM) data is organised as a ***file system*** on the disk.
 

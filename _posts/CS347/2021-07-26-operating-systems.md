@@ -11,3 +11,5 @@ excerpt: Running notes from CS347
 {% include_relative lecture1.md %}
 
 {% include_relative lecture2.md %}
+
+{% include_relative lecture21.md %}
