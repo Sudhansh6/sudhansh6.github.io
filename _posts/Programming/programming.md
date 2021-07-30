@@ -168,6 +168,8 @@ bool validate(TreeNode* root, long m, long M)
         3. Find an element closes to x in logarithmic time.
 ```
 
+Check out Segment Trees [here](https://www.geeksforgeeks.org/segment-tree-set-1-range-minimum-query/).
+
 ## Heaps and Maps
 
 **Treemaps** are implemented internally using balanced trees ( They mostly use red black trees). Take a look at [this](https://stackoverflow.com/questions/6147242/heap-vs-binary-search-tree-bst) answer for comparison of Heaps and BSTs (Maps). 
@@ -497,7 +499,69 @@ The idea is much simpler compared to Prim's. Although, the implementation is inv
 
 #### Union-Find algorithm
 
+A [*disjoint-set data structure*](http://en.wikipedia.org/wiki/Disjoint-set_data_structure) is a data structure that keeps track of a set of elements partitioned into a number of disjoint (non-overlapping) subsets. A [*union-find algorithm*](http://en.wikipedia.org/wiki/Disjoint-set_data_structure) is an algorithm that performs two useful operations on such a data structure. A simple method to do this is maintain a parent array, and check the highest ancestors of the vertices in the new edge. If they are the same, then they form a cycle. Otherwise, the new edge does not form a cycle. This approach is `O(n)` in worst case. To improve this to `O(logn)` we can use **union by rank**.
 
+The basic problem in the above approach is, the parent tree can be highly skewed. We need to keep the tree balanced by always attaching the smaller depth tree under the root of the deeper tree. The second optimization to naive method is ***Path Compression***. The idea is to flatten the tree when `find()` is called. When `find()` is called for an element x, root of the tree is returned. The `find()` operation traverses up from x to find root. The idea of path compression is to  make the found root as parent of x so that we don’t have to traverse all intermediate nodes again. This is somewhat like a *dynamic programming* paradigm.
+
+The amortized time complexity of this method becomes constant. The implementation is as follows. For a change, I'm including the code in Python.
+
+```python
+# A union by rank and path compression based
+# program to detect cycle in a graph
+from collections import defaultdict
+# a structure to represent a graph
+class Graph:
+    def __init__(self, num_of_v):
+        self.num_of_v = num_of_v
+        self.edges = defaultdict(list)
+    # graph is represented as an
+    # array of edges
+    def add_edge(self, u, v):
+        self.edges[u].append(v)
+class Subset:
+    def __init__(self, parent, rank):
+        self.parent = parent
+        self.rank = rank
+# A utility function to find set of an element
+# node(uses path compression technique)
+def find(subsets, node):
+    if subsets[node].parent != node:
+        subsets[node].parent = find(subsets, subsets[node].parent)
+    return subsets[node].parent
+# A function that does union of two sets
+# of u and v(uses union by rank)
+def union(subsets, u, v):
+    # Attach smaller rank tree under root
+    # of high rank tree(Union by Rank)
+    if subsets[u].rank > subsets[v].rank:
+        subsets[v].parent = u
+    elif subsets[v].rank > subsets[u].rank:
+        subsets[u].parent = v
+    # If ranks are same, then make one as
+    # root and increment its rank by one
+    else:
+        subsets[v].parent = u
+        subsets[u].rank += 1
+# The main function to check whether a given
+# graph contains cycle or not
+def isCycle(graph):
+    # Allocate memory for creating sets
+    subsets = []
+    for u in range(graph.num_of_v):
+        subsets.append(Subset(u, 0))
+    # Iterate through all edges of graph,
+    # find sets of both vertices of every
+    # edge, if sets are same, then there
+    # is cycle in graph.
+    for u in graph.edges:
+        u_rep = find(subsets, u)
+        for v in graph.edges[u]:
+            v_rep = find(subsets, v)
+            if u_rep == v_rep:
+                return True
+            else:
+                union(subsets, u_rep, v_rep)
+```
 
 # Sorting
 
@@ -692,7 +756,7 @@ if(A.find(k) != A.end()) A.erase(A.find(k)); // or A.erase(k);
 
 **Python** - Use Dictionaries.
 
-## Dynamic Programming
+# Dynamic Programming
 
 - Make sure you write the base cases in recursion!
 - You can use **static** variables in cpp for storing the memory from previous calls to the function. For example, the Fibonacci numbers code can be written as
@@ -711,6 +775,10 @@ int climbStairs(int n) {
 Although, make sure the environment you are using supports static variables correctly.
 
 - If you pass constant variables in recursion, pass them by reference rather than value to save memory and time!
+
+## Longest Increasing Subsequence
+
+This is not a special problem, and the dynamic programming approach you are thinking of right now works. The time complexity is `O(n^2)`. Although, there is another interesting approach to this problem, and I felt it was worth mentioning. Let the given array be `A`. Make a sorted copy of `A` say `B`. Now, the **longest common subsequence** of `A` and `B` is our answer (Why?). This approach is also `O(n^2)`.
 
 # Greedy Algorithms
 
@@ -880,4 +948,4 @@ Dijkstra_Algorithm(source, G):
 - When you write code for a DP problem, make sure you write the **base cases** first.
 - Checking boxes in Sudoku grid using `1-9` loop of `i` and `j` : `int x = (i/3)*3 + j/3, y = (i%3)*3 + j%3;` 
 - In sequence problems, make sure you test your algorithm in the beginning, the middle and the end.
-- Continuously check the range of values reached by the variables you declare. It may happen that the value of a `int` is going beyond `32` bits. 
+  - Continuously check the range of values reached by the variables you declare. It may happen that the value of a `int` is going beyond `32` bits. 
