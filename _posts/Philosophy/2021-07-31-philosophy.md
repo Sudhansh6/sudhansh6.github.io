@@ -13,3 +13,5 @@ excerpt: Running notes from HS301
 {% include_relative lecture2.md %}
 
 {% include_relative lecture3.md %}
+
+{% include_relative recordings1.md %}
