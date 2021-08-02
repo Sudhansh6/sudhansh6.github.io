@@ -3,6 +3,7 @@ layout: post
 title: Operating System Notes
 categories: [Notes]
 excerpt: Running notes from CS347
+toc: true
 
 ---
 
@@ -15,3 +16,5 @@ excerpt: Running notes from CS347
 {% include_relative lecture21.md %}
 
 {% include_relative lecture22.md %}
+
+{% include_relative live1.md %}

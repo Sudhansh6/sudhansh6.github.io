@@ -30,11 +30,12 @@ body {
   font-weight: 400;
   font-size: 19px;
   height: 100%;
+  width : 100%;
 }
 
 .container {
   margin: 0 auto;
-  max-width: 900px;
+  max-width: 1000px;
   padding: 0 10px;
   width: 100%;
 }
@@ -435,6 +436,42 @@ body:after {
     position: absolute;
     left: 0;
     content: '';
+}
+
+.sidebar{
+  margin-bottom: 1em;
+  position: sticky !important; /* added to make toc scroll with page */
+  float: left !important; /* added to make toc scroll with page */
+  top: 0;
+  right: 0;
+  padding: 10em 0em 0em 2em;
+
+  z-index: 10;
+  width: 400px;
+  .toc{
+    border-left: #404040 2px solid;
+    border-right: #404040 2px solid;
+    .sublist{
+      overflow: hidden;
+      max-height: 0;
+      -webkit-transition: all 0.5s ease-out;
+    }
+  }
+  .link{
+    list-style-type: none;
+    a{
+      color: $darkGray;
+      &:hover, &:active {
+        color: $blue;
+      }
+    }
+    &:hover {
+      .sublist{
+        display: block;
+        max-height: 200px;
+      }
+    }
+  }
 }
 
 #bar {

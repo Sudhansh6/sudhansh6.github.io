@@ -85,11 +85,23 @@ plugins:
   - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
   - jekyll-seo-tag
   - jekyll-paginate
+  - jekyll-toc
 
 include: ['_pages']
 
 paginate: 6
 paginate_path: /page:num/
+
+toc:
+  min_level: 1
+  max_level: 6
+  ordered_list: false
+  no_toc_section_class: no_toc_section
+  list_id: toc
+  list_class: toc
+  sublist_class: sublist
+  item_class: link
+  item_prefix: link-
 
 # Exclude these files from your production _site
 exclude:

@@ -27,8 +27,6 @@ A philosopher called Gracia tried to integrate metaphysics into philosophy.
 
 ## Epistemology
 
-The term “epistemology” comes from the Greek words “episteme” and “logos”. “Episteme” can be translated as “knowledge” or “understanding” or “acquaintance”. In contrast, “logos” can be translated as “account” or “argument” or “reason”.
+The term epistemology comes from the Greek words “episteme” and “logos”. “Episteme” can be translated as knowledge or understanding. In contrast, “logos” can be translated as argument or reason.
 
-### Knowledge as justified true belief
-
-Plato's Theatetus - "Knowledge importantly depends on the nature of knower and her relationship to her environment."
+Knowledge is a justified true belief. Plato's Theatetus - "Knowledge importantly depends on the nature of knower and her relationship to her environment."

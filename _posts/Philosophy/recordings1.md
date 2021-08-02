@@ -43,17 +43,17 @@ Metaphysics has the power of integrating knowledge across all fields of science.
 
 Now, we begin studying various philosopher and their philosophies.
 
-# Thales (624-546 BC) - Thales of Miletus
+## Thales (624-546 BC) - Thales of Miletus
 
 He is known as the First Philosopher. He is the founder of the Ionian School of Science. Thales motivated people to think about reality keeping aside religion and mythical wisdom.
 
-## What did Thales pursue?
+### What did Thales pursue?
 
 He embarked upon the study of things. He awakened people to their awareness. He questioned the existing system of knowledge and the frameworks of misunderstanding. He evoked a desire to find out the right knowledge. 
 
 He wanted to study reality as *it is* and not how it *appears*.
 
-## Everything is Water
+### Everything is Water
 
 Water has no shape, no form of its own. Thales remarked that water is something vital for the generation and growth of all things.
 
