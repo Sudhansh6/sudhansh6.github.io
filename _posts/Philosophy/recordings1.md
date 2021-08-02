@@ -12,28 +12,18 @@ All knowledge systems are developed from human/thinking thoughts. Speculating ab
 
 A philosophical investigation is conceptual. Philosophers think through concepts, and their effort is to make sense of experiences and ideas concerning the subject matter. Philosophical thinking is speculative, Imaginative/creative, Reflective/Critical, Argumentative, and liberal/inclusive.
 
-### Speculative thinking
-
-Knowledge is merely based on experience and **intuitive insights** beyond the expertise of observable facts. It highlights the power of imagination in forming or visualizing something - the existence of the underlying principle. For example, Pythagoras used numbers to speculate about reality. Thales theorized that five fundamental elements constitute reality.
+**Speculative thinking** - Knowledge is merely based on experience and **intuitive insights** beyond the expertise of observable facts. It highlights the power of imagination in forming or visualizing something - the existence of the underlying principle. For example, Pythagoras used numbers to speculate about reality. Thales theorized that five fundamental elements constitute reality.
 Imagination is the spirit of discovery/invention. 
 
 Imagination is the spirit of discovery/invention. 
 
-### Creative Thinking
+**Creative Thinking** - Rabindranath Tagore was a poet, philosopher and his poems are among the finest expressions of creativity that aspired to grasp the truth.
 
-Rabindranath Tagore was a poet, philosopher and his poems are among the finest expressions of creativity that aspired to grasp the truth.
+**Reflective/critical thinking** - Many philosophers and philosophical traditions accept critical thinking as a method of doing philosophy. It involves evaluating information, objective analysis of thoughts, skillful application of concepts, and synthesis of ideas.
 
-### Reflective/critical thinking
+**Argumentative thinking** - Philosophical thinking involves arguments. Logic takes us from one set of thoughts to another collection of ideas.
 
-Many philosophers and philosophical traditions accept critical thinking as a method of doing philosophy. It involves evaluating information, objective analysis of thoughts, skillful application of concepts, and synthesis of ideas.
-
-### Argumentative thinking
-
-Philosophical thinking involves arguments. Logic takes us from one set of thoughts to another collection of ideas.
-
-### Liberal and inclusive
-
-Philosophy would have been a disaster if people were not open-minded/ receptive to new ideas and thoughts. Although, sometimes dominant philosophical traditions prevail - Philosophical Blindness.
+**Liberal and inclusive** - Philosophy would have been a disaster if people were not open-minded/ receptive to new ideas and thoughts. Although, sometimes dominant philosophical traditions prevail - Philosophical Blindness.
 
 Philosophical enterprise demands self-scrutiny to eliminate prejudices and dogmas and also competitions - *R. Solomon 2001:100*.
 
@@ -66,3 +56,4 @@ He wanted to study reality as *it is* and not how it *appears*.
 ## Everything is Water
 
 Water has no shape, no form of its own. Thales remarked that water is something vital for the generation and growth of all things.
+
