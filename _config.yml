@@ -98,7 +98,7 @@ toc:
   ordered_list: false
   no_toc_section_class: no_toc_section
   list_id: toc
-  list_class: toc
+  list_class: sublist
   sublist_class: sublist
   item_class: link
   item_prefix: link-

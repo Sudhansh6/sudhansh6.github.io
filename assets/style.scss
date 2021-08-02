@@ -34,6 +34,8 @@ body {
 }
 
 .container {
+  margin-left: 400px;
+  margin-right: 400px;
   margin: 0 auto;
   max-width: 1000px;
   padding: 0 10px;
@@ -438,37 +440,55 @@ body:after {
     content: '';
 }
 
+@media only screen and (max-width: 1800px)
+{
+  body {
+    // background-color: lightblue;
+    .sidebar{
+      margin : auto;
+      text-align: center;
+      display: block;
+      width: 100%;
+      position: relative;
+    }
+  }
+}
+
 .sidebar{
   margin-bottom: 1em;
-  position: sticky !important; /* added to make toc scroll with page */
-  float: left !important; /* added to make toc scroll with page */
-  top: 0;
-  right: 0;
+  position: fixed;
+  display: block;
+  height: 100%;
   padding: 10em 0em 0em 2em;
-
-  z-index: 10;
-  width: 400px;
-  .toc{
-    border-left: #404040 2px solid;
+  overflow: auto;
+  width: 350px;
+  #toc{
+    border-left: #404040 2px solid; 
     border-right: #404040 2px solid;
-    .sublist{
-      overflow: hidden;
+  }
+  .sublist{
+    overflow: hidden;
       max-height: 0;
       -webkit-transition: all 0.5s ease-out;
+    li {
+      &:hover{
+        .sublist{
+          max-height: 200px;
+        }
+      }
     }
   }
   .link{
     list-style-type: none;
+    &:hover{
+        .sublist{
+          max-height: 200px;
+        }
+      }
     a{
       color: $darkGray;
       &:hover, &:active {
         color: $blue;
-      }
-    }
-    &:hover {
-      .sublist{
-        display: block;
-        max-height: 200px;
       }
     }
   }
@@ -988,6 +1008,7 @@ Modules - reusable parts of our design
   border: 7px solid transparent;
   border-right: 7px solid white;
 }
+
 @media only screen and (min-width: 768px) {
   .cd-timeline-content h2 {
     font-size: 20px;
