@@ -1,69 +1,71 @@
 ---
 layout: default
 ---
-<p>
-Hi, you've reached my website. This page contains a few reports that I have written. You can give suggestions for the website and the content <a href="{{site.baseurl}}contact/"> here </a>
-</p>
-<br>
-<div class="entry">
-    <div id="search-container">
-    <input type="text" id="search-input" placeholder="Search through the posts..." />
-    <ul id="results-container"></ul>
-</div>
+<div id="main" role="main" class="container">
+  <p>
+  Hi, you've reached my website. This page contains a few reports that I have written. You can give suggestions for the website and the content <a href="{{site.baseurl}}contact/"> here </a>
+  </p>
+  <br>
+  <div class="entry">
+      <div id="search-container">
+      <input type="text" id="search-input" placeholder="Search through the posts..." />
+      <ul id="results-container"></ul>
+  </div>
 
-<script src="/assets/simple-jekyll-search.min.js" type="text/javascript"></script>
+  <script src="/assets/simple-jekyll-search.min.js" type="text/javascript"></script>
 
-<script>
-    SimpleJekyllSearch({
-    searchInput: document.getElementById('search-input'),
-    resultsContainer: document.getElementById('results-container'),
-    searchResultTemplate: '<div style="text-align: left !important;"><a href="{url}"><h1 style="text-align:left !important;">{title}</h1></a></div>',
-    json: '/search.json'
-    });
-</script>
+  <script>
+      SimpleJekyllSearch({
+      searchInput: document.getElementById('search-input'),
+      resultsContainer: document.getElementById('results-container'),
+      searchResultTemplate: '<div style="text-align: left !important;"><a href="{url}"><h1 style="text-align:left !important;">{title}</h1></a></div>',
+      json: '/search.json'
+      });
+  </script>
 
-<div id = "all_posts" class="posts">
-  {% for post in paginator.posts %}
-    <article class="post">
-      <a href="{{ site.baseurl }}{{ post.url }}">
-        <h1>{{ post.title }}</h1>
+  <div id = "all_posts" class="posts">
+    {% for post in paginator.posts %}
+      <article class="post">
+        <a href="{{ site.baseurl }}{{ post.url }}">
+          <h1>{{ post.title }}</h1>
 
-        <!-- <div>
-          <p class="post_date">{{ post.date | date: "%B %e, %Y" }}</p>
-        </div> -->
-      </a>
-      <div class="entry">
-        {{ post.excerpt }}
-      </div>
+          <!-- <div>
+            <p class="post_date">{{ post.date | date: "%B %e, %Y" }}</p>
+          </div> -->
+        </a>
+        <div class="entry">
+          {{ post.excerpt }}
+        </div>
 
-      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-    </article>
-  {% endfor %}
-
-  <!-- pagination -->
-  {% if paginator.total_pages > 1 %}
-  <div class="pagination">
-    {% if paginator.previous_page %}
-      <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; Prev</a>
-    {% else %}
-      <span>&laquo; Prev</span>
-    {% endif %}
-
-    {% for page in (1..paginator.total_pages) %}
-      {% if page == paginator.page %}
-        <span class="webjeda">{{ page }}</span>
-      {% elsif page == 1 %}
-        <a href="{{ '/' | prepend: site.baseurl | replace: '//', '/' }}">{{ page }}</a>
-      {% else %}
-        <a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a>
-      {% endif %}
+        <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
+      </article>
     {% endfor %}
 
-    {% if paginator.next_page %}
-      <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Next &raquo;</a>
-    {% else %}
-      <span>Next &raquo;</span>
+    <!-- pagination -->
+    {% if paginator.total_pages > 1 %}
+    <div class="pagination">
+      {% if paginator.previous_page %}
+        <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; Prev</a>
+      {% else %}
+        <span>&laquo; Prev</span>
+      {% endif %}
+
+      {% for page in (1..paginator.total_pages) %}
+        {% if page == paginator.page %}
+          <span class="webjeda">{{ page }}</span>
+        {% elsif page == 1 %}
+          <a href="{{ '/' | prepend: site.baseurl | replace: '//', '/' }}">{{ page }}</a>
+        {% else %}
+          <a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if paginator.next_page %}
+        <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Next &raquo;</a>
+      {% else %}
+        <span>Next &raquo;</span>
+      {% endif %}
+    </div>
     {% endif %}
   </div>
-  {% endif %}
 </div>

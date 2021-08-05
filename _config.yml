@@ -94,12 +94,12 @@ paginate_path: /page:num/
 
 toc:
   min_level: 1
-  max_level: 6
+  max_level: 3
   ordered_list: false
   no_toc_section_class: no_toc_section
   list_id: toc
-  list_class: sublist
-  sublist_class: sublist
+  list_class: toc_list
+  sublist_class: toc_sublist
   item_class: link
   item_prefix: link-
 
