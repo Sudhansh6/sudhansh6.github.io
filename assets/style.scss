@@ -469,14 +469,15 @@ body:after {
   }
   .toc_list > li{
     .toc_sublist{
-      transition-delay: 10s;
       overflow: hidden;
       max-height: 0;
       -webkit-transition: all 1s ease-out;
+      -webkit-transition-delay: 3s;
     }
     &:hover{
       .toc_sublist{
         max-height: 500px;
+        -webkit-transition-delay: 0s;
       }
     }
   }
@@ -486,10 +487,13 @@ body:after {
       overflow: hidden;
       max-height: 0;
       -webkit-transition: all 1s ease-out;
+      -webkit-transition-delay: 3s;
     }
     &:hover{
       .link-h3{
         max-height: 500px;
+        -webkit-transition-delay: 0s;
+
       }
     }
   }
