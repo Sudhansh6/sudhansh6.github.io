@@ -1,11 +1,31 @@
 ## Linear Programming and primal-dual methods
 
-Consider the linear program
+For any linear problem,
 
 $$ \min c^Tx \\ \text{ s.t. } Ax \geq b \\ \hspace{2em} x \geq 0$$
 
 Its dual is given by 
 
-$$ \min c^Tx \\ \text{ s.t. } Ax \geq b \\ \hspace{2em} x \geq 0$$
+$$ \min y^Tb \\ \text{ s.t. } y^TA \leq c^T \\ \hspace{2em} y \geq 0$$
 
-https://www.coursera.org/lecture/advanced-algorithms-and-complexity/duality-N5N2W
+[Here](https://www.coursera.org/lecture/advanced-algorithms-and-complexity/duality-N5N2W) is a course on Linear programming.
+
+For example, consider the problem of reconstructing an image from compressed measurements. The primary function is given by,
+$$
+\min \|x\|_1 \\
+\text{s.t.} \|Ax - y \|_2 \leq \epsilon
+$$
+I jumped the gun too soon. I have no idea what the dual is.
+
+## Primal Dual Method
+
+Max-flow and min-cut are LP dual problems.
+
+We typically devise algorithms (for minimization problems) using the PD-schema in the following way:
+
+1. Write down an LP relaxation of the problem, and find its dual. Try to find some intuitive meaning for the dual variables.
+2. Start with vectors $$x = 0, y = 0$$, which will be dual feasible, but primal infeasible
+3. Until the primal is feasible,
+   1. Increase the dual values $$y_i$$ in some controlled fashion until some dual constraint(s) goes tight, while always maintaining the dual feasibility of $$y$$.
+   2. Select some subset of the tight dual constraints, and increase the primal variable corresponding to them by an integral amount.
+4. For the analysis, prove that the output pair of vectors $$(x, y)$$ satisfies $$c^T x\leq \rho \cdot y^Tb$$ for as small a value of $$\rho$$ as possible.

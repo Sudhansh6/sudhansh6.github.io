@@ -262,6 +262,17 @@ void heap_sort(int A[], int n)
 }
 ```
 
+## Trie (Advanced)
+
+Properties of the Trie for a set of the strings -
+
+1. The root node of the trie always represents the null node.
+2. Each child of nodes is sorted alphabetically.
+3. Each node can have a maximum of **26** children (A to Z).
+4. Each node (except the root) can store one letter of the alphabet.
+
+I'm lazy, so check the complete code [here](https://www.javatpoint.com/trie-data-structure).
+
 # Important Topics
 
 ## Bit Manipulation
@@ -561,23 +572,6 @@ def isCycle(graph):
                 return True
             else:
                 union(subsets, u_rep, v_rep)
-```
-
-## Kadane's Algorithm
-
-I am writing this name for the sake of completeness, and it is not some fancy algorithm. This algorithm is used to solve the **Largest sum contiguous subarray**. As expected, this can be done using DP. Turns out there is a more ordered structure in the problem, and we don't need a memoization table to solve it.
-
-The idea is as follows. You iterate over the array, and for each index `i`, calculate the maximum possible sum including `arr[i]`, `max_sum_so_far`, using `arr[i] + max(0, max_sum_so_far)`. The maximum sum is updated as `sum = max(sum, max_sum_so_far)`. This works because `max_sum_so_far` calculates the max of all sums ending at index `i`, and `sum` takes the maximum of all these values. (Sorry, but this is the best I could do to explain this) 
-
-```cpp
-int max_so_far = a[0];
-int curr_max = a[0];
-for (int i = 1; i < size; i++)
-{
-    curr_max = max(a[i], curr_max+a[i]);
-    max_so_far = max(max_so_far, curr_max);
-}
-return max_so_far;
 ```
 
 # Sorting

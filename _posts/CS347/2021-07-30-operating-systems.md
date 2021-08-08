@@ -18,3 +18,9 @@ toc: true
 {% include_relative lecture22.md %}
 
 {% include_relative live1.md %}
+
+{% include_relative lecture3.md %}
+
+{% include_relative lecture23.md %}
+
+{% include_relative lecture4.md %}
