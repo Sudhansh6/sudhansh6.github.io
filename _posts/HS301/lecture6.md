@@ -1,4 +1,4 @@
-# Lecture 6
+# Lecture 6 `05/08/21`
 
 We will study Pythagoras in this lecture. We are still in the pre-Socratic period.
 
