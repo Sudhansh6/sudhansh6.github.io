@@ -24,3 +24,5 @@ toc: true
 {% include_relative lecture23.md %}
 
 {% include_relative lecture4.md %}
+
+{% include_relative live2.md %}

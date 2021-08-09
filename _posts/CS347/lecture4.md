@@ -14,7 +14,7 @@ A function call translates to a **`jump`** instruction. A new stack frame is pus
 
 The CPU hardware has multiple privilege levels. The *user mode* is used to run the user code. OS code like the system calls run in the *kernel mode*. Some instructions execute only in kernel mode.
 
-The kernel does not trust the user stack. It uses a separate kernel stack when in kernel mode. The kernel also does not trust the user-provided addresses. It sets up ***Interrupt Descriptor Table (IDT)*** at boot time. The IDT has addresses of kernel functions to run for system calls and other events.
+The kernel does not trust the user stack. It uses a separate kernel stack when in kernel mode. The kernel also does not trust the user-provided addresses. It sets up an ***Interrupt Descriptor Table (IDT)*** at boot time. The IDT has addresses of kernel functions to run for system calls and other events.
 
 ## Mechanism of a system call: trap instruction
 

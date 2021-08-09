@@ -455,50 +455,52 @@ body:after {
 }
 
 .sidebar{
-  margin-bottom: 1em;
   position: fixed;
   display: block;
-  height: 100%;
-  padding: 4em 0em 0em 2em;
+  height: 75%;
+  // top right bottom left
+  padding: 0em 1em 0em 1em;
   overflow: auto;
   width: 350px;
   #toc{
-    padding: 0em 1em 0em 1em;
+    padding: 0em 0em 0em 0em;
     border-left: #404040 2px solid; 
     border-right: #404040 2px solid;
-  }
-  .toc_list > li{
     .toc_sublist{
-      overflow: hidden;
-      max-height: 0;
-      -webkit-transition: all 1s ease-out;
-      -webkit-transition-delay: 3s;
-    }
-    &:hover{
-      .toc_sublist{
-        max-height: 500px;
-        -webkit-transition-delay: 0s;
-      }
+      list-style: none;
     }
   }
-  .link-h2{
-    .link-h3{
-      transition-delay: 10s;
-      overflow: hidden;
-      max-height: 0;
-      -webkit-transition: all 1s ease-out;
-      -webkit-transition-delay: 3s;
-    }
-    &:hover{
-      .link-h3{
-        max-height: 500px;
-        -webkit-transition-delay: 0s;
+  // .toc_list > li{
+  //   .toc_sublist{
+  //     overflow: hidden;
+  //     max-height: 0;
+  //     -webkit-transition: all 1s ease-out;
+  //     -webkit-transition-delay: 3s;
+  //   }
+  //   &:hover{
+  //     .toc_sublist{
+  //       max-height: 500px;
+  //       -webkit-transition-delay: 0s;
+  //     }
+  //   }
+  // }
+  // .link-h2{
+  //   .link-h3{
+  //     transition-delay: 10s;
+  //     overflow: hidden;
+  //     max-height: 0;
+  //     -webkit-transition: all 1s ease-out;
+  //     -webkit-transition-delay: 3s;
+  //   }
+  //   &:hover{
+  //     .link-h3{
+  //       max-height: 500px;
+  //       -webkit-transition-delay: 0s;
 
-      }
-    }
-  }
+  //     }
+  //   }
+  // }
   .link{
-    padding-left: 0;
     a{
       color: $darkGray;
       &:hover, &:active {
@@ -510,25 +512,22 @@ body:after {
     padding-left: 0;
   }
   .link-h1{
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    font-size: 20px;
     list-style: none;
     background-color: rgb(212, 251, 238);
     &:hover{ 
-      background-color: rgb(192, 231, 218);
+      background-color: rgb(182, 241, 228);
     }
   }
   .link-h2{
+    font-size: 17px;
     padding-left: 1em;
-    list-style-type: disc;
-    background-color: rgb(192, 231, 218);
+    list-style-type: none;
     &:hover{ 
-      background-color: rgb(172, 211, 198);
-    }
-  }
-  .link-h3{
-    padding-left: 0.5em;
-    list-style-type: square;
-    &:hover{
-      background-color: rgb(209, 226, 219);
+      background-color: rgb(172, 225, 218);
     }
   }
 }
