@@ -2,35 +2,44 @@
 
 ## Skepticism
 
-*Pyrrho* started this idea that truth is never known, and having complete knowledge is impossible.
+*Pyrrho* started this idea that truth is never known, and having complete knowledge is impossible. Everything that is seen may not always be true.
 
 > Skepticism - Uncertainty of Human Knowledge
 
-Doubting is a form of learning.
+Doubting is a form of learning. For example, Rene Descartes, used a mathematical form of skepticism (Probability?).
 
-### Sources of Knowledge in India Philosophy
+## Sources of Knowledge in India Philosophy
 
 - *Prathyakhsha* - Perception
 - *Anumana* - Inference
 - *Upamana* - Comparison
 - *Sabdda* - Testimony
 
-### Foundation of Knowledge
+These are the means through which knowledge is gained via experience.
+
+## Foundation of Knowledge
 
 The rationalists believed **reason** is the primary source of knowledge, whereas empiricists believed **experience** is the primary source of knowledge. We shall learn about both these schools of knowledge in due time.
 
 ## Logic
 
-Logic is known as *Tarka shastra* in Indian philosophy.
+This is another branch of Philosophy like epistemology. Logic is known as *Tarka shastra* in Indian philosophy.  Laws of thought like the law of identity, the law of contradiction, etc., were developed using a human's thinking structure.
 
 >  Tarka - Arguments
 
-It involves deductive and inductive arguments. 
+It involves deductive and inductive arguments. Aristotle introduced **deductive** arguments. These arguments are in the premise-predicate form. The premises are based on universal truths. Francis Bacon presented **inductive** arguments. He spoke about $$5$$ different types of induction. 
 
-Aristotle introduced **deductive** arguments. The premises are based on universal truths.
+- Method of Agreement
+- Method of Difference
+- Joint Method of agreement in presence of difference
+- Method of Concomitant variation
+- Method of Residues
 
-Francis Bacon presented **inductive** arguments. In this realm, assumptions are based on experience.
+In this realm, assumptions are based on experience.
 
-## Ethics
+Therefore, along with epistemological inquiry, one must check for the arguments associated with the theory. Logic is an integral part of Philosophy.
 
-Philosophy also deals with the study of values. 
+## Ethics / Aesthetics
+
+Philosophy also deals with the study of values and beauty. This is also a branch of Philosophy along with Metaphysics, Epistemology, and Logic.
+

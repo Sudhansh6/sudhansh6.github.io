@@ -20,7 +20,7 @@ The most important system call to create a process is the **`fork()`** system ca
 
 ## What happens during a fork?
 
-A new process is created by making a copy of the parent's memory image. This means the child's code is exactly the same as the parent's code. The new process is added to the [OS process list](os-data-structures) and scheduled. Parent and child start execution just after the fork statement (with different return values).
+A new process is created by making a copy of the parent's memory image. This means the child's code is exactly the same as the parent's code. The new process is added to the [OS process list](#os-data-structures) and scheduled. Parent and child start execution just after the fork statement (with different return values).
 
 Note that parent and child execute and modify the memory data independently (the memory images being a  copy of one another does not propagate).
 
