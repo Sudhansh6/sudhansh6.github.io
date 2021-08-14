@@ -30,3 +30,5 @@ toc: true
 {% include_relative lecture24.md %}
 
 {% include_relative lecture25.md %}
+
+{% include_relative lecture26.md %}
