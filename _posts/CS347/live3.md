@@ -10,6 +10,6 @@
 
 - `forkret` is a small function that a program has to execute after a process has been created. This mainly involves the locking mechanism that will be discussed later. `fork` is a wrapper of `allocproc`
 
-- `sched` is only called by the user processes in case of `sleep`, `exit`, and `yield`. `sched` stores the context of the current context onto the kernel stack. The `scheduler` function is called by the scheduler thread to switch to a new process. Both of these functions call the `swtch` function to switch the current process. Think of the CPU scheduler (scheduler thread) as an intermediate process that has to be executed when you are switching from process A to process B. 
+- `sched` is only called by the user processes in case of `sleep`, `exit`, and `yield`. `sched` stores the context of the current context onto the kernel stack. The `scheduler` function is called by the scheduler thread to switch to a new process. Both of these functions call the `swtch` function to switch the current process. Think of the CPU scheduler (scheduler thread) as an intermediate process that has to be executed when switching from process A to process B. 
 
   Why do we need this intermediate process? Several operating systems make do without a scheduler thread. This is modular, and xv6 chose this methodology. The `scheduler` function simply uses the Round Robin algorithm.
