@@ -8,7 +8,7 @@ It iterates over the `ptable`, finds an unused entry, and marks it as an embryo.
 
 The role of `allocproc` is to create a template kernel stack, and make the process look like it had a trap and was context switched out in the past. This is done so that the scheduler can switch to this process like any other.
 
-> Where is kernel mode?
+> Where is kernel mode? The sp points to the kernel stack.
 
 ```c
 allocproc(void)
