@@ -99,7 +99,7 @@ Timeline of a function call is as follows (*Note.* Stack grows up from higher to
 - The return address or the old `eip` is pushed on stack by the `call` instruction
 - The old `ebp` is also pushed onto the stack
 - Set `ebp` to the current top of the stack (base of new "stack frame" of the function)
-- Push local variables and callee save registers ()`ebx, esi, edi`). `esp` automatically goes up as you push things onto the stack.
+- Push local variables and callee save registers (`ebx, esi, edi`). `esp` automatically goes up as you push things onto the stack.
 - The function is executed.
 - After the function execution, the current stack frame is popped to restore the old `ebp`.
 - The return address is popped and `eip` is restored by the `ret` instruction.
