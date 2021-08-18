@@ -43,7 +43,7 @@ title: Random
 	    //t=0;
 	  }
 	}
-
+	
 	});</script>
 </head>
 <body>
@@ -62,6 +62,11 @@ I converted RGB images into colored text [here](https://pixels-to-text.herokuapp
 
 Are you hungry? Order totally authentic food from [Cravings!](https://sudhansh.pythonanywhere.com/)  
 
+# Useful Websites
 
+I'm adding a list of useful websites that can be used for handy computations. Thanks to [Amit](https://amitrajaraman.github.io/) for most of these.
+
+- [Differentiation of matrices](http://www.matrixcalculus.org/)
+- 
 
 
