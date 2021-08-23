@@ -20,7 +20,7 @@ This is a preemptive version of SJF. This policy preempts the running task is th
 
 > How do we know the running time/ time left of a process? We schedule processes in bursts! No, that's wrong! See this
 >
-> ![image-20210818161439932](/home/sudhansh/.config/Typora/typora-user-images/image-20210818161439932.png)
+> ![image-20210823105421325](assets/image-20210823105421325.png)
 
 ### Round Robin (RR)
 
