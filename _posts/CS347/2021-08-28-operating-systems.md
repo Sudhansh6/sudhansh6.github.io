@@ -68,3 +68,11 @@ toc: true
 > ```
 > Week 5
 > ```
+
+{% include_relative lecture8.md %}
+
+{% include_relative lecture9.md %}
+
+{% include_relative lecture10.md %}
+
+{% include_relative lecture11.md %}
