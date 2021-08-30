@@ -1,6 +1,6 @@
 # Lecture 25 - Context Switching
 
-Before we understand context switching, we need to understand the concepts related to processes and schedulers in xv6. In xv6, every CPU has a attribute called a **scheduler thread**. It is a special process that runs the scheduler code. The scheduler goes over the list of processes and switches to one of the runnable processes. after running for sometime, the process switches back to the scheduler thread. This can happen in the following 2 ways -
+Before we understand context switching, we need to understand the concepts related to processes and schedulers in xv6. In xv6, every CPU has a attribute called a **scheduler thread**. It is a special process that runs the scheduler code. The scheduler goes over the list of processes and switches to one of the runnable processes. after running for sometime, the process switches back to the scheduler thread. This can happen in the following 3 ways -
 
 - Process has terminated
 - Process needs to sleep
