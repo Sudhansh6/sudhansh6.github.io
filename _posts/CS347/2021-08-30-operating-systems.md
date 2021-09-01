@@ -9,9 +9,7 @@ toc: true
 
 <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
 
-> ```
-> Week 1
-> ```
+> # Week `1`
 
 
 
@@ -25,9 +23,7 @@ toc: true
 
 {% include_relative live1.md %}
 
-> ```
-> Week 2
-> ```
+> # Week `2`
 
 
 
@@ -39,9 +35,7 @@ toc: true
 
 {% include_relative live2.md %}
 
-> ```
-> Week 3
-> ```
+> # Week `3`
 
 
 
@@ -53,9 +47,7 @@ toc: true
 
 {% include_relative live3.md %}
 
-> ```
-> Week 4
-> ```
+> # Week `4`
 
 {% include_relative lecture5.md %}
 
@@ -65,9 +57,7 @@ toc: true
 
 {% include_relative live4.md %}
 
-> ```
-> Week 5
-> ```
+> # Week `5`
 
 {% include_relative lecture8.md %}
 
@@ -79,9 +69,7 @@ toc: true
 
 {% include_relative live5.md %}
 
-> ```
-> Week 6
-> ```
+> # Week `6`
 
 {% include_relative lecture27.md %}
 
