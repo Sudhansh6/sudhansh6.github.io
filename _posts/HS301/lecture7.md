@@ -1,4 +1,4 @@
-# Lecture 7 `09/08/21`
+# Lecture 7
 
 Now, we shall study Heraclitus. He was not discussed in the previous years.
 

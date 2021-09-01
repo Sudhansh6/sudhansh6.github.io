@@ -1,4 +1,4 @@
-# Lecture 4 `02/08/21`
+# Lecture 4
 
 ## Skepticism
 
