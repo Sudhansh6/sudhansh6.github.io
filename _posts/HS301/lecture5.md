@@ -1,6 +1,6 @@
-# Lecture 5
+# Lecture 5 `03/08/21`
 
-We shall study about Thales now. Perspectives are different from Opinions. To talk about philosophy, we need to study the history.
+We shall study about Thales now. Perspectives are different from Opinions. To talk about philosophy, we need to study the history. We are going to start with the pre-Socratic period.
 
 ## Thales of Miletus
 

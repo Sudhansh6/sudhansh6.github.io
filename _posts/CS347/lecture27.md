@@ -46,7 +46,7 @@ The OS code/data structures are a part of the virtual address space of every pro
 
 Can't we directly access the OS code using its physical address? No. With paging and MMU, the physical memory can only be accessed by assigning a virtual address.  During a trap, the same page table can be used to access the kernel. If the OS is not a part of the virtual address space, we would have had to use a new page table during trap which is cumbersome (?).
 
-Some of the aforementioned free pages in the OS memory are assigned to processes. Suppose a physical frame P is initially mapped into the kernel part of the address space at virtual address V ( we will have V = P + `KERNBASE`). When assigned to a user process, this piece of memory is assigned another virtual address U U (< `KERNBASE`). This is because a user cannot utilize this free page unless the PTE is in the userspace. Hence, the same frame P is mapped twice into the page table! The kernel and user access the same memory using different virtual addresses.
+Some of the aforementioned free pages in the OS memory are assigned to processes. Suppose a physical frame P is initially mapped into the kernel part of the address space at virtual address V ( we will have V = P + `KERNBASE`). When assigned to a user process, this piece of memory is assigned another virtual address U (< `KERNBASE`). This is because a user cannot utilize this free page unless the PTE is in the userspace. Hence, the same frame P is mapped twice into the page table! The kernel and user access the same memory using different virtual addresses.
 
 > What is going on above?
 

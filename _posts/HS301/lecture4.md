@@ -1,8 +1,10 @@
-# Lecture 4
+# Lecture 4 `02-08-21`
+
+Our explanations are always *causal*. Justification is also a part of causal explanation. A decision is not explanatory because it depends on interpretation.
 
 ## Skepticism
 
-*Pyrrho* started this idea that truth is never known, and having complete knowledge is impossible. Everything that is seen may not always be true.
+*Pyrrho* (360BC to 270BC) started this idea that truth is never known, and having complete knowledge is impossible. We can doubt everything we know. Everything that is seen may not always be true.
 
 > Skepticism - Uncertainty of Human Knowledge
 

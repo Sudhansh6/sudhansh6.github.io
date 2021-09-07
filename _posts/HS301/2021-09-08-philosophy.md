@@ -22,4 +22,15 @@ toc: true
 
 {% include_relative lecture6.md %}
 
-{% include_relative lecture7.md %}
+{% include_relative lecture8.md %}
+
+{% include_relative lecture9.md %}
+
+{% include_relative lecture10.md %}
+
+{% include_relative lecture11.md %}
+
+{% include_relative lecture12.md %}
+
+
+

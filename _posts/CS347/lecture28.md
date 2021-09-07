@@ -141,7 +141,7 @@ Real operating systems do copy-on-write fork - The child page table also points 
 
 ## Growing memory image - `sbrk`
 
-Initially, the heap of a process is empty, and the program *break* is at the end of the stack. The `sbrk` system call is invoked by `malloc` to expand the heap. The `allocuvm` allocates new pages and adds mappings into the page table for the new pages to grow memory.  Whenever the page table is updated, we must update the `cr3` register and TLB (using `switchuvm`.
+Initially, the heap of a process is empty, and the program *break* is at the end of the stack. The `sbrk` system call is invoked by `malloc` to expand the heap. The `allocuvm` allocates new pages and adds mappings into the page table for the new pages to grow memory.  Whenever the page table is updated, we must update the `cr3` register and TLB (using `switchuvm`).
 
 The `allocuvm` function walks through the new virtual addresses to be added in the page-sized chunks.
 

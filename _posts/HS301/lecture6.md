@@ -1,10 +1,10 @@
-# Lecture 6
+# Lecture 6 `05/08/21`
 
 We will study Pythagoras in this lecture. We are still in the pre-Socratic period.
 
 ## Pythagoras
 
-He believed numbers could be used to explain the reality. His thoughts were unique and created a blend - Mysticism and Mathematics. He also loved music. Mathematics maintains demonstrative deductive arguments.
+He believed numbers could be used to explain the reality. This was quite different from Thales's perception who believed water, a tangible element, is the fundamental part of reality. However, numbers are intangible! His thoughts were unique and created a blend - Mysticism and Mathematics. He also loved music. Mathematics maintains demonstrative deductive arguments.
 
 ### Philosophical Contribution
 
