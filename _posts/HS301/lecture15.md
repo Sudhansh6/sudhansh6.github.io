@@ -22,4 +22,24 @@ Aristotle was dedicated to segregate Logic from the remaining branches. Logic is
 
 > Truth - Something which cannot be other than it is - Necessity
 >
-> 
+> Contingent Statements - Not necessarily true
+
+Demonstration in the form of Deduction - **Syllogism**. It's about form of an argument consisting of Premised and Conclusions. 
+
+### Logic as a form of thinking
+
+Form constitutes the essence of things. Human reasoning has the power of discerning the form. Thought and being/ existence coincide according to Aristotle. "Rational knowledge is implicit in the mind but experience is necessary to make reason aware of them." - Thilly.
+
+## Syllogism
+
+It's a form of reasoning to which all deduction is reducible. 
+
+- Terms 
+- Propositions. There are 4 types of propositions as classified by Aristotle
+  - A - Universal Affirmative $$\forall$$
+  - E - Universal Negative $$\neg \forall$$
+  - I - Particular Affirmative $$\exists$$
+  - O - Particular Negative $$\neg \exists$$
+-  Moods
+-  Figures 
+- Rules
