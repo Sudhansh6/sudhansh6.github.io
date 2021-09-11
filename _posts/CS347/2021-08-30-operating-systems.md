@@ -75,3 +75,4 @@ toc: true
 
 {% include_relative lecture28.md %}
 
+{% include_relative live6.md %}
