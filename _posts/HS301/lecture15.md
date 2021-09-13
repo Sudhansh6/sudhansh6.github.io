@@ -4,27 +4,27 @@
 
 Aristotle continued...
 
-Plato thought form and matter existed at different levels. However, Aristotle says form and matter are inseparable.
+Plato thought 'form' and 'matter' existed at different levels. However, Aristotle says form and matter are inseparable.
 
 ## Potentiality and Actuality: Explanation of Change
 
-Clay is the primordial stuff. A pot *potentially* exists in clay. How can a pot be *actualised*? - Efficient Cause
+Clay is the primordial stuff. A pot *potentially* exists in clay. How can a pot be *actualized*? - Efficient Cause
 
 The Form of Pot - The structure given to the object pot - Formal Cause.
 
 The final use of Pot - Final Cause.
 
-Every object that is created has a purpose to serve - teleological view of reality. Present science represents things in a more objective way and does not use the teleological view. 
+Every object that is created has a purpose of serving - a teleological view of reality. Present science represents things in more objectively and does not use the teleological view. 
 
 ## Logic
 
-Aristotle was dedicated to segregate Logic from the remaining branches. Logic is the form or the method of reasoning for the acquisition of genuine knowledge. 
+Aristotle was dedicated to segregate Logic from the remaining branches. Logic is the method of reasoning for the acquisition of genuine knowledge. 
 
 > Truth - Something which cannot be other than it is - Necessity
 >
 > Contingent Statements - Not necessarily true
 
-Demonstration in the form of Deduction - **Syllogism**. It's about form of an argument consisting of Premised and Conclusions. 
+Demonstration in the form of Deduction - **Syllogism**. It's about a form of an argument consisting of Premised and Conclusions. 
 
 ### Logic as a form of thinking
 
