@@ -16,6 +16,16 @@ Plato tried to compose learnings from other philosophers like Parmenides, Heracl
 
 ## Dialectical Method
 
+> “The dialectical method consists, first, in the comprehension of
+> scattered particulars into one idea, and second, the division of
+> the idea into species, that is in the process of generalization
+> and classification. In this way alone can there be clear and
+> consistent thinking; we pass from concepts to concept,
+> upward and downward, generalizing and particularizing,
+> combining and dividing, synthesizing and analysing, carving
+> out concepts as sculptor craves a beautiful figure out of a
+> block of marble”
+
 Socrates practiced this, but Plato conceptualized this idea. This method consists of
 
 - Comprehension of scattered particulars into one idea
@@ -50,3 +60,5 @@ The meaning of Good cannot be grasped by the senses. Unity (Metaphysical form) o
 For a realist, ideas are an illusion. However, Plato believed ideas are real. Our perception through our senses is not the actual reality. A realist believes in sensory experiences. In contrast, reality may be different from what we perceive.
 
 Difference between a soul and an idea? The soul is a part of human life. The soul is eternal, according to Plato. We can relate to forms using our souls. A soul can relate itself to ideas. 
+
+Plato did not believe in the knowledge obtained by senses. This is because he believed Heraclitus' and Protagorus' theory that "All things are in the process of becoming". Hence, Plato believed that knowledge of sense experience is subject to change, and therefore unreliable.

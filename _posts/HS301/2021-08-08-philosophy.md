@@ -45,3 +45,5 @@ toc: true
 {% include_relative lecture16.md %}
 
 {% include_relative recordings4.md %}
+
+{% include_relative lecture19.md %}

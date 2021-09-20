@@ -40,6 +40,12 @@ It's a form of reasoning to which all deduction is reducible.
   - E - Universal Negative $$\neg \forall$$
   - I - Particular Affirmative $$\exists$$
   - O - Particular Negative $$\neg \exists$$
--  Moods
+-  Moods - The types of propositions used in the arguments/proof.
 -  Figures 
 - Rules
+  - The fallacy of undistributed middle - The middle term must be distributed at least once in any of the premises.
+  - Illicit major/minor - If a term is distributed in the conclusion then it must be distributed in the premises.
+  - The fallacy of two exclusive premises - From two negative premises no conclusion follows.
+  - At least one of the premises must be universal.
+  - If there is any particular premise, then the conclusion must be particular.  
+  - If one the premises is negative, then the conclusion will be negative.
