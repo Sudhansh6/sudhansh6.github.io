@@ -76,3 +76,11 @@ toc: true
 {% include_relative lecture28.md %}
 
 {% include_relative live6.md %}
+
+> # Week 7
+
+{% include_relative lecture12.md %}
+
+{% include_relative lecture13.md %}
+
+{% include_relative lecture14.md %}
