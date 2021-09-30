@@ -84,3 +84,11 @@ toc: true
 {% include_relative lecture13.md %}
 
 {% include_relative lecture14.md %}
+
+{% include_relative live7.md %}
+
+> # Week 8
+
+{% include_relative lecture15.md %}
+
+{% include_relative lecture16.md %}
