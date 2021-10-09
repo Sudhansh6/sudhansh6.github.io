@@ -92,3 +92,11 @@ toc: true
 {% include_relative lecture15.md %}
 
 {% include_relative lecture16.md %}
+
+{% include_relative live8.md %}
+
+> # Week 9
+
+{% include_relative lecture29.md %}
+
+{% include_relative lecture30.md %}
