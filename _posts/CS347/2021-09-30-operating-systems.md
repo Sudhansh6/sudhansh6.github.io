@@ -100,3 +100,5 @@ toc: true
 {% include_relative lecture29.md %}
 
 {% include_relative lecture30.md %}
+
+{% include_relative live9.md %}
