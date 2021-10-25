@@ -7,7 +7,7 @@ A ***file system*** is a way of organization of files and directories on a disk.
 
 Usually, disks expose a set of blocks - of size 512 bytes in general. The file system organizes files onto blocks, and system calls are translated into reads and write on blocks.
 
- ## A simple file system
+## A simple file system
 
 The blocks are organized as follows - 
 
@@ -39,8 +39,6 @@ Alternate way to track file blocks. FAT stores next block pointer for each block
 
 A directory stores records mapping filename to inode number. Linked list of records, or more complex structures (hash tables, binary search trees, etc.). A directory is a special type of file and has inode and data blocks (which store the file records).
 
-> data blocks?
-
 ### Free space management
 
 How to track free blocks? Bitmaps, for inodes and data blocks, store on bit per block to indicate if free or not. Also, we can have a **free list** in which the super block stores a pointer to the first free block and the free blocks are stored as a linked list. We can also use a more complex structure.
@@ -62,8 +60,6 @@ There is a global open file table which stores on entry for every file opened (e
 There also exists a per-process open file table which is an array of files opened by a process. The file descriptor number is an index into this array. The per-process table entry points to the global open file table entry. Every process has three file - standard in/out/err open by default (fd 0, 1, 2).
 
 Open system call creates entries in both tables and return the fd number.
-
-> Handling already open files?
 
 ### Reading and writing a file
 
@@ -96,6 +92,6 @@ Usually, the page cache is unified in the OS. Free pages are allocated to both p
 - Improved performance due to reduced disk I/O.
 - Single copy of block in memory - No inconsistency across processes 
 
-> Second point?
+> Second point? It's fine.
 
 Some applications like databases may avoid caching altogether, to avoid inconsistencies due to crashes - **direct I/O**.

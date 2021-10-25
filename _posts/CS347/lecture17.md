@@ -44,8 +44,6 @@ The interrupt handler acts upon device notification, unblocks the process waitin
 
 The CPU cycles are wasted in copying data to/from device. Instead, we can use a special piece of hardware (DMA engine, seen in CS305) copies from main memory to device. The CPU gives DMA engine the memory location of data. In case of a read, the interrupt is raised after DMA completes. On the other hand, in case of a write, the disk starts writing after DMA completes.
 
-> huh?
-
 ## Device Driver
 
 The part of the OS code that talks to the specific device, gives commands, handles interrupts etc. Most of the OS code abstracts the device details. For example, the file system code is written on top of a generic block interface. the underneath implementation is done via the device drivers.

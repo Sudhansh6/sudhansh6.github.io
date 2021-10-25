@@ -111,6 +111,8 @@ toc: true
 
 {% include_relative lecture19.md %}
 
+{% include_relative live10.md %}
+
 > # Week 11
 
 {% include_relative lecture31.md %}
