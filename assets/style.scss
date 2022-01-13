@@ -440,19 +440,19 @@ body:after {
     content: '';
 }
 
-@media only screen and (max-width: 1400px)
-{
-  body {
-    // background-color: lightblue;
-    .sidebar{
-      margin : auto;
-      text-align: center;
-      display: block;
-      width: 100%;
-      position: relative;
-    }
-  }
-}
+// @media only screen and (max-width: 1400px)
+// {
+//   body {
+//     // background-color: lightblue;
+//     .sidebar{
+//       margin : auto;
+//       text-align: center;
+//       display: block;
+//       width: 100%;
+//       position: relative;
+//     }
+//   }
+// }
 
 .sidebar{
   position: fixed;
@@ -515,7 +515,7 @@ body:after {
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 10px;
-    font-size: 20px;
+    font-size: 14px;
     list-style: none;
     background-color: rgb(212, 251, 238);
     &:hover{ 
