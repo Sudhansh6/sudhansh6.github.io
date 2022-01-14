@@ -32,6 +32,7 @@ Typically, the real world sensors have a **finite** dynamic range. They have a *
 These sensors fold the amplitudes back into the dynamic range of the ADCs using the modulo arithmetic. However, these systems encounter loss due to the modulo operation. The *transfer* function of the SR_ADC with parameter $$\lambda$$ is given by  
 <div style="text-align: center;">
 
+
 $$
 \mathcal M_\lambda = 2\lambda \left( \left[ \left[ \frac{t}{2\lambda} + \frac{1}{2} \right]\right] - \frac{1}{2}\right)
 $$
