@@ -72,4 +72,5 @@ I'm adding a list of useful websites that can be used for handy computations. Th
 - [Image Color Picker](https://imagecolorpicker.com/)
 - [Other png tool](https://onlinepngtools.com/)
 - [LateX symbol decoder](https://detexify.kirelabs.org/classify.html)
+- [Website word counter](https://wordcounter.net/website-word-count)
 

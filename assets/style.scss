@@ -28,14 +28,14 @@ body {
   color: #404040;
   line-height: 1.7;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 15px;
   height: 100%;
   width : 100%;
 }
 
 .container {
-  margin-left: 500px;
-  margin-right: 500px;
+  margin-left: 600px;
+  margin-right: 600px;
   margin: 0 auto;
   max-width: 800px;
   padding: 0 10px;
@@ -440,26 +440,22 @@ body:after {
     content: '';
 }
 
-// @media only screen and (max-width: 1400px)
-// {
-//   body {
-//     // background-color: lightblue;
-//     .sidebar{
-//       margin : auto;
-//       text-align: center;
-//       display: block;
-//       width: 100%;
-//       position: relative;
-//     }
-//   }
-// }
+@media only screen and (max-width: 1400px)
+{
+  body {
+    // background-color: lightblue;
+    .sidebar{
+      display: none;
+    }
+  }
+}
 
 .sidebar{
   position: fixed;
   display: block;
   height: 75%;
   // top right bottom left
-  padding: 0em 1em 0em 1em;
+  padding: 0em 0.2em 0em 0.2em;
   overflow: auto;
   width: 200px;
   #toc{
