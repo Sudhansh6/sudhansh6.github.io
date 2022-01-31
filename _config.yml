@@ -25,7 +25,7 @@ footer-links:
   facebook: sudhansh.peddabomma
   flickr:
   github: sudhansh6
-  instagram: __macaroni_
+  instagram: ___macaroni_
   linkedin: 
   pinterest:
   rss: 
@@ -91,7 +91,7 @@ plugins:
 
 include: ['_pages']
 
-paginate: 6
+paginate: 50
 paginate_path: /page:num/
 
 toc:
