@@ -8,7 +8,6 @@
   \end{align}
   $$
   
-
 - Error in composite trapezoidal rule is $$\frac{b - a}{12}h^2f''(\mu)$$, and in composite Simpson’s rule is $$\frac{b - a}{180}h^4f''(\mu)$$.
 
 - The round-off error does not depend on the number of calculations in the composite methods. We get
@@ -67,7 +66,7 @@
 
   The other type of improper integral involves infinite limits of integration. The basic integral is of the type $$\int_a^\infty 1/x^p dx$$ for $$p > 1$$. Then, we substitute $$x = 1/t$$ and proceed. 
 
-- **Ordinary Differential Equations** We shall develop numerical methods to get solutions to ODEs at a given point. Then, we can use interpolation to get an approximate continuous solution.
+- ***Ordinary Differential Equations*** We shall develop numerical methods to get solutions to ODEs at a given point. Then, we can use interpolation to get an approximate continuous solution.
 
   A function $$f(t, y)$$ is said to satisfy a **Lipschitz condition** in the variable $$y$$ on a set $$D \subset \mathbb R^2$$ if a constant $$L > 0 $$ exists with 
   $$
@@ -83,7 +82,7 @@
 
 - <u>Error in Euler’s method</u> - Suppose $$\mid y''(t) \mid \leq M$$, then $$\mid y(t_i) - w_i \mid \leq \frac{hM}{2L}(\exp (L(t_i - a)) - 1)$$. What about round-off errors? We’ll get an additional factor of $$\delta/hL$$ in the above expression along with the constant $$\delta_0 \exp (L(t_i - a))$$. Therefore, $$h = \sqrt(2\delta/M)$$.
 
-- **Local truncation error** - $$\tau_{i + 1}(h) = \frac{y_{i + 1} - y_i}{h} - \phi(t_i, y_i)$$. It is just $$hM/2$$ for Euler’s method ($$\phi$$ refers to the Taylor polynomial). We want truncation error to be as $$\mathcal O(h^p)$$ for as large $$p$$ as possible. 
+- **Local truncation error** - **$$\tau_{i + 1}(h) = \frac{y_{i + 1} - y_i}{h} - \phi(t_i, y_i)$$.** It is just $$hM/2$$ for Euler’s method ($$\phi$$ refers to the Taylor polynomial). We want truncation error to be as $$\mathcal O(h^p)$$ for as large $$p$$ as possible. 
 
   **Higher order Taylor methods** - Assume $$f$$ is $$n$$-times continuously differentiable. We get $$\mathcal O(n)$$ for $$n$$th degree Taylor polynomial. However, the number of computations are a bit high.
 
@@ -129,10 +128,48 @@
 
 - **Multi-step methods**. Methods that use the approximation at more than one previous mesh point to determine the approximation at the next point. The general equation is implicit where $$w_{i + 1}$$ occurs on both sides of the equation. Implicit methods are more accurate than explicit methods.
 
-- ![image-20220324124220485](assets/image-20220324124220485.png)
+  ![image-20220324124220485](assets/image-20220324124220485.png)
 
-- 
+- **Predictor-Corrector Method** - How do we solve implicit methods? We can use the root-finding procedures we learnt. All of this can get quite cumbersome. We just use implicit methods to improve the prediction of the explicit methods. We insert the solution of explicit method (prediction) and insert it on the rhs of the implicit method (correction). 
 
+- **Consistency and Convergence** 
+
+  One-step difference method is **consistent** if $$\lim_{h \to 0}\max_{1 \leq i \leq n}\mid \tau_i(h)\mid = 0$$. But we also need the global measure - **convergence** - $$\lim_{h \to 0}\max_{1 \leq i \leq n}\mid y_i(t_i) - w_i\mid = 0$$
+
+  **stability** considering round-off errors. For the function $$\phi$$ satisfying Lipschitz condition with a $$h_0$$, the one-step difference method **is convergent iff it is consistent**. The local truncation error is bounded, and we get $$\mid y(t_i) - q_i \mid \leq \frac {\tau(h)}{L}e^{L(t_i - a)}$$.
   
+  Analysis of consistency, convergence, and stability is difficult for multi-step methods. Adams-* methods are stable.
+  
+- ***Numerical Linear Algebra*** - Basics - $$Ax = b$$ has a unique solution iff $$A$$ is invertible, and it does not have a unique or has no solution otherwise. 
 
+  **Cramer’s rule** - $$x_j = \frac{\det A_j}{\det A}$$. However, this is cumbersome. Determinant of an upper triangular matrix    is product of the diagonal entries.
+
+  **Gaussian Elimination Method** - $$A = LU$$ for most matrices $$A$$. $$L$$ is a lower triangular matrix and $$U$$ is an upper triangular matrix. Form the augmented matrix $$[ A \mid b] $$. Linear combination of rows and swapping of rows can be performed. What is the total number of arithmetic operations?
+  
+  For converting to triangular -  We use $$(n - i)$$ divisions for each row and $$(n - i + 1)$$ multiplications for each column of each row. Also, we have $$(n - i)(n - i + 1)$$ subtractions. In total, we have $$(n - i)(n - i + 2)$$ multiplications. Summing, we get $$\mathcal O(n^3)$$ multiplications ($$(2n^3 + 3n^2 - 5n)/6$$) and subtractions $$((n^3 - n)/3)$$.
+  
+  For back substitution - multiplication is $$(n^2 + n)/2$$ and subtraction is $$(n^2 - n)/2$$.
+  
+- We have not considered finite digit arithmetic for GEM previously. The error dominates the solution when the pivot has a low absolute value. In general, we need to ensure that the pivot does not have very low magnitude by interchanging rows (followed by interchanging columns for triangular form if needed). However, this might not be enough to get rid of the rounding error. Therefore, we need to consider scaled partial pivoting. Define $$s_i$$ as the maximum magnitude in the $$i$$th row. Now, the first pivot is chosen by taking the row with the maximum value of $$a_{i1}/s_i$$. The operation count order still remains the same. You need not calculate scale factors more than once.
+
+- **LU Decomposition** - The conversion of $$A$$ to a triangular form using the above method can be represented as a sequence of matrix multiplications (if $$A$$ does not require any row interchanges). The inverse of a  matrix depicting operations on $$A$$ can be seen a matrix depicting the same inverse operations on $$A$$. In the end, we get $$A = (L^{(1)} \dots L^{(n - 1)})(M^{(1)}\dots M^{(n-1)}A)$$ where each $$M^{(i)}$$ represents the action that uses $$A_{ii}$$ as a pivot. Once we get $$L$$ and $$U$$, we can solve $$y = Ux$$ and $$Ly = b$$ separately. There are multiple decompositions possible which are eliminated by imposing conditions on the triangular matrices. One such condition is setting $$L_{ii} = U_{ii}$$ which is known as *Cholesky Decomposition*.
+
+  We had assumed that row interchanges are not allowed. However, we can build **permutation matrices** for row interchanges which will be of the form of an identity matrix with row permutations.
+
+  Therefore, we get **PLU decomposition**.
+  
+- **Diagonally dominant matrices** - An $$n \times  n$$ matrix $$A$$ is said to be diagonally dominant when $$\mid a_{ii} \mid \geq \sum^n \mid a_{ij} \mid $$ for all rows. <u>A strongly diagonally dominant matrix is invertible</u>. Such matrices will not need row interchanges, and the computations will be stable wrt the round off errors.
+
+  > Why this instead of $$\mid a_{ii} \mid \geq \max \mid a_{ij} \mid $$
+
+  A matrix $$A$$ is **positive definite** if $$x^tAx > 0$$ for every $$x \neq 0$$. We shall also consider $$A$$ to be symmetric in the definition. Every positive definite matrix is invertible, $$A_{ii} > 0$$ for each $$i$$,  $$(A_{ij})^2 < A_{ii}A_{jj}$$, and $$\max_{1\leq k, j \leq n} \mid A_{kj} \mid \leq \max_{1 \leq i \leq n}\mid A_{ii}\mid$$.
+  
+  A **leading principal submatrix** of matrix $$A$$ is the top-left $$k \times k$$ submatrix of $$A$$. $$A$$ <u>is positive definite iff each leading principal submatrix of</u> $$A$$ <u> has a positive determinant.</u> 
+  
+  Gaussian Elimination on a symmetric matrix can be applied without interchanging columns iff the matrix is positive definite.
+  
+  A matrix $$A$$ is positive definite iff $$A = LDL^t$$ where $$L$$ is lower triangular with 1’s on the diagonal and $$D$$ is a diagonal matrix with positive diagonal entries. Alternatively, $$A$$ is positive dfinite iff $$A = LL^t$$ where $$L$$ is a lower triangular matrix. **Note.** Positive definite is stronger than Cholesky decomposition.
+  
+  
+  
   
