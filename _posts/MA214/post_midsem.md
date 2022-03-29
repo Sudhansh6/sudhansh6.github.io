@@ -170,6 +170,6 @@
   
   A matrix $$A$$ is positive definite iff $$A = LDL^t$$ where $$L$$ is lower triangular with 1’s on the diagonal and $$D$$ is a diagonal matrix with positive diagonal entries. Alternatively, $$A$$ is positive dfinite iff $$A = LL^t$$ where $$L$$ is a lower triangular matrix. **Note.** Positive definite is stronger than Cholesky decomposition.
   
-  
-  
+- 
+
   
