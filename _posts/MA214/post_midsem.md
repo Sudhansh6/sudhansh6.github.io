@@ -150,7 +150,7 @@
   
   For back substitution - multiplication is $$(n^2 + n)/2$$ and subtraction is $$(n^2 - n)/2$$.
   
-- We have not considered finite digit arithmetic for GEM previously. The error dominates the solution when the pivot has a low absolute value. In general, we need to ensure that the pivot does not have very low magnitude by interchanging rows (followed by interchanging columns for triangular form if needed). However, this might not be enough to get rid of the rounding error. Therefore, we need to consider scaled partial pivoting. Define $$s_i$$ as the maximum magnitude in the $$i$$th row. Now, the first pivot is chosen by taking the row with the maximum value of $$a_{i1}/s_i$$. The operation count order still remains the same. You need not calculate scale factors more than once.
+- We have not considered finite digit arithmetic for GEM previously. The error dominates the solution when the pivot has a low absolute value. In general, we need to ensure that the pivot does not have very low magnitude by interchanging rows (followed by interchanging columns for triangular form if needed) - **partial pivoting**. However, this might not be enough to get rid of the rounding error. Therefore, we need to consider **scaled partial pivoting**. Define $$s_i$$ as the maximum magnitude in the $$i$$th row. Now, the first pivot is chosen by taking the row with the maximum value of $$a_{i1}/s_i$$. The operation count order still remains the same. You need not calculate scale factors more than once.
 
 - **LU Decomposition** - The conversion of $$A$$ to a triangular form using the above method can be represented as a sequence of matrix multiplications (if $$A$$ does not require any row interchanges). The inverse of a  matrix depicting operations on $$A$$ can be seen a matrix depicting the same inverse operations on $$A$$. In the end, we get $$A = (L^{(1)} \dots L^{(n - 1)})(M^{(1)}\dots M^{(n-1)}A)$$ where each $$M^{(i)}$$ represents the action that uses $$A_{ii}$$ as a pivot. Once we get $$L$$ and $$U$$, we can solve $$y = Ux$$ and $$Ly = b$$ separately. There are multiple decompositions possible which are eliminated by imposing conditions on the triangular matrices. One such condition is setting $$L_{ii} = U_{ii}$$ which is known as *Cholesky Decomposition*.
 
@@ -170,6 +170,197 @@
   
   A matrix $$A$$ is positive definite iff $$A = LDL^t$$ where $$L$$ is lower triangular with 1’s on the diagonal and $$D$$ is a diagonal matrix with positive diagonal entries. Alternatively, $$A$$ is positive dfinite iff $$A = LL^t$$ where $$L$$ is a lower triangular matrix. **Note.** Positive definite is stronger than Cholesky decomposition.
   
-- 
+- We have been seeing direct methods for solving $$Ax = b$$. We shall see some iterative methods now. We need a distance metric to check the closeness of the approximation. We will consider $$l_2$$ distance = $$\| x - y\|_2 = \left( \sum_{i = 1}^n (x_i - y_i)^2 \right)^{1/2}$$ and $$l_\infty$$ distance  = $$\| x - y\|_2 = \max_{i = 1}^n \mid x_i - y_i \mid$$. Also, $$\|x - y\|_\infty \leq \|x - y\|_2 \leq \sqrt n\|x - y\|_\infty$$.  We also need to consider distances in matrices.
 
+- **Distances in Matrices** - $$\|A\|_2 = \max_{\|x\|_2 = 1} \|Ax\|_2$$ and $$\|A\|_\infty = \max_{\|x\|_\infty = 1} \|Ax\|_\infty$$. The $$l_\infty$$ can be directly calculated using $$\|A\|_\infty = ]max_{i} \sum_j \mid A_{ij} \mid$$. 
+
+- **eigenvalues, eigenvectors** - A **non-zero** vector $$v \in \mathbb R^n$$ is an eigenvector for $$A$$ if there is a $$\lambda \in \mathbb R$$ such that $$Av = \lambda v$$ and $$\lambda \in \mathbb R$$ is the eigenvalue. The **characteristic polynomial** of $$A$$ is $$\det(A - \lambda I)$$. We do not consider the complex roots that are not real for these polynomials to calculate eigenvalues.
+
+  **Spectral radius** - $$\rho(A) = \max \mid \lambda \mid$$. Then, we have the relation that $$\|A\|_2 = [\rho(A^tA)]^{1/2}$$ and also $$\rho(A) \leq \|A\|_2$$ and $$\rho(A) \leq \|A\|_\infty$$. 
   
+  **Convergent matrices** - It is of particular importance to know when powers of a matrix become small, that is, when all the entries approach zero. An $$n \times n$$ matrix $$A$$ is called convergent if for each $$1 \leq i, j \leq n$$, $$\lim_{k \to \infty}(A^k)_{ij} = 0$$.
+  
+  - $$A$$ is a convergent matrix
+  - $$\lim_{n \to \infty} \|A^n\|_2 = 0$$
+  - $$\lim_{n \to \infty} \|A^n\|_\infty = 0$$
+  - $$\rho(A) < 1$$
+  - $$\lim_{n \to \infty} A^nv =0 $$ for every vector $$v$$.
+  
+  The above statements are all equivalent.
+  
+- Iterative techniques are not often used for smaller dimensions. We will study **Jacobi** and the **Gauss-Seidel** method.
+
+  **Jacobi Method** - We assume that $$\det(A)$$ being non-zero (as matrix must be invertible for solution) and the diagonal entries of $$A$$ are also non-zero. We have
+  
+  Jacobi suggested that we start with an initial vector $$x^{(0)} = [x_1^{(0)}, \dots, x_n^{(0)}]$$ and for $$k \geq 1$$
+  
+  
+  $$
+  x_i^{(k)} = \frac{b_i - \sum_{j \neq i} a_{ij}x_j^{(k - 1)}}{a_{ii}}
+  $$
+  
+  
+  The error in the iterations is given by
+  
+  
+  $$
+  \mid x_i - x_i^{(k)} \mid \leq (\sum_{j \neq i} \frac{a_{ij}}{a_{ii}})\|x_j - x_j^{(k - 1)}\|_\infty
+  $$
+  
+  
+  which gives
+  
+  
+  $$
+  \| x - x^{(k)} \|_\infty \leq (\max_i \sum_{j \neq i} \frac{a_{ij}}{a_{ii}})\|x_j - x_j^{(k - 1)}\|_\infty
+  $$
+  
+  
+  If $$\mu = \max{i}\sum_{j \neq i} \frac{a_{ij}}{a_{ii}} < 1$$, then convergence is guaranteed. If $$\mu < 1$$, then the condition is nothing but that of strictly diagonally dominant matrices.
+  
+  **Gauss-Seidel method** - The idea is that once we have improved one component, we use it to improve the component of the next component and so on.
+  
+  
+  $$
+  x_i^{(k)} = \frac{1}{a_{ii}} \left[b_i - \sum_{j = 1}^{i - 1}a_{ij}x_j^{(k)} - \sum_{j = i + 1}^n a_{ij}x_j^{(k - 1)}\right]
+  $$
+  
+  
+  There are linear systems where Jacobi method converges but Gauss-Seidel method does not converge. If $$A$$ is strictly diagonally dominant, then both methods converge to the true solution.
+  
+- **Residual vector** - If $$\tilde x$$ is an approximation to $$Ax = b$$, then $$r = b - A\tilde x$$ is the residual vector. However, it is not always true that when $$\|r \|$$ is small then $$\|x - \tilde x\|$$ is also small. This is because $$r = A(x - \tilde x)$$, and that represents the affine transformation of space. This phenomenon is captured as follows
+
+  For a non-singular $$A$$, we have
+  
+  
+  $$
+  \|x - \tilde x\|_\infty \leq \|r \|_\infty \cdot \|A^{-1}\|_\infty
+  $$
+  
+  
+  If $$x \neq 0$$ and $$b \neq 0$$
+  
+  
+  $$
+  \frac{\|x - \tilde x \|_\infty}{\|x\|_\infty} \leq \|A\|_\infty\cdot \|A^{-1}\|_\infty \cdot \frac{\|r\|_\infty}{\|b\|_\infty}
+  $$
+  
+  
+  These relations work for $$l_2$$ norm too. 
+  
+  > I think $$\|A\|_\infty \|x\|_\infty \geq \|b\|_\infty$$
+  
+  The **condition number** of a non-singular matrix $$A$$ is 
+  
+  
+  $$
+  K(A) = \|A\|_\infty \cdot \|A^{-1}\|_\infty
+  $$
+  
+  
+  Also, $$\|AA^{-1}\|_\infty \leq \|A\|_\infty \|A^{-1}\|_\infty$$. A non-singular matrix $$A$$ is said to be **well-conditioned** if $$K(A)$$ is close to 1.
+  
+  However, the condition number depends on the round-off errors too. The effects of finite-digit arithmetic show up in the calculation of the inverse. As the calculation of inverse is tedious, we try to calculate the condition number without the inverse. If we consider $$t$$-digit arithmetic, we approximately have
+  
+  
+  $$
+  \|r\|_\infty \approx 10^{-t}\|A\|_\infty \cdot \|\tilde x \|_\infty
+  $$
+  
+  
+  One drawback is that we would have to calculate $$r$$ is double precision due to the above relation. The approximation for $$K(A)$$ comes from $$Ay = r$$.  Now, $$\tilde y \approx A^{-1}r = x - \tilde x$$. Then, 
+  
+  
+  $$
+  \|\tilde y\| \leq \|A^{-1}\|  \cdot (10^{-t}\cdot \|A\| \|\tilde x\|)
+  $$
+  
+  
+  Using the above expression, we get 
+  
+  
+  $$
+  K(A) \approx \frac{\|\tilde y\|}{\|\tilde x\|}10^t
+  $$
+  
+  
+  The only catch in the above method is that we need to calculate $$r$$ in $$2t$$-finite arithmetic.
+  
+  **Iterative refinement** - As we had defined $$\tilde y = x - \tilde x$$, in general, $$\tilde x + \tilde y$$ is more accurate. This is called as iterative improvement. If the process is applied using $$t$$-digit arithmetic and if $$K(A) \approx 10^q$$, then after $$k$$ iterations, we have approximately $$\min(t, k(t - q))$$ correct digits. When $$q> t$$, increased precision must be used.
+  
+- **Approximations for eigenvalues**
+
+  **Gerschgorin theorem** - We define discs $$D_i = \left\{ z \in \mathbb C: \mid z - a_{ii} \mid \leq \sum_{j \neq i} \mid A_{ij} \mid \right\}$$. Then, all eigenvalues of $$A$$ are contained in the union of all the disks $$D_i$$. The union of any $$k$$ of the disk that do not intersect the remaining $$n - k$$ disks contains precisely $$k$$ of the eigenvalues including the multiplicity. From this theorem, we get that strictly diagonally dominant matrices are invertible. This is also true for strictly diagonally column dominant matrices. 
+  
+  The above theorem provides us the initial approximations for the eigenvalues. We shall see the Power method.
+  
+  **Power method** - We assume $$\mid \lambda_1 \mid > \mid \lambda_2 \mid \geq \dots \geq \mid \lambda_n \mid$$, and that $$A$$ has $$n$$ linearly independent eigenvectors. Choose a non-zero $$z \in V$$, and compute 
+  
+  
+  $$
+  \lim_{k \to \infty} A^k z
+  $$
+  
+  
+  to get the eigenvalue! (Think of vector space transformations geometrically).
+  
+  If $$z = \sum \alpha_i v_i$$, we get
+  
+  
+  $$
+  A^k z = \lambda^k_1 \alpha_1 v_1 + \dots + \lambda^k_n \alpha_n v_n = \lambda_1^k \alpha_1 v_1
+  $$
+  
+  
+  for high values of $$k$$. 
+  
+  Sometimes, $$z$$ may not have the component of $$v_1$$. We choose a vector such that this is not the case. 
+  
+  Sometimes, it may also be the case that
+  
+  $$\mid \lambda_1 \mid \geq \mid \lambda_2 \mid \geq \dots > \mid \lambda_n \mid > 0$$. $$A$$ is invertible iff this holds. Then, we use the power method on $$A^{-1}$$.
+  
+  Sometimes, $$\mid \lambda_1 \mid < 1$$ and we’ll converge to 0. On the other hand, if it is more than 1, the limit will shoot to infinity. To take care of these, we scale $$A^k(z)$$, so that it is finite and non-zero. 
+  
+  Firstly, we choose $$z$$ such that $$\|z^{(0)}\| = 1$$ and we choose a component $$p_0$$ of $$z^{(0)}$$ such that  $$\mid z_{p_0}^{(0)} \mid = 1$$. Following this, we scale each subsequent value as follows - Let $$w^{(1)} = Az^{(0)}$$ and $$\mu^{(1)} = w_{p_0}^{(1)}$$.
+  
+  
+  $$
+  \mu^{(1)} = \lambda_1 \frac{\alpha_1(v_1)_{p_0} + \dots + (\lambda_n/ \lambda_1) \alpha_n (v_n)_{p_0}}{\alpha_1(v_1)_{p_0} + \dots + \alpha_n (v_n)_{p_0}}
+  $$
+  
+  
+  Now, we choose $$p_1$$ to be the least integer with $$\mid w_{p_1}^{(1)}\mid = \|w^{(1)}\|$$ and define $$z^{(1)}$$ by 
+  
+  
+  $$
+  z^{(1)} = \frac{1}{w_{p_1}^{(1)}} Az^{(0)}
+  $$
+  
+  
+  Then, in general,
+  
+  
+  $$
+  \mu^{(m)} = w_{p_{m - 1}}^{(m)}  = \lambda_1 \frac{\alpha_1(v_1)_{p_0} + \dots + (\lambda_n/ \lambda_1)^m \alpha_n (v_n)_{p_0}}{\alpha_1(v_1)_{p_0} + \dots + (\lambda_n/ \lambda_1)^{m - 1}\alpha_n (v_n)_{p_0}}
+  $$
+  
+  
+  Now, $$\lim_{m \to \infty} \mu^{(m)} = \lambda_1$$. 
+  
+  
+  
+  To find other eigenvalues, we use **Gram-Schmidt orthonormalisation**. 
+  
+  ![image-20220415200748597](assets/image-20220415200748597.png)
+  
+  
+
+---
+
+#### END OF COURSE
+
+---
+
+
+
