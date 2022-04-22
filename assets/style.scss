@@ -31,8 +31,8 @@ body {
 }
 
 .container {
-  margin-left: 210px;
-  margin-right: 210px;
+  // margin-left: 210px;
+  // margin-right: 210px;
   display: block;
   // margin: 0 auto;
   max-width: 800px;
@@ -455,7 +455,7 @@ body:after {
   // top right bottom left
   padding: 0em 0.2em 0em 0.2em;
   overflow: auto;
-  // width: 200px;
+  width: 200px;
   #toc{
     padding: 0em 0em 0em 0em;
     border-left: #404040 2px solid; 
