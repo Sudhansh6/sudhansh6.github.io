@@ -68,7 +68,7 @@ $$
 
 
 
-![](/Users/sudhansh/Desktop/Projects/new_website/_posts/MA214/assets/image-20220127150002932.png)
+<img src="/Users/sudhansh/Desktop/Projects/new_website/_posts/MA214/assets/image-20220127150002932.png" style="zoom:25%;" />
 
 Nested polynomial reduces the error.
 
@@ -114,7 +114,7 @@ Can use divided differences as the polynomial is unique!
 
 Natural boundary $$f'(x_0) = P'(x_0),  f'(x_n) = P'(x_n)$$ and clamped boundary $$f'(x_0) = f'(x_n) = 0$$. The following for cubic spline!
 
-![image-20220421215701164](/Users/sudhansh/Library/Application Support/typora-user-images/image-20220421215701164.png)
+<img src="/Users/sudhansh/Library/Application Support/typora-user-images/image-20220421215701164.png" alt="image-20220421215701164" style="zoom:25%;" />
 
 Error for **clamped** spline - Let $$f$$ be 4 times continuously differentiable and $$M = \max_{a, b}f^{(4)}(x)$$. Then error is
 
@@ -126,9 +126,9 @@ $$
 
 ### Differentiation Approximation
 
-![image-20220421220149181](/Users/sudhansh/Library/Application Support/typora-user-images/image-20220421220149181.png)
+<img src="/Users/sudhansh/Library/Application Support/typora-user-images/image-20220421220149181.png" alt="image-20220421220149181" style="zoom:25%;" />
 
-![image-20220421220211615](/Users/sudhansh/Library/Application Support/typora-user-images/image-20220421220211615.png)
+<img src="/Users/sudhansh/Library/Application Support/typora-user-images/image-20220421220211615.png" alt="image-20220421220211615" style="zoom: 25%;" />
 
 Remember that $$x_i = h + x_{i - 1}$$. To get the error formula, substitute $$\tilde f = f + \epsilon$$.
 
@@ -187,9 +187,21 @@ Instead of this, calculate manually using $$x^i$$ polynomials for $$i \in \{0, \
 
 #### Multidimensional integral
 
-![image-20220421222636533](assets/image-20220421222636533.png)
+<img src="assets/image-20220421222636533.png" alt="image-20220421222636533" style="zoom: 33%;" />
 
 For Simpson’s. Similarly, you can do for Trapezoidal.
 
+#### Improper integrals
 
+To use Composite Simpson’s rule, get $$G(x) = \frac{g(x) - P_4(x)}{(x - a)^p}$$ for $$x \in (a, b]$$ where $$P_4(x) = g(a) + g'(a)(x - a) + \frac{g''(a)}{2(x - a)^2} + \frac{g^{(3)}(a)}{6(x - a)^3} + \frac{g^{(4)}(a)}{24(x - a)^4}$$. Then, 
+
+
+$$
+\int_a^bg(x)dx = \int_a^bG(x)dx + \int_a^b \frac{P_4(x)}{(x - a)^p}dx
+$$
+
+
+#### ODEs Basics
+
+Lipschitz condition - 
 
