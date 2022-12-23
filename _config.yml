@@ -84,6 +84,7 @@ sass:
       - assets
       - _sass
       - bootstrap-5.0.2-dist/
+      - bootstrap-5.0.2-dist/css/
 
 # Use the following plug-ins
 plugins:
