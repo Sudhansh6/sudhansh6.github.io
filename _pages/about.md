@@ -5,7 +5,7 @@ permalink: /posts/
 ---
 <div id="main" role="main" class="container">
   <p>
-  This page contains all projects, notes, and random blogs that I have written. You can give suggestions for the website and the content <a href="{{site.baseurl}}contact/"> here </a>
+  This page contains all projects, notes, and random blogs that I have written. You can give suggestions for the website and the content <a href="{{site.url}}contact/"> here </a>
   </p>
   <br>
   <div class="entry">
