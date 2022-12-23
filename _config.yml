@@ -83,7 +83,7 @@ sass:
   load_paths: 
       - assets
       - _sass
-      - /opt/homebrew/lib/ruby/gems/3.0.0/gems/bootstrap-5.2.3/assets/stylesheets/
+      - bootstrap-5.0.2-dist/
 
 # Use the following plug-ins
 plugins:
