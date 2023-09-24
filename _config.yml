@@ -25,7 +25,7 @@ footer-links:
   facebook: sudhansh.peddabomma
   flickr:
   github: sudhansh6
-  instagram: ___macaroni_
+  instagram: sudhansh.6
   linkedin: 
   pinterest:
   rss: 
@@ -48,7 +48,7 @@ google_analytics: UA-199913124-1
 
 # Your website URL (e.g. http://amitmerchant1990.github.io or http://www.amitmerchant.com)
 # Used for Sitemap.xml and your RSS feed
-url: http://sudhansh6.github.io
+url: https://sudhansh6.github.io
 enforce_ssl: 
 
 # If you're hosting your site at a Project repository on GitHub pages
@@ -83,7 +83,7 @@ sass:
   load_paths: 
       - assets
       - _sass
-      - bootstrap-5.0.2-dist/
+
 
 # Use the following plug-ins
 plugins:

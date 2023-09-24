@@ -7,6 +7,7 @@
 
 @import "reset";
 @import "variables";
+
 // Syntax highlighting @import is at the bottom of this file
 
 /**************/
@@ -22,24 +23,22 @@ html {
 iframe[src*="ads-iframe"] { display: none; }
 
 body {
-  background: #fff;
+  background: #fdfdff;
   font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   color: #404040;
   line-height: 1.7;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 18px;
   height: 100%;
   width : 100%;
 }
 
+
 .container {
-  // margin-left: 210px;
-  // margin-right: 210px;
-  display: block;
   margin: 0 auto;
-  // max-width: 800px;
+  max-width: 800px;
   padding: 0 10px;
-  width: 60%;
+  width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -58,14 +57,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: 25px;
+  font-size: 30px;
   a {
     color: inherit;
   }
 }
 
 h2 {
-  font-size: 20px;
+  font-size: 24px;
 }
 
 @media (min-width: 769px){
@@ -81,11 +80,11 @@ h2 {
 }
 
 h3 {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 h4 {
-  font-size: 16px;
+  font-size: 18px;
   color: #222;
 }
 
@@ -442,22 +441,73 @@ body:after {
 
 @media only screen and (max-width: 1000px)
 {
-  body {
-    // background-color: lightblue;
-    .sidebar{
-      display: none;
-    }
+  .collapsible-menu label{
+    top: 1%;
+  }
+  .mobile{
+    background: #000;
+  }
+  input:checked ~ .menu-content {
+    margin-top: 0px;
+    top: -1%;
+    width: 100%;
+  }
+  input#sidebar {
+    margin-top: 0px;
+  }
+  .sidebar{
+    background-color: #404040;
   }
 }
 
-.sidebar{
-  position: fixed;
+.collapsible-menu {
+  margin-left: 20px;
+}
+.collapsible-menu label {
+  font-size: 18px;
   display: block;
+  position: fixed;
+  cursor: pointer;
+  background: url('../assets/hamburger.png') no-repeat left center;
+  background-size: 40px 40px;
+  padding: 10px 0px 10px 60px;
+  user-select: none;
+}
+
+input#sidebar {
+  display: none;
+  margin-top: 50px;
+}
+
+input:checked +label {
+  background: url('../assets/close.png') no-repeat left center;
+  background-size: 45px 45px;
+}
+
+.menu-content {
+  max-height: 0;
+  overflow: hidden;
+  font-family: 'Oswald', sans-serif; 
+  padding: 0 0 0 50px;
+}
+/* Toggle Effect */
+input:checked ~ label {
+  background: url('../assets/close.png') no-repeat left center;
+  background-size: 45px 45px;
+}
+
+input:checked ~ .menu-content {
+  max-height: 100%;
+  width: 250px;
+  display: block;
+  position: fixed;
+  margin-top: 50px;
   height: 75%;
-  // top right bottom left
-  padding: 0em 0.2em 0em 0.2em;
   overflow: auto;
-  width: 200px;
+}
+
+.sidebar{
+  
   #toc{
     padding: 0em 0em 0em 0em;
     border-left: #404040 2px solid; 
@@ -466,36 +516,7 @@ body:after {
       list-style: none;
     }
   }
-  // .toc_list > li{
-  //   .toc_sublist{
-  //     overflow: hidden;
-  //     max-height: 0;
-  //     -webkit-transition: all 1s ease-out;
-  //     -webkit-transition-delay: 3s;
-  //   }
-  //   &:hover{
-  //     .toc_sublist{
-  //       max-height: 500px;
-  //       -webkit-transition-delay: 0s;
-  //     }
-  //   }
-  // }
-  // .link-h2{
-  //   .link-h3{
-  //     transition-delay: 10s;
-  //     overflow: hidden;
-  //     max-height: 0;
-  //     -webkit-transition: all 1s ease-out;
-  //     -webkit-transition-delay: 3s;
-  //   }
-  //   &:hover{
-  //     .link-h3{
-  //       max-height: 500px;
-  //       -webkit-transition-delay: 0s;
-
-  //     }
-  //   }
-  // }
+  
   .link{
     a{
       color: $darkGray;

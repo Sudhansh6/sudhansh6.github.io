@@ -1,48 +1,71 @@
 ---
 layout: default
-title: Posts
-permalink: /posts/
+permalink: /
 ---
-<div id="main" role="main" class="container">
-  <p>
-  This page contains all projects, notes, and random blogs that I have written. You can give suggestions for the website and the content <a href="{{site.baseurl}}contact/"> here </a>
-  </p>
-  <br>
-  <div class="entry">
-      <div id="search-container">
-      <input type="text" id="search-input" placeholder="Search through the posts..." />
-      <ul id="results-container"></ul>
+<div class = "container grid">
+  <div class = "row">
+      <div class="col-sm-1">
+  Hi! I am Sudhansh, a fourth-year undergraduate at IIT Bombay majoring in Computer Science and Engineering with honors. My interests broadly lie in the domain of Artificial Intelligence under the context of Image Processing and Computer Vision. I am also pursuing a minor in Entrepreneurship.
+        <br><br>
+  I have worked with <a href="https://www.cse.iitb.ac.in/~ajitvr/">Prof. Ajit Rajwade</a> on the Likelihood Maximization method for Saturation Compressed Sensing. We are also working on developing algorithms for correction of Permutation Noise in Compressed Sensing. We are currently drafting a journal paper for this work. In addition to this, I have worked with <a href="http://www0.cs.ucl.ac.uk/people/M.Betcke.html">Prof. Marta Betcke</a> on Stochastic Primal Dual algorithms for Tomographic Reconstruction of 3D volumes in Low-Dose conditions, and we have a journal paper in preparation.
+        
+  <br><br>
+  <div class="text-center alert alert-primary">
+            <a class = "h4" href="https://drive.google.com/file/d/1Rq9Wp6J7d88Gw-4Su9zyjYtcsF4WJm0U/view?usp=sharing">CV</a>
+        </div>
+</div>
+<div class="col-sm-4 offset-sm-1" >
+        <div class="float-right">
+          <img src="https://drive.google.com/uc?export=view&id=1k8yF_-1ewZGjVlXkiuyvCZOwFxOZo797" class="img-fluid" alt="Responsive image">
+        </div>
+        </div>
   </div>
 
-  <script src="/assets/simple-jekyll-search.min.js" type="text/javascript"></script>
-
-  <script>
-      SimpleJekyllSearch({
-      searchInput: document.getElementById('search-input'),
-      resultsContainer: document.getElementById('results-container'),
-      searchResultTemplate: '<div style="text-align: left !important;"><a href="{url}"><h1 style="text-align:left !important;">{title}</h1></a></div>',
-      json: '/search.json'
-      });
-  </script>
-
-  <div id = "all_posts" class="posts">
-    {% for post in site.posts %}
-
-      <article class="post">
-        <a href="{{ site.baseurl }}{{ post.url }}">
-          <h1>{{ post.title }}</h1>
-
-          <!-- <div>
-            <p class="post_date">{{ post.date | date: "%B %e, %Y" }}</p>
-          </div> -->
-        </a>
-        <div class="entry">
-          {{ post.excerpt }}
+  <h1 class="display-4"> Projects </h1>
+    <div class="card-deck text-center row">
+      <div class="card box-shadow" style="margin: 10px;">
+        <div class="card-header">
+          <h5 class="card-title"> Saturation Noise in Compressed Sensing </h5>
         </div>
-
-        <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-      </article>
-    {% endfor %}
-
-   </div>
+        <div class="card-body">
+            <p class="card-text">{{ post.excerpt }}</p>
+            <p class="card-text"><a class="text-muted" href="https://drive.google.com/file/d/1fnIdgTUYLmPAnmXGyrM319kw3BrjYkhI/view?usp=sharing" class="read-more">[Publication]</a></p>
+        </div>
+    </div>
+    <div class="card box-shadow" style="margin: 10px;">
+      <div class="card-header">
+        <h5 class="card-title"> Stochastic Primal-Dual Algorithm for Tomographic Reconstruction </h5>
+      </div>
+      <div class="card-body">
+          <p class="card-text"><a class="text-muted" href="https://drive.google.com/file/d/1fnIdgTUYLmPAnmXGyrM319kw3BrjYkhI/view?usp=sharing" class="read-more">[Publication]</a></p>
+      </div>
+  </div>
+  <div class="card box-shadow]" style="margin: 10px;">
+      <div class="card-header">
+        <h5 class="card-title"> Permutation Noise in Compressed Sensing </h5>
+      </div>
+      <div class="card-body">
+          <p class="card-text">{{ post.excerpt }}</p>
+          <p class="card-text"><a class="text-muted" href="https://drive.google.com/file/d/1_nMlRPJUfJW8DVqFggtD5Pos5sEKPXTY/view?usp=sharing" class="read-more">[Report]</a></p>
+      </div>
+  </div>
+      {% for post in paginator.posts %}
+          {% for category in post.categories %}
+              {% if category == "Projects" %}
+                  <div class="card box-shadow col-lg" style="margin: 10px;">
+                      <div class="card-header">
+                        <h5 class="card-title"> {{ post.title }} </h5>
+                      </div>
+                      <div class="card-body">
+                          <p class="card-text">{{ post.excerpt }}</p>
+                          <p class="card-text"><a class="text-muted" href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a></p>
+                      </div>
+                  </div>
+              {% endif %}
+          {% endfor %}
+      {% endfor %}
+  </div>
 </div>
+
+
+
