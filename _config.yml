@@ -83,7 +83,7 @@ sass:
   load_paths: 
       - assets
       - _sass
-
+      
 
 # Use the following plug-ins
 plugins:
