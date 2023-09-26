@@ -13,6 +13,7 @@
     <meta name="theme-color" content="#000000">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ site.baseurl }}/images/favicon-32x32.png">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     {% include analytics_head.html %}
   </head>
 
@@ -20,12 +21,12 @@
     <div id="bar"></div>
     <div class="wrapper-container">
       <div class="wrapper-masthead">
-        <div class="container">
+        <div class="container1">
           <header class="masthead clearfix">
             <!-- <a href="{{ site.baseurl }}/" class="site-avatar"><img src="{{ site.baseurl }}{{ site.avatar }}" alt="{{ site.title }}" /></a> -->
 
             <div class="site-info">
-              <h1 class="site-name"><a href="{{ site.baseurl }}/">{{ site.name }}</a></h1>
+              <h1 class="site-name"><a href="{{ site.baseurl }}/"><br>{{ site.name }}</a></h1>
               <!-- <p class="site-description">{{ site.description }}</p>  -->
             </div>
 
@@ -35,7 +36,13 @@
               <a href="{{ site.baseurl }}/posts"> Posts </a>
               <a href="{{ site.baseurl }}/miscellaneous"> Misc </a>
               <a href="{{ site.baseurl }}/challenges"> Challenges </a>
+
+              <button id="dark-mode-toggle">
+                <i class="toggle-sun fas fa-sun"></i> <!-- Sun icon for light mode -->
+                <i class="toggle-moon fas fa-moon"></i> <!-- Moon icon for dark mode -->
+              </button>
             </nav>
+            
           </header>
         </div>
       </div>
@@ -43,9 +50,11 @@
       <div class="wrapper-main">
           {{ content }}
       </div>
-
+    
+      
       <div class="wrapper-footer">
         <div class="container">
+          
           <footer class="footer">
             {% include svg-icons.html %}
           </footer>
@@ -54,5 +63,38 @@
     </div>
 
     {% include analytics.html %}
+    <script>
+      // Function to toggle dark mode
+      function toggleDarkMode() {
+
+        const body = document.body;
+        body.classList.toggle("dark-mode");
+
+        // Check if dark mode is enabled and save the preference
+        if (body.classList.contains("dark-mode")) {
+            localStorage.setItem("dark-mode-preference", "enabled");
+        } else {
+            localStorage.setItem("dark-mode-preference", "disabled");
+        }
+      }
+
+      // Dark mode toggle button event listener
+      const darkModeToggle = document.getElementById("dark-mode-toggle");
+      if (darkModeToggle) {
+          console.log("Dark mode toggle found");
+          darkModeToggle.addEventListener("click", toggleDarkMode);
+      }
+      // Check the user's dark mode preference on page load
+      document.addEventListener("DOMContentLoaded", function () {
+          const body = document.body;
+          const darkModePreference = localStorage.getItem("dark-mode-preference");
+
+          if (darkModePreference === "enabled") {
+              body.classList.add("dark-mode");
+          } else {
+              body.classList.remove("dark-mode");
+          }
+      });
+    </script>
   </body>
 </html>

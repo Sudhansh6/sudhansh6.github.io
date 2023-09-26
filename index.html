@@ -1,0 +1,88 @@
+---
+layout: default
+permalink: /
+---
+<div class = "container2 grid">
+  <div class = "row">
+      <div class="col-sm-7">
+        Hello! I'm Sudhansh, a first-year Masters in Computer Science student at UC San Diego.
+        My interests broadly lie in the intersection of Artificial Intelligence, Robotics, Image Processing and Computer Vision. 
+        I am a graduate of IIT Bombay, where I majored in Computer Science and Engineering with honors and pursued a minor in Entrepreneurship.
+  
+        <br><br>
+        I have worked with <a href="https://www.cse.iitb.ac.in/~ajitvr/">Prof. Ajit Rajwade</a> on the Likelihood Maximization method for Saturation Compressed Sensing. We are also working on developing algorithms for correction of Permutation Noise in Compressed Sensing. 
+        We have submitted a journal paper to Elsevier Signal Processing 2023 based on this work. 
+        In addition to this, I have worked with <a href="http://www0.cs.ucl.ac.uk/people/M.Betcke.html">Prof. Marta Betcke</a> on Stochastic Primal Dual algorithms for Tomographic Reconstruction of 3D volumes in Low-Dose conditions, and we have a journal paper in preparation.
+        
+        <br><br>
+        I'm always eager to connect with fellow enthusiasts, collaborators, and like-minded individuals who share my passion for technology and innovation. 
+        Feel free to email me at any of the addresses below.
+        
+        <ul>
+          <li>sudhansh6[at]gmail[dot]com</li>
+          <li>speddabomma[at]ucsd[dot]edu</li>
+        </ul>
+  
+</div>
+<div class="col-sm-4 offset-sm-1" >
+        <div class="float-right">
+          <img src="https://drive.google.com/uc?export=view&id=17MCn6Zufq9iI0G20gtnLB8I-a4pnarp9" class="img-fluid" alt="Responsive image">
+        </div>
+        <br>
+      
+        <div class="text-center alert alert-primary">
+          <a class = "h4" href="https://drive.google.com/file/d/1Rq9Wp6J7d88Gw-4Su9zyjYtcsF4WJm0U/view?usp=sharing">CV</a>
+      </div>
+      <div class="text-center alert alert-primary">
+        <a class = "h4" href="https://drive.google.com/file/d/1tQZM54iu4RveYWitFur9ZeuRE1_493Q6/view?usp=sharing">Resume</a>
+    </div>
+        </div>
+        
+  </div>
+  <br><br>
+  <h2> Research Projects </h2>
+    <div class="card-deck text-center row">
+      <div class="card box-shadow" style="margin: 10px;">
+        <div class="card-header">
+          <h5 class="card-title"> Saturation Noise in Compressed Sensing </h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text"><a href="https://drive.google.com/file/d/1fnIdgTUYLmPAnmXGyrM319kw3BrjYkhI/view?usp=sharing" class="read-more">[Publication]</a></p>
+        </div>
+    </div>
+    <div class="card box-shadow" style="margin: 10px;">
+      <div class="card-header">
+        <h5 class="card-title"> Stochastic Primal-Dual Algorithm for Tomographic Reconstruction </h5>
+      </div>
+      <div class="card-body">
+          <p class="card-text"><a href="https://drive.google.com/file/d/1fnIdgTUYLmPAnmXGyrM319kw3BrjYkhI/view?usp=sharing" class="read-more">[Publication]</a></p>
+      </div>
+  </div>
+  <div class="card box-shadow]" style="margin: 10px;">
+      <div class="card-header">
+        <h5 class="card-title"> Permutation Noise in Compressed Sensing </h5>
+      </div>
+      <div class="card-body">
+          <p class="card-text"><a href="https://drive.google.com/file/d/1_nMlRPJUfJW8DVqFggtD5Pos5sEKPXTY/view?usp=sharing" class="read-more">[Report]</a></p>
+      </div>
+  </div>
+      {% for post in paginator.posts %}
+          {% for category in post.categories %}
+              {% if category == "Projects" %}
+                  <div class="card box-shadow col-lg" style="margin: 10px;">
+                      <div class="card-header">
+                        <h5 class="card-title"> {{ post.title }} </h5>
+                      </div>
+                      <div class="card-body">
+                          <p class="card-text">{{ post.excerpt }}</p>
+                          <p class="card-text"><a class="text-muted" href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a></p>
+                      </div>
+                  </div>
+              {% endif %}
+          {% endfor %}
+      {% endfor %}
+  </div>
+</div>
+
+
+

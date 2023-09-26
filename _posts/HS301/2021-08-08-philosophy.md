@@ -2,7 +2,7 @@
 layout: post
 title: Philosophy Notes
 categories: [Notes]
-excerpt: Running notes from HS301
+excerpt: An introductory philosophical course discussing the transitions in philosophical thought from Greek philosophy to modern philosophy. The notes cover topics such as classical philosophy, Socratic period, Indian philosophy, and modern philosophy.
 toc: true
 ---
 

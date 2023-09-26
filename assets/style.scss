@@ -7,6 +7,7 @@
 
 @import "reset";
 @import "variables";
+@import "sublime";
 
 // Syntax highlighting @import is at the bottom of this file
 
@@ -14,6 +15,7 @@
 /* BASE RULES */
 /**************/
 @import url('https://fonts.googleapis.  m/css?family=Roboto');
+
 
 html {
   font-size: 100%;
@@ -23,20 +25,130 @@ html {
 iframe[src*="ads-iframe"] { display: none; }
 
 body {
+  transition: background-color 0.3s ease, color 0.3s ease;
   background: #fdfdff;
   font-family: -system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   color: #404040;
   line-height: 1.7;
+  
   font-weight: 400;
   font-size: 18px;
   height: 100%;
   width : 100%;
 }
 
+/* Dark mode styles (example) */
+body.dark-mode {
+  background-color: #404040;
+  color: #fdfdff;
+  a {
+        color:  #61b8ff; /* Change link color in dark mode */
+    }
+  h1, h2, h3, h4, h5, h6 {
+    color: inherit;
+  }
 
-.container {
+  button {
+      background-color: #61b8ff; /* Button background color in dark mode */
+      color: #404040; /* Button text color in dark mode */
+  }
+
+  /* Default light mode styles for pagination buttons (example) */
+  .pagination a {
+    background-color: #61b8ff; /* Default button background color in light mode */
+    color: #fdfdff; /* Default button text color in light mode */
+    cursor: pointer;
+  }
+  .pagination span
+  {
+    background-color: #4682B4; /* Default button background color in light mode */
+    color: #fdfdff; /* Default button text color in light mode */
+  }
+
+  .post-tags a {
+    background-color: #00796B;
+    color: #fdfdff;
+  }
+  .highlighter-rouge {
+    background-color: #404040;
+    color: #FF554A;
+  }
+  table {
+    background-color: #404040; /* Dark background color for tables in dark mode */
+    color: #fdfdff; /* Text color for tables in dark mode */
+    border-color: #555; /* Border color for tables in dark mode */
+  }
+  table th {
+    background-color: #555; /* Background color for table headers in dark mode */
+    color: #fff; /* Text color for table headers in dark mode */
+  }
+  table tr:nth-child(even) {
+    background-color: #444; /* Background color for even rows in dark mode */
+  }
+  table tr:nth-child(odd) {
+    background-color: #333; /* Background color for odd rows in dark mode */
+  }
+  .card {
+    background-color: #454545; /* Card background color in dark mode */
+    color: #fdfdff; /* Card text color in dark mode */
+    border: none; /* Remove the card border in dark mode */
+  }
+  .wrapper-footer
+  {
+    background-color: #303030;
+    color: #fdfdff;
+  }
+}
+
+/* Dark mode toggle button styles (example) */
+#dark-mode-toggle {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* Style the icons (Font Awesome) */
+#dark-mode-toggle i {
+  font-size: 18px; /* Adjust icon size as needed */
+  padding-left: 10px;
+}
+
+/* Dark mode styles for the moon icon */
+body.dark-mode #dark-mode-toggle .toggle-sun {
+  display: inline; /* Display moon icon in dark mode */
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+body:not(.dark-mode) #dark-mode-toggle .toggle-moon {
+  display: inline; 
+  transition: color 0.3s ease;
+}
+
+/* Hide the opposite icon in each mode */
+body.dark-mode #dark-mode-toggle .toggle-moon,
+body:not(.dark-mode) #dark-mode-toggle .toggle-sun {
+  display: none;
+}
+
+/* Center-align the pagination */
+.pagination-container {
+  margin: auto;
+  width: 40%;
+  padding-top: 10px;
+}
+
+
+.container1 {
   margin: 0 auto;
-  max-width: 800px;
+  max-width: 760px;
+  padding: 0 10px;
+  width: 100%;
+}
+
+.container2 {
+  margin: 0 auto;
+  max-width: 860px;
   padding: 0 10px;
   width: 100%;
 }
@@ -57,18 +169,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: 30px;
+  font-size: 24px;
   a {
     color: inherit;
+    text-decoration: none;
   }
 }
 
 h2 {
-  font-size: 24px;
+  font-size: 22px;
 }
 
 @media (min-width: 769px){
-	.post h2::before, .post h2::after {
+	h2::before, h2::after {
 	    content: "";
 	    display: inline-block;
 	    vertical-align: middle;
@@ -80,16 +193,16 @@ h2 {
 }
 
 h3 {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 h4 {
-  font-size: 18px;
+  font-size: 16px;
   color: #222;
 }
 
 p {
-  margin: 15px 0;
+  margin: 14px 0;
 }
 
 table {
@@ -183,8 +296,9 @@ span[data-pullquote]:before {
 }
 
 a {
-  color: $blue;
+  color: $darkerGray;
   text-decoration: none;
+
 	cursor: pointer;
   &:hover, &:active {
     color: $blue;
@@ -354,6 +468,7 @@ nav {
     text-align: right;
     font-weight: 300;
     letter-spacing: 1px;
+    text-decoration: none;
 
     @include mobile {
       margin: 0 10px;
@@ -404,6 +519,10 @@ nav {
   .read-more {
     text-transform: uppercase;
     font-size: 15px;
+  }
+
+  a {
+    text-decoration: none;
   }
 }
 
@@ -1257,5 +1376,4 @@ Modules - reusable parts of our design
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
 // @import "highlights";
-@import "sublime";
 @import "svg-icons";

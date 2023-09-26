@@ -2,7 +2,7 @@
 layout: post
 title: Operating System Notes
 categories: [Notes]
-excerpt: Running notes from CS347
+excerpt: Basic concepts of Operating Systems like process abstraction, process execution mechanism, inter-process mechanism, memory management, paging, memory allocation and free space management algorithms, threads and concurrency, locks, condition variables, semaphores, I/O and filesystems, etc.
 toc: true
 
 ---
