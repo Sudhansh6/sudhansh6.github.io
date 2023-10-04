@@ -10,3 +10,6 @@ end
 
 gem "webrick", "~> 1.7"
 gem 'bootstrap', '~> 4.3.1'
+
+# Gemfile
+gem 'jekyll-notion', '2.4.0'

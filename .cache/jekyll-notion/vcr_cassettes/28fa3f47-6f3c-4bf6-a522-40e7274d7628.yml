@@ -1,0 +1,79 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.notion.com/v1/blocks/28fa3f47-6f3c-4bf6-a522-40e7274d7628/children
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json; charset=utf-8
+      User-Agent:
+      - Notion Ruby Client/1.2.2
+      Authorization:
+      - Bearer <NOTION_TOKEN>
+      Notion-Version:
+      - '2022-02-22'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      date:
+      - Mon, 02 Oct 2023 23:22:44 GMT
+      content-type:
+      - application/json; charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      x-powered-by:
+      - Express
+      x-notion-request-id:
+      - a915baa9-cefe-49a0-bfb0-020d0db67d53
+      etag:
+      - W/"1a6f-la1hAtMZ3CzESmO2SbkX57npyhs"
+      vary:
+      - Accept-Encoding
+      content-encoding:
+      - gzip
+      cf-cache-status:
+      - DYNAMIC
+      set-cookie:
+      - __cf_bm=BY4tx11vKLPw32YgCzzzxryJtMJWMAJw66zfEjCApYk-1696288964-0-AV5vJF8UFZsQH3LghwUmrBDZiti4ELuz0Du1/kPAi9F5cGDQVVMHUMUSx/R31aLkttWdkT8cUa2aIdXmZURPdjg=;
+        path=/; expires=Mon, 02-Oct-23 23:52:44 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      server:
+      - cloudflare
+      cf-ray:
+      - 8100b06b09a0311c-LAX
+    body:
+      encoding: UTF-8
+      string: '{"object":"list","results":[{"object":"block","id":"004cb26d-3105-4821-a41e-0e159240d5e6","parent":{"type":"page_id","page_id":"28fa3f47-6f3c-4bf6-a522-40e7274d7628"},"created_time":"2023-10-02T23:15:00.000Z","last_edited_time":"2023-10-02T23:15:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"heading_2","heading_2":{"rich_text":[{"type":"text","text":{"content":"Lecture
+        1","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Lecture
+        1","href":null}],"is_toggleable":false,"color":"default"}},{"object":"block","id":"ba5376a7-d0c4-4f4e-a6d5-5875d3a54c4b","parent":{"type":"page_id","page_id":"28fa3f47-6f3c-4bf6-a522-40e7274d7628"},"created_time":"2023-10-02T23:15:00.000Z","last_edited_time":"2023-10-02T23:15:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"This
+        is a theoretical course. Requires basics like Karp-reduction (converting decidable
+        problems to equivalent ones) and circuit model (logic for CS). The goal of
+        this lecture is to understand the development of cryptography in a quantum
+        world. We will cover topics such as the following - ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"This
+        is a theoretical course. Requires basics like Karp-reduction (converting decidable
+        problems to equivalent ones) and circuit model (logic for CS). The goal of
+        this lecture is to understand the development of cryptography in a quantum
+        world. We will cover topics such as the following - ","href":null}],"color":"default"}},{"object":"block","id":"98f8a489-598b-4e94-90f5-024c575f0ea5","parent":{"type":"page_id","page_id":"28fa3f47-6f3c-4bf6-a522-40e7274d7628"},"created_time":"2023-10-02T23:15:00.000Z","last_edited_time":"2023-10-02T23:15:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"bulleted_list_item","bulleted_list_item":{"rich_text":[{"type":"text","text":{"content":"Quantum
+        algorithms - Shor’s, Grover’s (till Week 3)","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Quantum
+        algorithms - Shor’s, Grover’s (till Week 3)","href":null}],"color":"default"}},{"object":"block","id":"cb186daa-8dfa-4839-a113-3eef6e9545d1","parent":{"type":"page_id","page_id":"28fa3f47-6f3c-4bf6-a522-40e7274d7628"},"created_time":"2023-10-02T23:15:00.000Z","last_edited_time":"2023-10-02T23:15:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"bulleted_list_item","bulleted_list_item":{"rich_text":[{"type":"text","text":{"content":"Quantum
+        information - unclonability","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Quantum
+        information - unclonability","href":null}],"color":"default"}},{"object":"block","id":"3856b358-05c2-46ec-8e55-9228a6ee4ffb","parent":{"type":"page_id","page_id":"28fa3f47-6f3c-4bf6-a522-40e7274d7628"},"created_time":"2023-10-02T23:15:00.000Z","last_edited_time":"2023-10-02T23:15:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"bulleted_list_item","bulleted_list_item":{"rich_text":[{"type":"text","text":{"content":"Lots
+        of classically impossible applications","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Lots
+        of classically impossible applications","href":null}],"color":"default"}},{"object":"block","id":"764985be-fa34-4652-af89-0264bbc8628e","parent":{"type":"page_id","page_id":"28fa3f47-6f3c-4bf6-a522-40e7274d7628"},"created_time":"2023-10-02T23:15:00.000Z","last_edited_time":"2023-10-02T23:15:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"bulleted_list_item","bulleted_list_item":{"rich_text":[{"type":"text","text":{"content":"Explain
+        paradoxes in quantum physics using cryptography","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Explain
+        paradoxes in quantum physics using cryptography","href":null}],"color":"default"}},{"object":"block","id":"017cadc5-fbff-49b6-acee-fc68427dc85c","parent":{"type":"page_id","page_id":"28fa3f47-6f3c-4bf6-a522-40e7274d7628"},"created_time":"2023-10-02T23:15:00.000Z","last_edited_time":"2023-10-02T23:15:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"We
+        don’t cover quantum physics/mechanics or implementation of these algorithms.
+        ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"We
+        don’t cover quantum physics/mechanics or implementation of these algorithms.
+        ","href":null}],"color":"default"}},{"object":"block","id":"7f8f3ae4-169e-49e6-b2b5-892615e75c6d","parent":{"type":"page_id","page_id":"28fa3f47-6f3c-4bf6-a522-40e7274d7628"},"created_time":"2023-10-02T23:15:00.000Z","last_edited_time":"2023-10-02T23:15:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"toggle","toggle":{"rich_text":[{"type":"text","text":{"content":"Grading
+        (nvm)","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Grading
+        (nvm)","href":null}],"color":"default"}}],"next_cursor":null,"has_more":false,"type":"block","block":{}}'
+  recorded_at: Mon, 02 Oct 2023 23:22:44 GMT
+recorded_with: VCR 6.2.0

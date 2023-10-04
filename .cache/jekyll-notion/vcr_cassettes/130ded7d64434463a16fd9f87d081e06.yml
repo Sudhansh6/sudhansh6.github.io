@@ -1,0 +1,57 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.notion.com/v1/pages/130ded7d64434463a16fd9f87d081e06
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json; charset=utf-8
+      User-Agent:
+      - Notion Ruby Client/1.2.2
+      Authorization:
+      - Bearer <NOTION_TOKEN>
+      Notion-Version:
+      - '2022-02-22'
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      date:
+      - Mon, 02 Oct 2023 22:45:09 GMT
+      content-type:
+      - application/json; charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      x-powered-by:
+      - Express
+      x-notion-request-id:
+      - a0827e7c-a7e5-43f2-8377-3afad05bfff8
+      etag:
+      - W/"d5-i43+9QGwlfvx1oYkjMjsbBIt/0A"
+      vary:
+      - Accept-Encoding
+      cf-cache-status:
+      - DYNAMIC
+      set-cookie:
+      - __cf_bm=tvPwIbPbHuxKR7QAYtIpLR7CG2bnXGdYlpTeJWPQc8c-1696286709-0-Af+Rl2Ca9gE+yLaHFbM3LghbLuFsu4fpJ4ZDg3QfXvxg36JUZDPieLKyWcpLqb+Z0MN83GNQP4YAuiEBOSTsr9o=;
+        path=/; expires=Mon, 02-Oct-23 23:15:09 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      server:
+      - cloudflare
+      cf-ray:
+      - 810079598dcd2f46-LAX
+      content-encoding:
+      - gzip
+    body:
+      encoding: UTF-8
+      string: '{"object":"error","status":404,"code":"object_not_found","message":"Could
+        not find page with ID: 130ded7d-6443-4463-a16f-d9f87d081e06. Make sure the
+        relevant pages and databases are shared with your integration."}'
+  recorded_at: Mon, 02 Oct 2023 22:45:09 GMT
+recorded_with: VCR 6.2.0

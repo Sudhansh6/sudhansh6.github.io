@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.notion.com/v1/blocks/8d09697d-0aa4-42a6-918d-9229ea636f36/children
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json; charset=utf-8
+      User-Agent:
+      - Notion Ruby Client/1.2.2
+      Authorization:
+      - Bearer <NOTION_TOKEN>
+      Notion-Version:
+      - '2022-02-22'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      date:
+      - Mon, 02 Oct 2023 23:48:35 GMT
+      content-type:
+      - application/json; charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      x-powered-by:
+      - Express
+      x-notion-request-id:
+      - 31854022-59e4-48bc-bbb8-330c90bad097
+      etag:
+      - W/"671-esl8avtHKajtM0h5iGhCzvWSitE"
+      vary:
+      - Accept-Encoding
+      content-encoding:
+      - gzip
+      cf-cache-status:
+      - DYNAMIC
+      set-cookie:
+      - __cf_bm=G1K0jQp2_ZsEkX_yAn3ZyzixFx33m76De2a8BZHNkJM-1696290515-0-AQcsovdSETKzzbw66B6kkwmDjFNvws278AYujOiHmxFt9hTWwwtERF54qN4jlZRr/ecBTuBtErIwDdnRpB+fPmE=;
+        path=/; expires=Tue, 03-Oct-23 00:18:35 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      server:
+      - cloudflare
+      cf-ray:
+      - 8100d644cf8b0fb6-LAX
+    body:
+      encoding: UTF-8
+      string: '{"object":"list","results":[{"object":"block","id":"47f192c6-6b2f-41f6-80c1-f81de6cae7a7","parent":{"type":"block_id","block_id":"8d09697d-0aa4-42a6-918d-9229ea636f36"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"bulleted_list_item","bulleted_list_item":{"rich_text":[{"type":"text","text":{"content":"Cons
+        - Cannot adapt and fails if the assumptions are false","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Cons
+        - Cannot adapt and fails if the assumptions are false","href":null}],"color":"default"}},{"object":"block","id":"1dab86b2-1690-4f09-a4ee-8a59e1f9df68","parent":{"type":"block_id","block_id":"8d09697d-0aa4-42a6-918d-9229ea636f36"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"bulleted_list_item","bulleted_list_item":{"rich_text":[{"type":"text","text":{"content":"Pros
+        - Requires no data","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Pros
+        - Requires no data","href":null}],"color":"default"}}],"next_cursor":null,"has_more":false,"type":"block","block":{}}'
+  recorded_at: Mon, 02 Oct 2023 23:48:35 GMT
+recorded_with: VCR 6.2.0

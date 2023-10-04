@@ -1,0 +1,65 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.notion.com/v1/databases/e3f98c998ddb496096850887a0771340/query
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json; charset=utf-8
+      User-Agent:
+      - Notion Ruby Client/1.2.2
+      Authorization:
+      - Bearer <NOTION_TOKEN>
+      Notion-Version:
+      - '2022-02-22'
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      date:
+      - Mon, 02 Oct 2023 23:22:41 GMT
+      content-type:
+      - application/json; charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      x-powered-by:
+      - Express
+      x-notion-request-id:
+      - 34180101-bf22-4535-b0b4-f9029b769fbd
+      etag:
+      - W/"12aa-p4ktGbFhMqmj67UV0xPifhs+xms"
+      vary:
+      - Accept-Encoding
+      content-encoding:
+      - gzip
+      cf-cache-status:
+      - DYNAMIC
+      set-cookie:
+      - __cf_bm=lW72e7oSaIk8Q.qT7RkPuaLd0zzZzgWXlwqI.b4rxIk-1696288961-0-AXZynY13cYU8F4bFwcCGg9vAdHfrXyM6nUDNuEcftx94+4nUuXsFfo63Mg1RV/jrywpE6Q7Au7UmIMmneSf7/0w=;
+        path=/; expires=Mon, 02-Oct-23 23:52:41 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      server:
+      - cloudflare
+      cf-ray:
+      - 8100b056a9df2ef0-LAX
+    body:
+      encoding: UTF-8
+      string: '{"object":"list","results":[{"object":"page","id":"5a754175-ccf8-41d0-9568-23b0511795d6","created_time":"2023-10-02T23:14:00.000Z","last_edited_time":"2023-10-02T23:14:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"cover":null,"icon":null,"parent":{"type":"database_id","database_id":"e3f98c99-8ddb-4960-9685-0887a0771340"},"archived":false,"properties":{"Tags":{"id":"b%5B%7Cq","type":"multi_select","multi_select":[]},"Courses":{"id":"title","type":"title","title":[]}},"url":"https://www.notion.so/5a754175ccf841d0956823b0511795d6","public_url":null},{"object":"page","id":"598028b2-30d8-422b-9cc2-605be63871ab","created_time":"2023-10-02T23:12:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"cover":null,"icon":null,"parent":{"type":"database_id","database_id":"e3f98c99-8ddb-4960-9685-0887a0771340"},"archived":false,"properties":{"Tags":{"id":"b%5B%7Cq","type":"multi_select","multi_select":[{"id":"02e7e81f-32fc-44f8-9702-6791701228b0","name":"Notes","color":"yellow"}]},"Courses":{"id":"title","type":"title","title":[{"type":"text","text":{"content":"CSE275
+        - Deep Learning for 3D data","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"CSE275
+        - Deep Learning for 3D data","href":null}]}},"url":"https://www.notion.so/CSE275-Deep-Learning-for-3D-data-598028b230d8422b9cc2605be63871ab","public_url":null},{"object":"page","id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88","created_time":"2023-10-02T23:12:00.000Z","last_edited_time":"2023-10-02T23:17:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"cover":null,"icon":null,"parent":{"type":"database_id","database_id":"e3f98c99-8ddb-4960-9685-0887a0771340"},"archived":false,"properties":{"Tags":{"id":"b%5B%7Cq","type":"multi_select","multi_select":[{"id":"02e7e81f-32fc-44f8-9702-6791701228b0","name":"Notes","color":"yellow"}]},"Courses":{"id":"title","type":"title","title":[{"type":"text","text":{"content":"CSE259
+        - AI Seminar","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"CSE259
+        - AI Seminar","href":null}]}},"url":"https://www.notion.so/CSE259-AI-Seminar-070e0ebffe8e4c1f9f2da1a7c91cdb88","public_url":null},{"object":"page","id":"28fa3f47-6f3c-4bf6-a522-40e7274d7628","created_time":"2023-10-02T23:12:00.000Z","last_edited_time":"2023-10-02T23:15:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"cover":null,"icon":null,"parent":{"type":"database_id","database_id":"e3f98c99-8ddb-4960-9685-0887a0771340"},"archived":false,"properties":{"Tags":{"id":"b%5B%7Cq","type":"multi_select","multi_select":[{"id":"02e7e81f-32fc-44f8-9702-6791701228b0","name":"Notes","color":"yellow"}]},"Courses":{"id":"title","type":"title","title":[{"type":"text","text":{"content":"CSE291E
+        - Quantum Cryptography","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"CSE291E
+        - Quantum Cryptography","href":null}]}},"url":"https://www.notion.so/CSE291E-Quantum-Cryptography-28fa3f476f3c4bf6a52240e7274d7628","public_url":null},{"object":"page","id":"4755984b-8b0a-4e0d-b53f-c9df5085c764","created_time":"2023-10-02T23:12:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"cover":null,"icon":null,"parent":{"type":"database_id","database_id":"e3f98c99-8ddb-4960-9685-0887a0771340"},"archived":false,"properties":{"Tags":{"id":"b%5B%7Cq","type":"multi_select","multi_select":[{"id":"02e7e81f-32fc-44f8-9702-6791701228b0","name":"Notes","color":"yellow"}]},"Courses":{"id":"title","type":"title","title":[{"type":"text","text":{"content":"CSE258
+        - Web Mining and Recommender Systems","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"CSE258
+        - Web Mining and Recommender Systems","href":null}]}},"url":"https://www.notion.so/CSE258-Web-Mining-and-Recommender-Systems-4755984b8b0a4e0db53fc9df5085c764","public_url":null}],"next_cursor":null,"has_more":false,"type":"page_or_database","page_or_database":{}}'
+  recorded_at: Mon, 02 Oct 2023 23:22:41 GMT
+recorded_with: VCR 6.2.0

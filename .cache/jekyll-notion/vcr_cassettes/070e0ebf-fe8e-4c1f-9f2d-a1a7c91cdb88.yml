@@ -1,0 +1,181 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.notion.com/v1/blocks/070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88/children
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json; charset=utf-8
+      User-Agent:
+      - Notion Ruby Client/1.2.2
+      Authorization:
+      - Bearer <NOTION_TOKEN>
+      Notion-Version:
+      - '2022-02-22'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      date:
+      - Mon, 02 Oct 2023 23:22:44 GMT
+      content-type:
+      - application/json; charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      x-powered-by:
+      - Express
+      x-notion-request-id:
+      - c72ca85a-36a7-4322-96b8-78d5dd9b9627
+      etag:
+      - W/"7753-DXPFChTUBXPVv3opHcopnemj9cM"
+      vary:
+      - Accept-Encoding
+      content-encoding:
+      - gzip
+      cf-cache-status:
+      - DYNAMIC
+      set-cookie:
+      - __cf_bm=k518b.Rwhp4CTo16pFNEX2bCe1_r.S4OgSMLDbBVDOc-1696288964-0-AX11zfx+Gj+3MpDJ5mhdx2S8Q6C20ysVbwQetKtNcExRFNWfos8oPYc0kkXIthAcrhYqmR/54Tp8xnSi4I/AZus=;
+        path=/; expires=Mon, 02-Oct-23 23:52:44 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      server:
+      - cloudflare
+      cf-ray:
+      - 8100b067fd712eea-LAX
+    body:
+      encoding: UTF-8
+      string: '{"object":"list","results":[{"object":"block","id":"257ac6d5-3fe3-441f-a43e-62c117d229ad","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"heading_2","heading_2":{"rich_text":[{"type":"text","text":{"content":"LLM
+        and Hugging Face - Colin Raffel ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"LLM
+        and Hugging Face - Colin Raffel ","href":null},{"type":"mention","mention":{"type":"date","date":{"start":"2023-10-02","end":null,"time_zone":null}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"2023-10-02","href":null},{"type":"text","text":{"content":"
+        ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"
+        ","href":null}],"is_toggleable":false,"color":"default"}},{"object":"block","id":"97df65f9-3f77-4a35-a241-e4ebe9c8fa5f","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"quote","quote":{"rich_text":[{"type":"text","text":{"content":"Building
+        an Ecosystem, Not a Monolith","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Building
+        an Ecosystem, Not a Monolith","href":null}],"color":"default"}},{"object":"block","id":"dbcf4d1e-3dbb-4853-b1c4-5b2c13dc44a3","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"Excerpt
+        - We shall discuss the realm of network of specialised models in the domain
+        of text-manipulation, and argue whether this system is better than a generalised
+        large model.","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Excerpt
+        - We shall discuss the realm of network of specialised models in the domain
+        of text-manipulation, and argue whether this system is better than a generalised
+        large model.","href":null}],"color":"default"}},{"object":"block","id":"0fec2300-a2d0-4512-b612-17ec839f5654","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"heading_3","heading_3":{"rich_text":[{"type":"text","text":{"content":"Monolithic
+        models","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Monolithic
+        models","href":null}],"is_toggleable":false,"color":"default"}},{"object":"block","id":"817456a7-0203-40b3-9a7d-8495b7ae35e7","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"Transfer
+        Learning","link":null},"annotations":{"bold":true,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Transfer
+        Learning","href":null},{"type":"text","text":{"content":" - Fine-tuning to
+        create specialised nodes","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"
+        - Fine-tuning to create specialised nodes","href":null}],"color":"default"}},{"object":"block","id":"0055a3fe-d88e-48dd-ae4a-eb1f3b822bbb","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"Additional
+        training for task specific data. LLMs, on the other hand, are a general-purpose
+        monolithic models which work well for any general data without additional
+        fine-tuning. A monolithic model is a general purpose model designed for a
+        large domain of data.","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Additional
+        training for task specific data. LLMs, on the other hand, are a general-purpose
+        monolithic models which work well for any general data without additional
+        fine-tuning. A monolithic model is a general purpose model designed for a
+        large domain of data.","href":null}],"color":"default"}},{"object":"block","id":"455b8133-5e09-4bf6-94ff-d57128e50569","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"The
+        development of such models involves wholesale replacement. That is, there
+        are big improvements over a long scale of time. ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"The
+        development of such models involves wholesale replacement. That is, there
+        are big improvements over a long scale of time. ","href":null}],"color":"default"}},{"object":"block","id":"56488473-4ace-4ea9-ba7f-3c74646b5641","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"heading_3","heading_3":{"rich_text":[{"type":"text","text":{"content":"What
+        about an ecosystem of specialist models?","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"What
+        about an ecosystem of specialist models?","href":null}],"is_toggleable":false,"color":"default"}},{"object":"block","id":"8e04d378-1b04-4bfe-ba13-52c33cbbccf4","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"Basically,
+        we are wondering whether a network of specialised models would work better
+        than a generalised large model. What are the advantages and disadvantages
+        of these models? Also, how do we replace one large model with multiple models?
+        Can we cover all the topics that the generalised model can tackle?","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Basically,
+        we are wondering whether a network of specialised models would work better
+        than a generalised large model. What are the advantages and disadvantages
+        of these models? Also, how do we replace one large model with multiple models?
+        Can we cover all the topics that the generalised model can tackle?","href":null}],"color":"default"}},{"object":"block","id":"c6a43621-c20e-4a54-a457-ccd44dd29539","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"The
+        development of such an ecosystem will lead to continual improvements training
+        multiple models together. Specialist models are often cheaper and sometimes
+        better in performance. Here is [a paper](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"The
+        development of such an ecosystem will lead to continual improvements training
+        multiple models together. Specialist models are often cheaper and sometimes
+        better in performance. Here is [a paper](","href":null},{"type":"text","text":{"content":"https://arxiv.org/pdf/2205.05638.pdf","link":{"url":"https://arxiv.org/pdf/2205.05638.pdf"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://arxiv.org/pdf/2205.05638.pdf","href":"https://arxiv.org/pdf/2205.05638.pdf"},{"type":"text","text":{"content":")
+        that summarises such results. Fun fact, not so related, PaLM 2 outperforms
+        GPT-4 on some tasks. Google translate is a specialised model designed for
+        translating and it is able to match the performance of the latest models like
+        PaLM2. ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":")
+        that summarises such results. Fun fact, not so related, PaLM 2 outperforms
+        GPT-4 on some tasks. Google translate is a specialised model designed for
+        translating and it is able to match the performance of the latest models like
+        PaLM2. ","href":null}],"color":"default"}},{"object":"block","id":"3895d558-e275-4222-b13a-b06fcfb5fa96","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"Each
+        specialist model can be a cheaply communicable model to a base model. Also,
+        these can be trained on a small percentage of parameters in the model (say
+        0.01%). In addition to all of this, there is a huge library of specialised
+        models on sites like [Hugging Face](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Each
+        specialist model can be a cheaply communicable model to a base model. Also,
+        these can be trained on a small percentage of parameters in the model (say
+        0.01%). In addition to all of this, there is a huge library of specialised
+        models on sites like [Hugging Face](","href":null},{"type":"text","text":{"content":"https://huggingface.co/welcome","link":{"url":"https://huggingface.co/welcome"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://huggingface.co/welcome","href":"https://huggingface.co/welcome"},{"type":"text","text":{"content":")
+        and [AdapterHub](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":")
+        and [AdapterHub](","href":null},{"type":"text","text":{"content":"https://adapterhub.ml","link":{"url":"https://adapterhub.ml/"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://adapterhub.ml","href":"https://adapterhub.ml/"},{"type":"text","text":{"content":").
+        This is extremely common in developing Stable diffusion models. ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":").
+        This is extremely common in developing Stable diffusion models. ","href":null}],"color":"default"}},{"object":"block","id":"4fbc2dd6-6ec9-41ae-8666-fadea8848119","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"Now,
+        how do we replace a single model with a network. The appropriate model for
+        a query should be chosen automatically. [This research paper](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Now,
+        how do we replace a single model with a network. The appropriate model for
+        a query should be chosen automatically. [This research paper](","href":null},{"type":"text","text":{"content":"https://arxiv.org/pdf/1902.03545.pdf","link":{"url":"https://arxiv.org/pdf/1902.03545.pdf"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://arxiv.org/pdf/1902.03545.pdf","href":"https://arxiv.org/pdf/1902.03545.pdf"},{"type":"text","text":{"content":")
+        suggests a vectorial representation for classification tasks. We used Fisher
+        information matrix to group similar tasks. Furthermore, [this paper](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":")
+        suggests a vectorial representation for classification tasks. We used Fisher
+        information matrix to group similar tasks. Furthermore, [this paper](","href":null},{"type":"text","text":{"content":"https://arxiv.org/pdf/2210.11705.pdf","link":{"url":"https://arxiv.org/pdf/2210.11705.pdf"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://arxiv.org/pdf/2210.11705.pdf","href":"https://arxiv.org/pdf/2210.11705.pdf"},{"type":"text","text":{"content":")
+        claims that adapter parameters also encode task similarity. ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":")
+        claims that adapter parameters also encode task similarity. ","href":null}],"color":"default"}},{"object":"block","id":"34eed7c6-cd0b-4f88-8ade-1b24b51d2db2","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"image","image":{"caption":[],"type":"file","file":{"url":"https://prod-files-secure.s3.us-west-2.amazonaws.com/29d3f56d-1729-46c9-9d10-dc7b01a23761/2e8640fc-5a92-4ce5-bce9-5617e3da4627/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231002%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231002T232244Z&X-Amz-Expires=3600&X-Amz-Signature=547e4c609a5f81a7708ad74a34ae752b6fe549be5aeb1420c9a287ba9714542e&X-Amz-SignedHeaders=host&x-id=GetObject","expiry_time":"2023-10-03T00:22:44.082Z"}}},{"object":"block","id":"f66555f0-2e4f-4f2f-bcbb-49e64d71d26b","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[],"color":"default"}},{"object":"block","id":"b2bd0818-096a-4499-9424-77f7ee9e863b","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"The
+        [following paper](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"The
+        [following paper](","href":null},{"type":"text","text":{"content":"https://arxiv.org/pdf/2306.03745.pdf","link":{"url":"https://arxiv.org/pdf/2306.03745.pdf"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://arxiv.org/pdf/2306.03745.pdf","href":"https://arxiv.org/pdf/2306.03745.pdf"},{"type":"text","text":{"content":")
+        suggests that a mixture-of-experts models perform adaptive routing inside
+        the model. ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":")
+        suggests that a mixture-of-experts models perform adaptive routing inside
+        the model. ","href":null}],"color":"default"}},{"object":"block","id":"efb18bf0-b79a-4a8d-9c7c-c476c122836b","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"image","image":{"caption":[],"type":"file","file":{"url":"https://prod-files-secure.s3.us-west-2.amazonaws.com/29d3f56d-1729-46c9-9d10-dc7b01a23761/a37b91da-d689-4c81-a4af-e5de8a94f008/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231002%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231002T232244Z&X-Amz-Expires=3600&X-Amz-Signature=0edbc12dffe2cc827e6f5c188d2c7c8d8253d5c65fa023d546bb25cae14f7672&X-Amz-SignedHeaders=host&x-id=GetObject","expiry_time":"2023-10-03T00:22:44.090Z"}}},{"object":"block","id":"fe8df9ff-63e4-4da2-b8ea-dbff7ead90b7","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[],"color":"default"}},{"object":"block","id":"d4215381-336b-4775-b5de-470188b80c24","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"We
+        can consider tasks as a composition of ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"We
+        can consider tasks as a composition of ","href":null},{"type":"text","text":{"content":"skills","link":null},"annotations":{"bold":false,"italic":true,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"skills","href":null},{"type":"text","text":{"content":"
+        or sub-tasks. For example, skills may include world-knowledge, physics computation
+        etc. We propose that merging specialised models gives better performance.
+        For instance, check out the applications in [this paper](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"
+        or sub-tasks. For example, skills may include world-knowledge, physics computation
+        etc. We propose that merging specialised models gives better performance.
+        For instance, check out the applications in [this paper](","href":null},{"type":"text","text":{"content":"https://arxiv.org/pdf/2205.12647.pdf","link":{"url":"https://arxiv.org/pdf/2205.12647.pdf"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://arxiv.org/pdf/2205.12647.pdf","href":"https://arxiv.org/pdf/2205.12647.pdf"},{"type":"text","text":{"content":")
+        and [this paper](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":")
+        and [this paper](","href":null},{"type":"text","text":{"content":"https://arxiv.org/pdf/2202.13914.pdf","link":{"url":"https://arxiv.org/pdf/2202.13914.pdf"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://arxiv.org/pdf/2202.13914.pdf","href":"https://arxiv.org/pdf/2202.13914.pdf"},{"type":"text","text":{"content":")-
+        ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":")-
+        ","href":null}],"color":"default"}},{"object":"block","id":"b2cb8e62-27fe-4564-8cae-15c212331fb5","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"image","image":{"caption":[],"type":"file","file":{"url":"https://prod-files-secure.s3.us-west-2.amazonaws.com/29d3f56d-1729-46c9-9d10-dc7b01a23761/46c0b6a6-1094-4057-8457-435cf22e23d3/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231002%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231002T232244Z&X-Amz-Expires=3600&X-Amz-Signature=c9fe4094168fd098d854280170348c4866fc22a7a0620225c8a1115985b03d6e&X-Amz-SignedHeaders=host&x-id=GetObject","expiry_time":"2023-10-03T00:22:44.087Z"}}},{"object":"block","id":"d6dbfd3a-7adb-45ec-af89-054d491ad6eb","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"image","image":{"caption":[],"type":"file","file":{"url":"https://prod-files-secure.s3.us-west-2.amazonaws.com/29d3f56d-1729-46c9-9d10-dc7b01a23761/92e46c1b-cb94-4f65-ba78-37ff6d85f3c1/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20231002%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20231002T232244Z&X-Amz-Expires=3600&X-Amz-Signature=38ac1400cc51066dc71cb6fd400cb08b9d23b46336d15f5126c4f9f473b637c9&X-Amz-SignedHeaders=host&x-id=GetObject","expiry_time":"2023-10-03T00:22:44.085Z"}}},{"object":"block","id":"d3425b18-c67c-4834-898f-463239575d9f","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"In
+        the second paper, it is assumed that each task is associated with a subset
+        of latent discrete skills from a (potentially small) inventory. In turn, skills
+        correspond to parameter-efficient (sparse / low- rank) model parameterisations.
+        By jointly learning these and a task–skill allocation matrix, the network
+        for each task is instantiated as the average of the parameters of active skills.
+        ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"In
+        the second paper, it is assumed that each task is associated with a subset
+        of latent discrete skills from a (potentially small) inventory. In turn, skills
+        correspond to parameter-efficient (sparse / low- rank) model parameterisations.
+        By jointly learning these and a task–skill allocation matrix, the network
+        for each task is instantiated as the average of the parameters of active skills.
+        ","href":null}],"color":"default"}},{"object":"block","id":"5244cc2f-6dbd-4c7a-90d5-a188556e5c76","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"We
+        can edit models/the target set of parameters using task vectors. Finally,
+        [this paper](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"We
+        can edit models/the target set of parameters using task vectors. Finally,
+        [this paper](","href":null},{"type":"text","text":{"content":"https://arxiv.org/pdf/2304.14933.pdf","link":{"url":"https://arxiv.org/pdf/2304.14933.pdf"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://arxiv.org/pdf/2304.14933.pdf","href":"https://arxiv.org/pdf/2304.14933.pdf"},{"type":"text","text":{"content":")
+        shows that merging can create multimodal models from unimodal models. Recently,
+        the community has been building new open-source (generally better) language
+        models using merging. ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":")
+        shows that merging can create multimodal models from unimodal models. Recently,
+        the community has been building new open-source (generally better) language
+        models using merging. ","href":null}],"color":"default"}},{"object":"block","id":"9bf779ba-8dad-4689-b635-45e468fc020a","parent":{"type":"page_id","page_id":"070e0ebf-fe8e-4c1f-9f2d-a1a7c91cdb88"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"paragraph","paragraph":{"rich_text":[{"type":"text","text":{"content":"A
+        method of merging is summarised in [this paper](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"A
+        method of merging is summarised in [this paper](","href":null},{"type":"text","text":{"content":"https://arxiv.org/pdf/2111.09832.pdf","link":{"url":"https://arxiv.org/pdf/2111.09832.pdf"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://arxiv.org/pdf/2111.09832.pdf","href":"https://arxiv.org/pdf/2111.09832.pdf"},{"type":"text","text":{"content":").
+        There is another cool platform that tracks, merges, and updates models using
+        the git workflow! The paper is present in [this link](","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":").
+        There is another cool platform that tracks, merges, and updates models using
+        the git workflow! The paper is present in [this link](","href":null},{"type":"text","text":{"content":"https://arxiv.org/pdf/2306.04529.pdf","link":{"url":"https://arxiv.org/pdf/2306.04529.pdf"}},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"https://arxiv.org/pdf/2306.04529.pdf","href":"https://arxiv.org/pdf/2306.04529.pdf"},{"type":"text","text":{"content":").
+        This way of merging is also very space-efficient. It allows for continuous
+        and collaborative model development. ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":").
+        This way of merging is also very space-efficient. It allows for continuous
+        and collaborative model development. ","href":null}],"color":"default"}}],"next_cursor":null,"has_more":false,"type":"block","block":{}}'
+  recorded_at: Mon, 02 Oct 2023 23:22:44 GMT
+recorded_with: VCR 6.2.0

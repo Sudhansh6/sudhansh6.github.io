@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.notion.com/v1/blocks/2fa9780e-84f3-4bcf-ae31-2134643b27d9/children
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json; charset=utf-8
+      User-Agent:
+      - Notion Ruby Client/1.2.2
+      Authorization:
+      - Bearer <NOTION_TOKEN>
+      Notion-Version:
+      - '2022-02-22'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      date:
+      - Mon, 02 Oct 2023 23:48:35 GMT
+      content-type:
+      - application/json; charset=utf-8
+      transfer-encoding:
+      - chunked
+      connection:
+      - keep-alive
+      x-powered-by:
+      - Express
+      x-notion-request-id:
+      - 16f4888e-c6f8-4746-87d9-4d35b36d1a87
+      etag:
+      - W/"81f-H65MlcwpA94qtrn+qE6jp52399Q"
+      vary:
+      - Accept-Encoding
+      content-encoding:
+      - gzip
+      cf-cache-status:
+      - DYNAMIC
+      set-cookie:
+      - __cf_bm=IhZR9SOtCZ8CCOLLCI0bHEcppc9yG0j4eOI8aK8QD0Y-1696290515-0-AXbxHdp83DiO5aLK3aCuP9zc6Wxg+yx6d/lOelMrwCZuNQoWZ5sx+4KP4my2wnk40h+//hM//UURIC9Zm5ed37o=;
+        path=/; expires=Tue, 03-Oct-23 00:18:35 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      server:
+      - cloudflare
+      cf-ray:
+      - 8100d64b59671026-LAX
+    body:
+      encoding: UTF-8
+      string: '{"object":"list","results":[{"object":"block","id":"97bc731f-fd55-44f6-8b9a-10ef9e11a35b","parent":{"type":"block_id","block_id":"2fa9780e-84f3-4bcf-ae31-2134643b27d9"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"bulleted_list_item","bulleted_list_item":{"rich_text":[{"type":"text","text":{"content":"Cons
+        - REquires large amount of data","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Cons
+        - REquires large amount of data","href":null}],"color":"default"}},{"object":"block","id":"4ae9e9e5-bce2-4226-a666-c49fdf8a065f","parent":{"type":"block_id","block_id":"2fa9780e-84f3-4bcf-ae31-2134643b27d9"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"bulleted_list_item","bulleted_list_item":{"rich_text":[],"color":"default"}},{"object":"block","id":"dd7bce65-6ba1-4d1a-879e-9b2a284c91d2","parent":{"type":"block_id","block_id":"2fa9780e-84f3-4bcf-ae31-2134643b27d9"},"created_time":"2023-10-02T23:16:00.000Z","last_edited_time":"2023-10-02T23:16:00.000Z","created_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"last_edited_by":{"object":"user","id":"7d5bb75b-4f13-4392-8c70-33e921994c8f"},"has_children":false,"archived":false,"type":"bulleted_list_item","bulleted_list_item":{"rich_text":[{"type":"text","text":{"content":"Pros
+        - ","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Pros
+        - ","href":null}],"color":"default"}}],"next_cursor":null,"has_more":false,"type":"block","block":{}}'
+  recorded_at: Mon, 02 Oct 2023 23:48:35 GMT
+recorded_with: VCR 6.2.0

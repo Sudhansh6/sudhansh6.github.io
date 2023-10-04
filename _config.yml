@@ -92,6 +92,7 @@ plugins:
   - jekyll-seo-tag
   - jekyll-paginate
   - jekyll-toc
+  - jekyll-notion
 
 include: ['_pages']
 
@@ -108,6 +109,15 @@ toc:
   sublist_class: toc_sublist
   item_class: link
   item_prefix: link-
+
+notion:
+  fetch_on_watch: true
+  cache: false
+  # pages:
+  #  - id: 070e0ebffe8e4c1f9f2da1a7c91cdb8z
+  databases:
+     - id: e3f98c998ddb496096850887a0771340
+       filter: {"property": "Publish", "checkbox": { "equals" : true }}
 
 # Exclude these files from your production _site
 exclude:
