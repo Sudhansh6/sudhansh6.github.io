@@ -3,21 +3,10 @@ layout: post
 title: Stock Analysis
 comments: true
 categories: [Projects, SoS_2020]
+toc: true
 excerpt: A report on Stock Markets, Options Trading and Technical Analysis.  Fundamental analysis to be added soon.
 ---
 
-# Contents
-
-## 1. [Need to invest and investments](need-to-invest-and-investments)
-## 2. [Stock Market introduction](stock-market-introduction)
-## 3. [Stages of a Business](stages-of-a-business)
-## 4. [IPO Markets](ipo-markets)
-## 5. [Stock Markets](stock-markets)
-## 6. [Options Trading](options-trading)
-## 7. [Technical Analysis](technical-analysis)
-## 8. [Currency Basics](currency-basics)
-
----
 
 # Need to invest and investments
 
