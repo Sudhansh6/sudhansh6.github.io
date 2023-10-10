@@ -1,5 +1,4 @@
 name: Build and Deploy to Github Pages
-$NOTION_TOKEN: secret_BiokHV3wX3KhaIVzUg34cxteDKkNX9kG3Ut7hnfepCA
 
 on:
   push:
@@ -34,26 +33,3 @@ jobs:
           cname: ''                  # Default is to not use a cname
           actor: ''                  # Default is the GITHUB_ACTOR
 
-  notion-sync:
-  stage: deploy
-  script:
-    - |
-      # run our synchronization command
-      bundle exec jekyll prefetch
-      
-      # if there are any changes from notion ...
-      # note: be sure that all files produced by 
-      #       (i.e. bundle install) are git-ignored
-      if [[ $(git status --porcelain) ]]; then
-        git config user.name "$BOT_NAME"
-        git config user.email "$BOT_EMAIL"
-        git add .
-        git commit -m "Notion sync $(date +'%Y-%m-%d')"
-        
-        # git remote add ci "https://$TOKEN_NAME:$ACCESS_TOKEN@gitlab.com/<username>/<your-repo>.git"
-        git push ci HEAD:$CI_COMMIT_REF_NAME
-      fi
-  only:
-    - push
-  variables:
-    NOTION_TOKEN: $NOTION_TOKEN
