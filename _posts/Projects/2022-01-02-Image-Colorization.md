@@ -2,7 +2,7 @@
 layout: post
 title: Image Colorization
 comments: true
-categories: [Projects, SoC_2021]
+categories: [Projects]
 excerpt: A project where I try to build a Machine Learning Model that is capable of converting grayscale images to colored ones. 
 ---
 <!-- Special thanks to https://www.codicode.com/art/how_to_draw_on_a_html5_canvas_with_a_mouse.aspx -->
