@@ -5,8 +5,6 @@ categories: [Research]
 excerpt: An introduction to recovery methods for measurements using fixed dynamic range sensors.
 ---
 
-<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
-
 ## Compressed Sensing
 
 Recover a high dimensional vector $$x$$ with a very few non-zero values. Plethora of algorithms

@@ -7,8 +7,6 @@ excerpt: An introduction to Tensors and notation. Summary of a few papers.
 
 ---
 
-<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
-
 # Tensors
 
 - A scalar can be represented by a **single** component with **zero** basis vectors for each component.

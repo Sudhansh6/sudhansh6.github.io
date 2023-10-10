@@ -7,8 +7,6 @@ excerpt: TBA
 
 ---
 
-<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
-
 # Generative Adversarial Networks
 
 Take a look at [this](https://towardsdatascience.com/understanding-generative-adversarial-networks-gans-cd6e4651a29) blog for an introduction to GANs. 

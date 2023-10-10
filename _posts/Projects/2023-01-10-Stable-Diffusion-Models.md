@@ -5,8 +5,6 @@ comments: true
 categories: [Projects]
 excerpt: A brief introduction to image synthesis applications, stable diffusion models and its applications. We discuss the problem of "High-Resolution Image Synthesis with Latent Diffusion Models". <span style="color:orange">There was an issue with markdown conversion, article might be incomplete</span>
 ---
-<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
-
 ## Image Synthesis
 
 * Artificially generating images with some desired content
