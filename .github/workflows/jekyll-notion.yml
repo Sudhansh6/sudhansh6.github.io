@@ -1,30 +1,32 @@
-name: Fetch notion pages
+name: Jekyll importer
 
 on:
   push:
-    branches:
-      - master  # Here source code branch is `master`, it could be other branch
 
 jobs:
-  notion-sync:
-    stage: deploy
+  importer:
     runs-on: ubuntu-latest
-    env:
-      NOTION_TOKEN: secret_BiokHV3wX3KhaIVzUg34cxteDKkNX9kG3Ut7hnfepCA
-    script:
-      - |
-        # run our synchronization command
-        bundle exec jekyll prefetch
-        
-        # if there are any changes from notion ...
-        # note: be sure that all files produced by 
-        #       (i.e. bundle install) are git-ignored
-        if [[ $(git status --porcelain) ]]; then
-          git config user.name "$BOT_NAME"
-          git config user.email "$BOT_EMAIL"
-          git add .
-          git commit -m "Notion sync $(date +'%Y-%m-%d')"
-          
-          # git remote add ci "https://$TOKEN_NAME:$ACCESS_TOKEN@gitlab.com/<username>/<your-repo>.git"
-          git push ci HEAD:$CI_COMMIT_REF_NAME
-        fi
+
+    steps:
+      - uses: actions/checkout@master
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "17"
+
+      - run: npm install
+
+      - run: node _scripts/notion-import.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          DATABASE_ID: ${{ secrets.DATABASE_ID }}
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commit_message: Update Importer posts
+          branch: master
+          commit_user_name: importer-bot 🤖
+          commit_user_email: actions@github.com
+          commit_author: importer-bot 🤖 <actions@github.com>
