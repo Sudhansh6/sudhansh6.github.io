@@ -75,3 +75,5 @@ I'm adding a list of useful websites that can be used for handy computations. Th
 - [Website word counter](https://wordcounter.net/website-word-count)
 - [Numerical Analysis Simulators](https://atozmath.com/CONM/RungeKutta.aspx?q=meuler&m=1&q1=1%2b(x-y)%5e2%602%601%603%600.25%60meuler%600&dp=4&do=1#PrevPart)
 
+# Fun Websites
+- [Oatmeal Comics](https://theoatmeal.com/comics/)

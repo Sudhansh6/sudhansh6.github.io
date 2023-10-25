@@ -45,48 +45,6 @@ permalink: /
   <br>
   <mark class=".bg-secondary"> The main content on my website can be found in the <a href="{{ site.baseurl }}/posts"> Posts </a> tab. </mark>
 
-  <br><br>
-  <h2> Research Projects </h2>
-    <div class="card-deck text-center row">
-      <div class="card box-shadow" style="margin: 10px;">
-        <div class="card-header">
-          <h5 class="card-title"> Saturation Noise in Compressed Sensing </h5>
-        </div>
-        <div class="card-body">
-            <p class="card-text"><a href="https://drive.google.com/file/d/1skmTrJm8727VOveqxW21Y94IAfjHXus-/view?usp=sharing" class="read-more">[Publication]</a></p>
-        </div>
-    </div>
-    <div class="card box-shadow" style="margin: 10px;">
-      <div class="card-header">
-        <h5 class="card-title"> Stochastic Primal-Dual Algorithm for Tomographic Reconstruction </h5>
-      </div>
-      <div class="card-body">
-          <p class="card-text"><a href="https://drive.google.com/file/d/1fnIdgTUYLmPAnmXGyrM319kw3BrjYkhI/view?usp=sharing" class="read-more">[Publication]</a></p>
-      </div>
-  </div>
-  <div class="card box-shadow]" style="margin: 10px;">
-      <div class="card-header">
-        <h5 class="card-title"> Permutation Noise in Compressed Sensing </h5>
-      </div>
-      <div class="card-body">
-          <p class="card-text"><a href="https://drive.google.com/file/d/1skmTrJm8727VOveqxW21Y94IAfjHXus-/view?usp=sharing" class="read-more">[Report]</a></p>
-      </div>
-  </div>
-      {% for post in paginator.posts %}
-          {% for category in post.categories %}
-              {% if category == "Projects" %}
-                  <div class="card box-shadow col-lg" style="margin: 10px;">
-                      <div class="card-header">
-                        <h5 class="card-title"> {{ post.title }} </h5>
-                      </div>
-                      <div class="card-body">
-                          <p class="card-text">{{ post.excerpt }}</p>
-                          <p class="card-text"><a class="text-muted" href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a></p>
-                      </div>
-                  </div>
-              {% endif %}
-          {% endfor %}
-      {% endfor %}
   </div>
 </div>
 
