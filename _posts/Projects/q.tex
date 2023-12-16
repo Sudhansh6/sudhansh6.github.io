@@ -1,0 +1,653 @@
+\documentclass[]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[sc]{mathpazo}
+\usepackage[english]{babel}
+
+\usepackage{blindtext}
+\usepackage{parskip}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{unicode-math}
+\usepackage{bm}
+\setlength{\parindent}{0pt}
+\newtheorem{lemma}{Lemma}
+\newtheorem{sublemma}{Lemma}[lemma]
+\newtheorem{theorem}{Theorem}
+\usepackage{physics}
+\usepackage{titling}
+\usepackage{titlepic}
+\usepackage{appendix}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{braket}
+\newtheorem{definition}{Definition}
+
+\usepackage{xcolor}
+\newcommand{\doo}[0]{\partial}
+\newcommand{\C}{\mathbb C}
+\newcommand{\F}{\mathbb F}
+\newcommand{\cO}{\mathcal O}
+\newcommand*{\xo}{\otimes}
+\newcommand*{\I}{\mathbb I}
+\newcommand*{\Tr}{\texttt{Tr}}
+\newcommand*{\CNOT}{\texttt{CNOT}}
+\newcommand*{\xor}{\cOplus}
+\newcommand*{\dollar}{\$}
+\newcommand*{\pm}{\plusminus}
+\newcommand*{\mp}{\minusplus}
+\newcommand*{\q}{\ket{\phi}}
+\newcommand*{\E}[1]{\langle #1 \rangle}
+\newcommand{\iprod}[2]{\langle #1, #2 \rangle}
+\newcommand{\iprodq}[2]{\langle #1 \vert #2 \rangle}
+\newcommand{\Exp}[3]{\langle #1 \vert #2 \vert #3 \rangle}
+\usepackage{graphicx} % remove 'demo' option in real document
+\usepackage{subcaption}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\title{%
+    Quantum Money Schemes and Attacks\\ \vspace{10pt}
+    \large Course Project \\}
+\author{Sudhansh Peddabomma \vspace{5pt} \\  under the supervision of Qipeng Liu \\ University of California San Diego}
+\date{December 2023} 
+
+\begin{document}
+
+\maketitle
+\pagebreak
+\tableofcontents
+\pagebreak
+
+\section{Introduction}
+The current system for money is versatile and convenient but issues such as data leaks, counterfeits and frauds are still commonplace in many regions of the world. In the current system, we have two kinds of money 
+
+\begin{itemize}
+    \item Physical money - This form of money includes coins, notes, precious metals, etc. These media of money can easily be verified for validity, but they can be counterfeited.
+    \item Virtual Money - The kind of money accessible through bank accounts and credit lines. These systems rely on a third-party (the bank) for transactions. The transactions are sometimes not private - when the statements are leaked.
+\end{itemize}
+
+We ideally want a form of money that cannot be counterfeited and can be spent without leaving a trace. Such a system is not possible with digital money because any information passed through classical communication channels can be copied, making it infeasible for any such kind of system.
+
+
+Quantum systems, unlike their classical counterparts possess unique properties, and present a promising avenue to develop monetary schemes. Due to the laws of physics, it is impossible to clone a given quantum state as results of the \textbf{No-cloning theorem}. Wiesner \cite{Wiesner} proposed quantum money as one of the first applications of this property. Despite numerous attempts to refine quantum money schemes, Wiesner's original proposal remains widely adopted due to its efficiency and simplicity. 
+
+
+Most of the schemes, including that of Wiesner's, are based on a \textit{secret-key} architecture, wherein only the issuing authority or the bank can verify a given quantum note. As a result, every transaction has to be verified by the bank making the system inefficient. Furthermore, many of these schemes are proven not be secure. Such attacks, as discussed in later sections, leverage quantum properties to prepare counterfeit notes. 
+
+
+Ideally, we require a \textit{public-key} system, where any user can use a public-key to verify a given quantum note. However, these schemes are difficult to formulate, and there is a very small number of such schemes. 
+
+
+\textit{Quantum Lightning}, proposed by Mark Zhandry et al. \cite{quantum_lightning}, is a famous approach for public-key quantum money. While initially regarded as a promising public-key quantum money approach, recent research \cite{quantum_lightning_security} has identified vulnerabilities challenging its fundamental assumptions.
+
+
+In this report, we delve into the landscape of quantum money, exploring its potential and addressing the challenges faced by existing schemes. We analyze the security implications and advancements in the field, with a focus on both secret-key and public-key architectures.
+
+\section{Background}
+
+\subsection{Quantum computing}
+Before we delve into the protocols, let us summarise some fundamentals from quantum mechanics. Quantum mechanical systems store information in a very different way as compared to classical or non-quantum systems - the act of measuring a quantum state changes the state itself. 
+
+\begin{definition}[Qubit]
+A qubit is mathematically described as 
+\begin{align*}
+    \ket{\phi} = \alpha \ket{0} + \beta \ket{1} 
+\end{align*}
+\end{definition}
+
+where $\alpha, \beta \in \mathbb{C}$ such that $\vert \alpha \vert^2 + \vert \beta \vert^2 = 1$, and the states $\ket{0}, \ket{1}$ form a basis for the 2D vector space.
+
+In such a state, the probability of obtaining $0$ upon measuring the qubit is given by $\vert \alpha \vert^2$. Simply put, the coefficients associated with the basis states represents the probability of obtaining that particular basis state in the output.
+
+\begin{definition}[$n$-qubit system]
+    In general, an $n$-qubit quantum state is of the form
+    \begin{align}
+        \ket{\phi} = \sum_{x \in \{0, 1\}^n} \alpha_x \ket{x}
+    \end{align}
+    where $\alpha_x \in  \C$ and $\sum_{x \in \{0, 1\}^n} \|\alpha_x\|^2  = 1$.
+\end{definition}
+
+Similarly, we can generalise the notion of measurement to a general state basis using \textbf{Born's rule}.  
+
+\begin{definition}[Born's Rule]
+    A quantum state $\ket{\phi}$ measured under the basis $\ket{\phi_i}$ yields the classical output $i$, with probability $\|\iprodq{\phi_i}{\phi}\|^2$ and the quantum state collapses to $\ket{\phi_i}$
+\end{definition}
+
+Qubits, unlike classical bits, cannot be copied. There are well-established theoretical results for approximate cloning of qubits - these allow us to design cryptographic protocols beyond classical computers. One famous example for such a result is quantum-key distribution.
+
+Technically, we can clone qubits under certain conditions - we can always generate basis states like $\ket{0}, \ket{1}$. Therefore, we cannot use the no-cloning theorem directly for quantum money. We need a design scheme that is cryptographically secure, and such schemes are discussed below.
+
+\subsection{Mixed States}
+The state of the form $\ket{\phi} = \sum_{x \in \{0, 1\}^n} \alpha_x \ket{x}$ is called a pure state.
+
+\begin{definition}[Mixed States]
+    Consider an $n$-qubit quantum state of the form
+    \begin{align}
+        \rho = \begin{cases}
+            \ket{\phi_1} & \text{ with probability } p_1 \\
+            \ket{\phi_2} & \text{ with probability } p_2  \\
+            \vdots & \\
+            \ket{\phi_m} & \text{ with probability } p_m 
+        \end{cases}
+    \end{align}
+    where for $i \in [m]$, $\ket{\phi_i}$ is an $n$-qubit pure/mixed state, $p_i \geq 0$ and $p_1 + p_2 + \cdots + p_m = 1$
+
+    The mathematical notation for the density matrix $\rho$ is given by
+    \begin{align}
+        \rho = \sum_{i \in [m]} p_i \ketbra{\phi_i}{\phi_i}
+    \end{align}
+\end{definition}
+
+The notion of measurement for mixed states is generalised by the following
+\begin{definition}[Projective Measurements]
+    When $\rho$ is measured under a projective measurement ${P_i}_i$ with $\sum_i P_i = \I$ and $P^2_i = P_i$, we see the outcome $i$ with probability $p_i = \Tr[P_i\rho]$ and the state collapses to $\frac{P_i \rho P_i}{\Tr[P_i \rho P_i]}$ 
+\end{definition}
+
+\subsection{Elitzur-Vaidman bomb Testing}
+The goal of the  Elitzur-Vaidman Bomb Testing is to test whether a ``quantum bomb" system is a dud or an actual bomb. We can interact with the system using an input state $\ket{\phi}$. The output state remains $\ket{0}$ if there is no bomb. On the other hand, in presence of a bomb, if the output state flips to $\ket{1}$ (based on Born's rule) it explodes.
+
+There is a safe algorithm to test whether the system is a dud or a bomb, without triggering it, based on the Zeno effect \cite{lemeshko2009quantum}. It is a prime example of measuring a property of a system without disturbing it. The algorithm is a probabilistic test that can certify a property of an object, by measuring another system that has not interacted with the object.
+
+The testing procedure chooses a large $N$ and a small angle $\delta = \frac{\pi}{2N}$. It uses two registers (probe and the system). Start with a the system state $\ket{\phi} = \ket{0}$ - 
+\begin{enumerate}
+    \item Prepare an augmented state with \textit{ancillary probe qubit}, starting with $\ket{0}$.
+    \item Rotate the probe by a small angle $\delta$.
+    \item Apply $\texttt{CNOT}$ to couple the probe and the system qubit
+    \item Send the system qubit into the system, and obtain the collapsed state after measurement (if no explosion)
+\end{enumerate}
+
+After $N$ iterations, the probe qubit will output $1$ with certainty when there is a bomb. It can be shown that the probability of explosion with the algorithm is of the order $O(1/N)$.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{Images/evb_vis.png}
+    \caption{Visualization of the EVD Bomb Testing}
+    \label{fig:evb_vis}
+\end{figure}
+
+\subsection{Protective Measurements}\label{sec:pm}
+The concept of protective measurement was proposed by Aharnov et al. in \cite{PM} to measure a wave-function without changing its properties appreciably when the measurement is being made.
+
+It involves measuring the expectation value of a dichotomic observable $A$, to gauge the properties of the system
+
+\begin{definition}[Dichotomic Observable]
+    A dichotomic observable $A$ is an operator with eigenvalues $\pm 1$ defined by
+    \begin{align}
+        A = P - P^\perp
+    \end{align}
+    where $P$ is a projector on its $+1$ eigenspace
+\end{definition}
+
+Given an unknown state $\ket{\alpha} \in \mathbb C^d$, and an access to a two outcome von Neumann measurement $\{\Pi = \ket{\alpha}\bra{\alpha}, \mathbb I - \Pi\}$, the protocol for protective measurement has running time $N$, accuracy $\epsilon$, and a failure probability $f$, when
+\begin{itemize}
+    \item The protocol uses at most $N$ calls to the projective measurement
+    \item The probability that all outcomes are $\Pi$ is at least $1 - f$
+\end{itemize}
+
+That is, we prepare a probe state $\ket{\phi}\ket{\alpha}$ and map it to $\left[e^{-i c \E{A} \sigma_x} \ket{\phi} + \mathcal O(\epsilon) \ket{\phi'}\right]\ket{\alpha}$ for an appropriate constant $c$ for an error state $\ket{\phi'}$ after $N$ steps. 
+
+The idea is to then use the classical information $\E{A}$ to measure $\alpha$. For example, we can measure the expected value of the Pauli matrices on $\alpha$ using this procedure, and accurately reconstruct the required state.
+
+\section{Quantum Money}
+A quantum money scheme is characterized by two functions
+\begin{itemize}
+    \item A token generation procedure $\texttt{TokenGen}(1^\lambda)$ that generates a serial number $S$ and a quantum money state $\ket{\dollar}$. The serial number is kept \textit{secret} with the bank, and the quantum banknotes are shared with the customers.
+    \item The verification procedure $\texttt{Ver}(S, \ket{\dollar})$ outputs $0$ if the banknote is valid and $1$ if invalid. The bank can either choose to return the resulting state after verification (if the verification does not invalidate the note) or issue a new note to the user. The procedure should be successful with a \textit{very high probability} for a correct input state.
+\end{itemize}
+
+We consider two categories of quantum money
+\begin{itemize}
+    \item Private key quantum money
+    \item Public key quantum money
+\end{itemize}
+
+\subsection{Private-key quantum money}
+
+In such schemes, only the issuing authority can verify a quantum money state. They maintain a database of secret keys for each quantum bill issued, and verify the input quantum state with that key. Stephen Wiesner proposed one of the first frameworks in this category in 1969 \cite{Wiesner} (but published in 1983). In these frameworks, each quantum bill is a unique random quantum state, which the issuing authority labels with a serial number. 
+
+Formally, a quantum bank note is defined as $n$-qubit quantum state, where each of the qubit is randomly drawn from the set $\{ \ket{0}, \ket{1}, \ket{+}, \ket{-}\}$. Each such state is associated with a serial number which the issuing authority keeps note of. During a transaction, the quantum bill is sent to the mint where the bill is matched against the corresponding serial number and verified. It can be shown that the probability of cloning these bills can be bounded by $0.85^n$. However, the main bottleneck in this protocol is that every transaction must be conveyed to the bank/issuing authority.
+
+In a follow-up paper by Bennet et al. \cite{Bennett1982QuantumCO}, a fixed \textit{psuedo-random} function was proposed to choose the secret keys for all the serial numbers, avoiding the growth of the secret-key table with the number of notes issued. The next scheme in this category was suggested by Tokunaga et al. in 2003. However, in this scheme, the bank has to destroy all the issued bills once it detects a counterfeit note which limits its practical applicability.
+
+\subsection{Public-key quantum money}
+These schemes are the desired ideal money form, where any user can verify the authenticity of a quantum money state. Bennett et al. proposed such a scheme in 1982 \cite{Bennett1982QuantumCO} wherein a quantum money is essentially a token which can only be used once. However, this scheme can be easily broken by a quantum computer that can run \textit{Shor's algorithm} \cite{Shor1995PolynomialTimeAF}. 
+
+Mosca and Stebila \cite{mosca2009quantum} proposed using the same quantum states for the same denomination. They used the \textit{complexity-theoretic no-cloning theorem} proved by Aaronson \cite{Aaronson_2009} (which basically limits the cloning ability through computational power), but they did not give a concrete implementation for such a scheme. 
+
+The difficulty of developing public-key quantum money lies in the designing the verification algorithm. Typically, in schemes like Weisner coding, the counterfeiter can repeatedly query the bank's verification scheme to duplicate a note with high probability of not getting caught (discussed later). However, this can be prevented if the bank returns a new note after verification and a \textit{strict testing} regime, where no bank note is returned on failed verification.
+
+
+\subsection{Wiesner's Quantum Money Scheme}
+
+Consider $X \in \{0, 1\}$ and $\theta \in \{0, 1\}$. Then, a \textit{single qubit Weisner state} is defined as 
+\begin{align}
+    \ket{X^\theta} &= \begin{cases}
+        \ket{0} \text{ or } \ket{1}, & \theta = 0 \\
+        \ket{+} \text{ or } \ket{-}, & \theta = 1 
+    \end{cases} \\
+    &= H^\theta \ket{X}
+\end{align}
+
+where $\ket{+} = \frac{1}{\sqrt{2}}{\ket{0} + \ket{1}}$ and $\ket{-} = \frac{1}{\sqrt{2}}{\ket{0} - \ket{1}}$. This can easily be extended to $n$-qubit systems as $\ket{X^{\theta}} = \ket{X_1^{\theta_1}}\ket{X_2^{\theta_2}} \dots$.
+
+Using the above framework, Wiesner Quantum Money scheme is then defined as the following
+\begin{definition}[Wiesner's Quantum Money Scheme]
+    The scheme is characterized by two functions $\texttt{TokenGen}(1^\lambda)$ and $\texttt{Ver}(S, \ket{\dollar})$
+    \begin{itemize}
+    \item The token generation procedure $\texttt{TokenGen}(1^n)$ generates a serial number $S$ and  and a quantum money state $\ket{\dollar}$ defined by 
+    \begin{align}
+        S &= f(x_1, x_2, \dots, x_n, \theta_1, \theta_2, \dots, \theta_n) \\
+        \ket{\dollar} &= \ket{x_1^{\theta_1}}\ket{x_2^{\theta_2}} \dots \ket{x_n^{\theta_n}}
+    \end{align}
+    
+    \item The verification procedure $\texttt{Ver}(S, \ket{\dollar'})$ outputs $0$ if the banknote is valid and $1$ if invalid using the following projective measurement $P = \{P_0 = \ketbra{\dollar}{\dollar}, \I - P_0\}$
+\end{itemize}
+\end{definition}
+
+We shall discuss the adaptive attacks as described in \cite{adaptive_attacks} on the Wiesner Quantum money scheme. 
+
+\subsection{Quantum Lightning}
+Quantum Lightning was proposed by Zhandry \cite{quantum_lightning} as a public-key quantum money scheme. The lightning bolt refers to a superposition that can be sampled efficiently, but not duplicated. Anyone can generate a random lightning bolt, and a verifier can check that the bolt was generated honestly. The idea is to develop a sampling procedure that makes it difficult to generate same lightning bolts as seen by a verifier.
+
+The authors use a collision-resistant hash function, $f_A$, and the bolt is defined as a superposition over the pre-image of some value output by $f_A$. That is, for some output $\ket{y}$ in the hash function range, the lightning bolt is a superposition of all states $\ket{x}$ for $x$ in the domain of $f_A$ such that $f_A(x) = y$.
+
+To generate a random bolt, we use the following procedure
+\begin{enumerate}
+    \item Create a superposition over the domain of $f_A$, and  apply the unitary corresponding to $f_A$ to the superposition
+    \item The output of the unitary is stored in a separate register entangled with the original superposition. We measure the output register, which collapses to a single random eigenstate $\ket{y}$. The has $y$ constitutes as the serial number for the bank note. 
+    
+    Since the two registers were entangled, the first register becomes a uniform superposition over the pre-image of $y$. The first register's state is the bolt or the required quantum bill.
+\end{enumerate}
+
+Now, since the hash function is collision-resistant, the bolt is unclonable. If we can generate the same bolts with different serial numbers, then that would imply a collision in the hash function raising a contradiction. The formal definition of the quantum lightning scheme involves more intricate constructions by tensoring multiple \textit{mini-bolts}. However, for our analysis we shall consider the simple scheme described above.
+
+\subsection{General Public Money Scheme}
+In particular, we shall consider a generic quantum money scheme described as follows - 
+Consider a randomly chosen subspace $A \subseteq \F^{n}_2$, where $\text{dim}(A) = n/2$.
+
+Each quantum money state is a uniform superposition of the vectors in $A$. We denote this superposition by
+\[
+\ket{A} = \frac{1}{\sqrt {\vert A\vert}} \sum_{a} \ket{a}.
+\]
+
+Also, we know that
+\[
+H^{\otimes n} \ket{A} = \ket{A^\perp}
+\]
+
+where $\text{dim}(\ket{A^\perp}) = n - \text{dim}(A) = \frac{n}{2}$.
+
+Them the quantum money scheme is constructed as follows:
+
+\begin{enumerate}
+    \item Pick $A \subseteq \F^\lambda$ such that $\text{dim}(A) = \lambda/2$.
+    \item $\text{TokenGen}(1^\lambda)$ generates $pk, \ket{\$}$ such that
+    \[
+    pk = \left\{ P_0 = \ket{A} \bra{A}, P_1 = I - \ket{A} \bra{A} \right\}, \ket{\$} = \ket{A}.
+    \]
+   \item The verification procedure can be implemented via membership oracles for $A$ and  $A^\perp$. These are implemented in the form of unitary operators $U_A$ and $U_{A^\perp}$ that are applied on augmented qubits. We do the following:
+
+    \begin{enumerate}
+        \item[(a)] Given a quantum state $\ket{\phi} = \sum_{v\in\mathbb{Z}^{n}_2} \alpha_v \ket{v}$.
+        
+        \item[(b)] Run $U_A$ on $\ket{\phi} \ket{0}$ and measure the second qubit to obtain $\ket{\phi'}$, $b'$.
+        
+        \item[(c)] Run $H^{\otimes n} \cdot U_A^\perp \cdot H^{\otimes n}$ on $\ket{\phi'} \ket{0}$ and measure the second qubit to obtain $\ket{\phi''}$, $b''$.
+        
+        \item[(d)] When $b' = b'' = 0$, $\ket{\phi''}$ must be equal to $\ket{A}$.
+    \end{enumerate}
+\end{enumerate}
+
+The intuition behind this scheme is that the quantum money state is essentially a randomly chosen subspace of dimension $n/2$ from the complete space of dimension $n$. Doing so would yield us a large number of possible quantum bills of the order $n \choose n/2$. The attacker has to correctly guess the subspace in order to forge a counterfeit note.
+
+We shall analyse the soundness of this general scheme in the later sections.
+
+\section{Bomb-testing Adaptive Attack}
+The bomb testing algorithm described in the previous sections can be modified, to successfully break the Wiesner Quantum Money scheme. In particular, we can successfully determine if the state is $\ket{+}$ or not. We first consider the simple case where only one Wiesner qubit is used -
+
+The algorithm is summarized as follows - 
+
+\begin{enumerate}
+        \item Prepare $\ket{0}\q$.
+        \item Apply $R_\theta$ on the first qubit. That is, we obtain $\ket{\phi'} = R_\theta \ket{0} = \cos\theta \ket{0} + \sin\theta \ket{1}$, where $\theta = \frac{\pi}{2N}$.
+        \item Apply $\CNOT$ to $\ket{\phi'}$ to obtain $\ket{\phi"}$. We also define $\psi_\theta = \cos\theta \ket{0} + \sin\theta\ket{1}$.
+        \item Verify the second qubit of $\ket{\phi"}$.
+        \item Repeat the procedure for $N$ steps.
+    \end{enumerate}
+
+It can be shown that the bank's probability of detecting a counterfeit is at most $O(1/N)$ when the bank note is $\ket{0}, \ket{1}$. When the bank note is $\ket{+}$, the measurement of the probe qubit will yield $1$ with certainty. Otherwise, the outcome will be $0$. The scheme can be extended to an $n$-state system wherein the quantum bill given by
+\begin{align*}
+    \ket{q} = \ket{q_1} \ket{q_2}\dots \ket{q_n}
+\end{align*}
+
+where each $\ket{q_i}$ is $\ket{H^\theta X}$ for $X, \theta \in \{0, 1\}$. The counterfeiter prepares the following state keeping $\ket{q_1}$ aside - 
+
+\begin{align*}
+    \ket{q^{(1)}} = \ket{\psi}\ket{q_2} \dots \ket{q_n} 
+\end{align*}
+
+where $\psi$ is the modified Wiesner bit that is coupled with a probe qubit. Each of the individual Wiesner states can be determined, changing each qubit one after the other.
+
+\subsection{Further Generalization}
+We consider a more general Wiesner's scheme in which we use $d$ dimensional qubits. We choose $n$ random states from $\{ \ket{\beta_1}, \ket{\beta_2}, \dots, \ket{\beta_r}\}$, where each $\ket{\beta_i} \in \mathcal C^d$.  Let $\theta_{min} = \min_{ 1 \leq i \neq j \leq r} \arccos \vert \langle \beta_i\vert \beta_j \rangle \vert$. For example, in the previous scheme, the set of random states is $\{\ket{0}, \ket{1}, \ket{+}, \ket{-}\}$ with $\theta_{min} = \pi/4$.
+
+In the previous attack, we essentially found an operator $R$ such that $R \ket{+} = \ket{+}$ and not for the other states. In a similar way, given a generate state $\ket{alpha}$ from a set of arbitrary quantum states, we aim to find a unitary $R$ such that $R \ket{\alpha} = \ket{\alpha}$. One such potential operator is to use the \textit{controlled reflection} $R = 2 \ketbra{\alpha}{\alpha} - \I$ instead of the controlled $X$ as before.
+
+Assuming we know the set of arbitrary states $\{\ket{\beta_1}, \ket{\beta_2}, \dots, \ket{\beta_r}\}$, the idea is to select a $\ket{\beta}$ from the set, and check if the unknown state $\ket{\alpha}$ is same as our chosen state. The procedure can be repeated for all the available quantum states to identify the unknown state. The operator $R$ behaves in the following manner
+\begin{align}
+    R \ket{\alpha} = \cos (2\theta) \ket{\alpha} + \sin(2\theta) \ket{\alpha^\perp}
+\end{align}
+
+where $\cos \theta = \iprodq{\alpha}{\beta}$
+
+The algorithm is summarized as 
+\begin{enumerate}
+    \item Prepare a probe qubit $\ket{0}$.
+    \item At the $k$th step, the state of the probe qubit is given by $\ket{\phi_k}$. We apply a rotation $R_\delta$ to the probe qubit to obtain $\ket{\psi_{(\phi_k + \delta)}} = \cos(\phi_k + \delta) \ket{0} + \sin (\phi_k + \delta) \ket{1}$ where $\delta = \frac{\pi}{2N}$.
+    \item The probe and the unknown qubit are coupled. The controlled $R$ operator defined as 
+    \begin{align}
+        C_R = \cos (\phi_k + \delta) \ket{0}\ket{\alpha} + \sin (\phi_k + \delta) \cos (2\theta) \ket{1} \ket{\alpha} \\
+        + \sin(\phi_k + \delta) \sin (2\theta) \ket{1} \ket{\alpha^\perp}
+    \end{align}
+    The operator $C_R$ is applied on the joint state.
+    \item The second register is measured and the procedure is repeated for $N$ steps.
+\end{enumerate}
+
+The probability of getting caught in the $k$th round can be calculated as $\sin^2(2\theta) \sin^2(\phi_k + \delta)$, and after successful verification, the (unnormalized) residual state is 
+\begin{align}
+    &\left(\cos(\phi_k + \delta) \ket{0} +\cos(2\theta)\sin(\phi_k + \delta)\ket{1}\right)\ket{\alpha} \\
+    &= \ket{\phi_{k + 1}} \ket{\alpha}
+\end{align}
+
+The transformation can be represented as 
+\begin{align}
+    \ket{\phi_{k + 1}} &= \begin{bmatrix}
+        1 & 0 \\ 0 & \cos(2 \theta)
+    \end{bmatrix} R_{\delta} \ket{\phi_k} \\
+    &= \label{eq:T} \begin{bmatrix}
+        \cos \delta & -\sin \delta \\ q\sin\delta & q\cos \delta 
+    \end{bmatrix}\ket{\phi_k} = T \ket{\phi_k}
+\end{align}
+
+where $q = \cos (2\theta)$. At the end of $N$ steps, we have $T^N\ket{0}$. Consider the following cases
+\begin{enumerate}
+    \item Our guess is correct, i.e, $\theta = 0$. Then, $q = 0$, $T = R_\delta$, and $\Exp{1}{T^N}{0} = 1$, and the probe qubit is rotated to $\ket{1}$. We never get caught in this case.
+    \item Our guess is perpendicular to the unknown state, i.e, $\theta = \pi/2$. Then, $q = -1$ and $T^2 = \I$. Hence, after an even number of rounds $\Exp{0}{T^N}{0} = 1$, and we are never caught.
+    \item When our guess makes an arbitrary angle with the unknown state, i.e, $\theta_{min} \leq \theta < \pi/2$. Then, $\| q\| < 1$. For large $N$, we have 
+    \begin{align}
+        T = \begin{bmatrix}
+            1 & - \delta \\
+            q \delta & q 
+        \end{bmatrix} + \Delta T
+    \end{align}
+    with $\|\Delta T \| = O(\delta^2)$. Now,
+    \begin{align*}
+        T^N \ket{0} &= T^N \begin{bmatrix}
+            1 \\ 0
+        \end{bmatrix} = T^{N - 1}\begin{bmatrix}
+            1 \\ \delta q
+        \end{bmatrix} + \underbrace{T^{N - 1} \Delta T \begin{bmatrix}
+            1 \\ 0
+        \end{bmatrix}}_{\ket{v_1}} \\
+        &= T^{N - 2}\begin{bmatrix}
+            1 \\ 0
+        \end{bmatrix} + \underbrace{T^{N - 2}\left(\begin{bmatrix}
+            -\delta^2 q \\ 0
+        \end{bmatrix} + \Delta T \begin{bmatrix}
+            1 \\ \delta q
+        \end{bmatrix}\right)}_{\ket{v_2}} + \ket{v_1} \\
+        &\vdots \\
+        &= \begin{bmatrix}
+            1 \\ \delta (q + q^2 + \cdots + q^N)  
+        \end{bmatrix} + \sum_{i \in [N]} \ket{v_i}
+    \end{align*}
+
+    The norms of the error vectors $\ket{v_i}$ can be bounded as 
+    \begin{align*}
+        \ket{v_k} &= T^{N - k}  \left(\begin{bmatrix}
+            -\delta (q + q^2 + \cdots + q^{k - 1}) \\ 0  
+        \end{bmatrix} + \Delta T  \begin{bmatrix}
+            1 \\ \delta (q + q^2 + \cdots + q^{k - 1})  
+        \end{bmatrix} \right) \\
+        \| \ket{v_k} \| &\leq \mathcal O \left(\delta\left(1 + q + \dots + q^{k - 1}\right)\right) \leq \mathcal O \left(\frac{\delta^2}{1 - q}\right)
+    \end{align*}
+    because $\|T \| \leq 1$ from \ref{eq:T}. We then have,
+
+    \begin{align}
+        \Exp{0}{T^N}{0} \geq 1 - N \| \ket{v_N}\| \geq 1 - \mathcal O\left(\frac{N \delta^2}{1 - q}\right) \geq 1 - \mathcal O(N^{-1} \theta^{-2}_{min})
+    \end{align}
+
+    using $1 - q = \Omega(\theta^2)$ for small $\theta$ 
+    %\footnote{This assumption is only true when the set of qubit states is dense. For example, it does not work when we choose the set as the BB84 set of states.}.
+
+    In conclusion, we can choose an $N$ of the order $f^{-1}\theta_{min}^{-2}$ to get $\|\Exp{0}{T^N}{0} \|^2 > 1 - f$. Now, since we repeat this over all the $r$ quantum states from the set, and we need to identify all the $n$ qubits, the complexity of the algorithm becomes $\mathcal O(r^2 n^2f^{-1} \theta_{min}^{-2})$. The square on $rn$ appears because the failure probability for each procedure needs to be modified as $f' = f/nr$ to bound the total failure probability of the procedure.
+
+    Furthermore, we can parallelise the procedure, wherein we attach the probe qubits to all of the $n$ states simulataneously and query the verification procedure. The failure probability does not increase because the verification in this scheme is done on each qubit independently. Therefore, the final runtime complexity of the algorithm reduces to $\mathcal O(r^2 nf^{-1} \theta_{min}^{-2})$
+\end{enumerate}
+
+When $\theta_{min}$ is arbitrarily close to $0$, i.e, the states are continuous, the attack described above fails. In this case, the attacker has to arbitrarily choose a $\theta_{min}$ to proceed with the attack. Simply put, since there is no true bound on the value of $\theta_{\min}$, we cannot find the number of iterations. Our best bet is to guess a value, and check if that works.
+
+Doing so, will add a new case in the above description, where $0 < \theta < \theta_{min}$. If we repeat the above procedure for an arbitrary number of steps, the \textit{cumulative probability} of failure increases. 
+
+To understand this intuitively, $\theta_{min}$ gave us the approximate upper bound on how much the probe qubit rotates. If the $\theta_{min}$ is close to $\theta$, then we can find an approximate $N$ such that the probe qubit rotates by $\pi/2$ at the end of $N$ rounds. However, if we there is no correlation between $\theta_{min}$ and $\theta$, which is the case when the states are continuous and we take a guess, the probe qubit rotates by an arbitrary amount at the end of $N$ steps. Moreover, if the probe qubit is very close to $\ket{1}$ during the procedure, the coupling between probe and system state becomes strong, and the operation $R$ is applied on the system qubit with a very high probability. The state $R\ket{\beta}$ has a high chance of failing the verification protocol as we cycle through all the possible states.
+
+In the next section, we shall see an attack based on protective measurements which is able to tackle this case.
+\clearpage
+\section{Protective Measurement Attack}
+The idea of a protective measurement attack is similar. We define an operator $A$, and find its expectation value $\E{A} = \langle \psi \vert A \vert \psi \rangle$ on the state $\ket{\psi}$. The classical information can then be used to reconstruct $\ket{\phi}$ accurately.
+
+The gist of the attack is as follows - we prepare a probe with the initial state $\ket{0}$, choose $\delta = \frac{c}{N}$ for some constant $c$, and repeat the following procedure for $N$ steps -
+
+\begin{itemize}
+    \item Weakly couple the probe and the system
+    \item Send the state to the bank for validation
+\end{itemize}
+
+We expect the following -
+\begin{align}
+        \ket{0}\ket{\psi} & \xrightarrow{e^{-i\delta (\sigma_x \cOtimes A)}} \approx \ket{0}\ket{\psi} - i\delta \ket{1}A\ket{\psi} \\
+        &\xrightarrow{\text{bank measures} \{\ket{\psi}\bra{\psi}, \mathbb I - \ket{\psi}\bra{\psi}\}} \approx \left(e^{-i \delta \lang A \rang \sigma_x} \ket{0}\right) \cOtimes \ket{\psi} \\
+        &\xrightarrow{\text{repeat } N \text{ times}} \approx \left(e^{-i N\delta \lang A \rang \sigma_x} \ket{0}\right) \cOtimes \ket{\psi} 
+\end{align}
+
+By measuring the probe, we can approximate $\lang A\rang$ and thus $\ket{\psi}$. 
+
+\subsection{Construction}
+The building block of this attack is to ensure \textit{weak interaction} between the probe and the system. As mentioned in Section \ref{sec:pm}, we use a dichotomic observable $A = P - P^\perp$ where $P$ is the projection on the $+1$ eigenspace of $A$. 
+
+The crucial difference from the approaches in \label{sec:wiesner_attack} is that, instead of applying $\delta$ rotation and a controlled operator, we use the unitary coupling operation defined as 
+\begin{align}
+    U &= e^{-i \delta (\sigma_x \xo A)} =  e^{-i \delta (\sigma_x \xo P - \sigma_x \xo P^\perp)} \\
+    &= e^{-i \delta \sigma_x \xo P} e^ {i\delta \sigma_x \xo P^\perp} = e^{-i \delta \sigma_x} \xo P + e^{i \delta \sigma_x} \xo P^{\perp} 
+\end{align}
+
+As before, we assume the first part of the system is the probe followed by the unknown state to the right of the tensor product. We choose $\delta = \frac{c}{N}$ for an appropriate value of $c$. Here, if the probe state is close to $1$, the unknown state is not affected in a significant manner unlike before. 
+
+\subsection{Obtaining the expectation value of $A$}
+We have the following lemma,
+\begin{lemma}
+    For any dichotomic observable $A$ there exists a protective measurement protocol with running time $N$, accuracy  $\mathcal O(1/N)$ and failure probability $\mathcal O(1/N)$
+\end{lemma}
+\begin{proof}
+    Consider an arbitrary initial state of the probe qubit $\ket{\phi_0}$. After $k$ steps, we obtain $\ket{\phi}$ and $\ket{\alpha}$ on the second register assuming we did not fail in the $k$ rounds.
+
+    At the $k+1$th step, on applying $U$, we get
+    \begin{align}
+        W \ket{\phi_k} = (\I \xo \bra{\alpha}) U \ket{\phi_k} \ket{\alpha} = \sqrt{p_k} \ket{\phi_{k + 1}} 
+    \end{align}
+    where $p_k$ represents the probability of success in the $k$th step.
+
+    The expression for $W$ is given by
+    \begin{align}
+        W &= \Exp{\alpha}{P}{\alpha} e^{-i \delta \sigma_x} + \Exp{\alpha}{P^\perp}{\alpha}e^{i \delta \sigma_x} \notag\\
+        &= \cos \delta \Exp{\alpha}{P + P ^\perp}{\alpha} \I - i \sin \delta \Exp{\alpha}{P - P ^\perp}{\alpha} \sigma_x \notag\\
+        &= \cos \delta \I - i \sin \delta \E{A} \sigma_x \\
+    \end{align}
+
+    The matrix $W$ has the eigenvalues $\lambda_{\mp} = \cos \delta \mp i \E{A} \sin \delta$ corresponding to eigenstates $\ket{+}, \ket{-}$. Then, 
+
+    \begin{align}
+        W^N \ket{\phi_0} = \left(\prod_{k = 0}^{ N - 1} \sqrt{p_k}\right) = \sqrt{p}\ket{\phi_N}
+    \end{align}
+
+    where $p$ is the probability of succeeding in all the $N$ validation steps. For large $N$, 
+    \begin{align}
+        \lambda_{\mp}^N &= (\cos \delta \mp i \sin \delta \E{A})^N  \\
+        &= \left(e^{\mp i \delta \E{A}} + \cO (\delta^2) \right) \\
+        &= \left(e^{\mp i \delta \E{A}}(1 + \cO (\delta^2)) \right) \\
+        &= e^{\mp iN \delta \E{A} ( 1 + N \cO (\delta)^2) = e^{\mp ic \E{A}} + \cO (N^{-1})
+    \end{align}
+
+    Therefore, for large $N$, 
+    \begin{align*}
+        W^N &= \lambda^N_1 \ketbra{+}{+} + \lambda^N_2 \ketbra{-}{-} \\
+        &= (e^{-ic\E{A}} \ketbra{+} (e^{ic\E{A}} \ketbra{-} + O(1/N) (\ketbra{+} + \ketbra{-}) \\
+        &= \cos (c\E{A}) (\ketbra{+} + \ketbra{-}) - \sin (c \E{A}) (\ketbra{+} - \ketbra{-}) + O(1/N) \mathbb I \\
+        &= \cos (c\E{A})\mathbb I - \sin (c \E{A}) \sigma_x + O(1/N) \mathbb I \\
+        W^N &= e^{-ic \E{A} \sigma_x} + \cO(1/N)
+    \end{align*}
+
+    At the end of $N$ steps, the probe gets rotated by an amount proportional to $\E{A}$. The final state can be written as 
+    \begin{align}
+        \ket{\phi_N} = e^{-ic \E{A} \sigma_x} \ket{\phi_0} + \cO(1/N) \ket{\phi'}
+    \end{align}
+
+    for some error state $\ket{\phi'}$. The value of $p$ can then be estimated as $1 - \cO(1/N)$.
+\end{proof}
+
+To understand this better, consider the Wiesner states $\ket{X^\theta}$ - We choose $A = \sigma_x$, $c = \frac{\pi}{2}$, $\ket{\phi_0} = \ket{0}$. Then, we get $\Exp{0}{\sigma_x}{0} = \Exp{1}{\sigma_x}{1} = 0$ and $\Exp{+}{\sigma_x}{+} = - \Exp{-}{\sigma_x}{-} = 1$. The final probe state when the unknown state is initially $\ket{+}$ or $\ket{-}$ is $W^N \ket{0} = \mp i \ket{1}$. Otherwise, the probe will remain close to $\ket{0}$. Therefore, we can compute $\theta$ with certainty, which can then be used to find $X$ as well.
+
+In a general case, we generate many copies of $\ket{\phi_N}$ and measure it in $\sigma_y$ basis to get the estimate of $\E{A}$. The result is formally stated in the following lemma.
+\begin{lemma}
+    For any $\nu, \eta, f > 0$, it is possible to use a protective measurement protocol to estimate $\E{A}$ with precision at least $\nu$, confidence at least $1- \eta$, probability of failure $\mathcal O(f)$ and running time $\mathcal O(f^{-1} \nu^{-4} \ln^2(\eta^{-1})$
+\end{lemma}
+\begin{proof}
+    We run the above mentioned protocol for $m = 336 \ln (2 \eta^{-1}) \nu^{-2}$ times with $N = m/f$. The total running time for this procedure is $mN = \cO(\ln^2(\eta^{-1}) \nu^{-4} f^{-1})$, and the overall failure probability is $\cO(f)$. We set the parameter $c = \frac{\pi}{8}$ for optimality, and obtain $m$ copies of $\ket{\phi_N}$
+    \begin{align}
+        \phi_{N} = \cos \left(\frac{\pi}{8}\E{A}\right) \ket{0} - i \sin  \left(\frac{\pi}{8} \E{A}\right) \ket{1} + \cO \left(\frac{1}{N}\right) \ket{\phi'}
+    \end{align}
+
+    We measure this state in $\sigma_y = \begin{bmatrix}
+        0 & -i \\ i & 0
+    \end{bmatrix}$ basis $m$ times. Considering $\ket{y_+} = \frac{1}{\sqrt{2}}[\ket{0} - i \ket{1}]$, let $\bar p$ be the probability of obtaining $+1$ as the measurement outcome and $p^{(m)}$ be the empirical frequency of $+1$. Then,
+    \begin{align*}\label{eq:bar_p}
+        \bar p = \| \iprodq{y_+}{\phi_N} \|^2 &= \frac{1}{2} \| \cos \left(\frac{\pi}{8}\E{A}\right) -  \sin  \left(\frac{\pi}{8} \E{A}\right) + \cO \left(\frac{1}{N}\right) \|^2 \\
+        &= \frac{1}{2} \left(1 - \sin \left(\frac{\pi}{4} \E{A}\right) + \cO \left(\frac{1}{N}\right)\right)
+    \end{align*}
+
+    Since $\|\E{A}\| \leq 1$, the expectation value $\bar p$ is well bounded away from $0$ - 
+    \begin{align}
+        \bar p \geq \frac{1}{2} - \frac{1}{\sqrt{8}} + \cO \left(\frac{1}{N}\right) \geq \frac{1}{7}
+    \end{align}
+
+    Let $\tilde \nu = \nu/4$, then
+    \begin{align}
+        m = \frac{336\ln(2/\eta)}{\nu^2} \geq \frac{3\ln(2/\eta)}{\tilde nu^2 \bar p}
+    \end{align}
+    
+    Using Chernoff bound, the probability that $\| p^{(m)} - \bar p\| \geq \tilde \nu \bar p$ is at most
+    \begin{align}
+        2 \text{exp} \left(-\frac{\tilde v^2 m \bar p}{3} \right) \leq \eta
+    \end{align}
+    
+    The above result establishes that $p^{(m)}$ is within $\nu/4 \bar p \leq \nu/4$ of $\bar p$. Using the expression from \ref{eq:bar_p}, we get
+    \begin{align}
+        \arcsin \left(1 - 2p^{(m)} - \frac{\nu}{2} - \cO \left(\frac{1}{N}\right) \right) \leq \frac{\pi}{4} \E{A} \leq\arcsin \left(1 - 2p^{(m)} - \frac{\nu}{2} + \cO \left(\frac{1}{N}\right) \right)
+    \end{align}
+
+    The precision of $\E{A}$ can be analysed using the Taylor series expansion. We obtain the result 
+    \begin{align}
+        \left\vert \E{A} - \frac{1}{\pi} \arcsin \left(1 - 2 p^{(m)} \right)\right\vert \leq \nu
+    \end{align}
+    
+    Therefore, the value of $\E{A}$ is estimated as $\frac{4}{\pi} \arcsin \left(1 - 2p^{(m)}\right)$ with precision $\nu$ and confidence $1 - \eta$. 
+\end{proof}
+
+\subsection{Obtaining $\ket{\alpha}$ from $\E{A}$}
+The quantum state $\ket{\alpha}$ is obtained from $\E{A}$ using Protective Tomography.
+\begin{definition}[Protective Tomography]
+    A protocol achieves protective tomography with infidelity $\epsilon$, confidence $1 - \eta$, failure probability $f$ and running time $t$ if it outputs a classical description of a mixed state $\rho$ such that 
+    \begin{itemize}
+        \item The probability of failure (the output is $\mathbb I - \Pi$ for some step), is $\mathcal O(f)$
+        \item If the algorithm does not fail, the fidelity $F(\ket{\alpha}, \rho) \geq 1 - \epsilon$ with probability atleast $1 - \eta$
+        \item The algorithm uses at most $t$ validations
+    \end{itemize}
+\end{definition}
+
+We have the following lemmas
+\begin{lemma}
+    There exists a protective tomography protocol for a qubit system with dimension $d$ and running time scaling as $t = \cO (d^{12} f^{-1} \epsilon^{-4} \ln^2(d^{2}\eta^{-1}))$.
+\end{lemma}
+
+\begin{lemma}
+    There exists a protective tomography protocol for $n$-qubit states of the form $\ket{\alpha} = \xo_{i \in [n]} \ket{\alpha_i}$, with running time $t = \cO (n^{5} f^{-1} \epsilon^{-4} \ln^2(n\eta^{-1}))$.
+\end{lemma}
+
+\begin{proof}
+    Using the procedure described above, we can obtain $\E{\tilde \sigma_j}$ for $j \in \{x, y, z\}$ - the approximated values of the Pauli matrices $\E{\sigma_j} = \Exp{\alpha}{\sigma_j}{\alpha}$, with precision parameters $\nu = \epsilon/6, \tilde \eta = \eta/3, \tilde f = f/3$. The running time for all the algorithms would then be
+    \begin{align}
+        t &= 3 \cO (\tilde f^{-1}\tilde \nu^{-4} \ln^2(\tilde \eta^{-1}) \\
+        &= \cO (f^{-1}\nu^{-4} \ln^2(\eta^{-1})
+    \end{align}
+    and the failure probability $f = 3\tilde f$ using the union bound. Similarly, the confidence bound can also be obtained as $1 - \nu$. The approximation of $\ket{\alpha}$ is given by
+    \begin{align}
+        \tilde \rho = \I/2 + \sum_{j \in \{x,y,z\}} \E{\tilde \sigma_j}\sigma_j
+    \end{align}
+    with fidelity at least $1 - \epsilon$ and confidence at least $1 - \eta$.
+
+    However, this matrix is not necessarily positive semi-definite with trace $1$. Therefore, we choose $\rho$ to be the closest state that is $\rho = \text{argmin}\, D(\tilde \rho, \tau)$, where $\tau$ runs over all single-qubit mixed states and $D$ is the trace distance $D(\alpha, \beta) = \frac{1}{2} ||\alpha - \beta||_{\text{tr}}$ and $||A||_{\text{tr}} = \text{Tr}(\sqrt{AA^\dagger})$. Using the triangle inequality and the definition of $\rho$, we get
+    \begin{align}
+        D(\rho, |\alpha\rangle\langle\alpha|) \leq D(\rho, \tilde\rho) + D(\tilde\rho, |\alpha\rangle\langle\alpha|) \leq 2D(\tilde\rho, |\alpha\rangle\langle\alpha|)
+    \end{align}
+    Then the fidelity of the final state is $\epsilon$ with probability at least $1 - \eta$.
+\end{proof}
+    % \subsection{Summary}
+    % In the above sections, we have shown that an unknown state $\ket{\alpha}$ can be estimated with accuracy at least $1 - \epsilon$, failure probability at most $f$, and confidence $1 - \eta$ with running time $\cO(f^{-1} \epsilon^{-4} \ln(\eta^{-1}))$
+\section{Duplication in Public-key money}
+\subsection{Soundness Analysis}
+Let us analyse what happens to the verification procedure when we use a forged state. Suppose the true state is sampled from the subspace $A$ with dimension $n/2$. Let the unknown state be $\ket{\alpha} = \sum_{v \in A} \alpha_v \ket{v}$.
+
+Now, we guess a vector in subspace $B$ of dimension $n/2$. Let the forged state be $\ket{\beta} = \sum_{v \in B} \beta_v \ket{v}$ Let $S = A \cap B$ and $| A \cap B | = m$. For simplicity, let us work with subspace states.
+
+\begin{align}
+    U_A \ket{B}\ket{0} &= \ket{S}\ket{0} +  \ket{B - S}\ket{1} \\ 
+    \ket{\phi'} &\propto \ket{S}
+\end{align}
+
+The probability of obtaining $0$ on measuring the second qubit is given by $\left(\vert S \vert /\vert B\right) \vert = 2m/n$. Assuming we are successful here,  we apply the Hadamard operator to obtain
+\begin{align}
+    H^{\xo^n} \ket{\phi'} \propto \ket{S^\perp}
+\end{align}
+
+The applying the unitary operator $U_{A^\perp}$, we get
+\begin{align}
+    U_{A^\perp} H^{\xo^n} \ket{\phi'} \ket{0} &\propto \ket{A^\perp \cap S^\perp} \ket{0} + \ket{A \cap S^\perp} \ket{1}
+\end{align}
+
+Now, $S^\perp = A^\perp \cup B^\perp$. Therefore, $A \cap S^\perp = A \cap B^\perp$, and $A^\perp \cap S^\perp = A^\perp$. We then have
+
+\begin{align}
+    U_{A^\perp} H^{\xo^n} \ket{\phi'} \ket{0} &\propto \ket{A^\perp} \ket{0} + \ket{A \cap B^\perp} \ket{1}
+\end{align}
+
+The probability of obtaining $0$ on the second qubit in this case is given by $\left(\vert A^\perp \vert / (\vert S^\perp \vert) \right) = \frac{n}{2(n - m)}$.
+
+Upon successful verification, we obtain the state $\ket{A^\perp \cap S^\perp}$. The probability of success is calculated as $\frac{2m}{n} \times \frac{n}{2(n - m)} = \frac{m}{n - m}$. It can be seen that the probability of success if highest when $m$ is close to $n/2$, i.e, we guess the subspace correctly.
+
+\textcolor{gray}{\textit{Note.} I tried to extend the protective measurement attack to these schemes to estimate the subspace rather than a single state. Unfortunately, I could not make any progress in that aspect. I will think about it more from other perspectives. However, I am skipping these aspects in the report for the project submission for now.} 
+% \subsection{Attempt at duplication using Protective Measurements}
+% Unlike the previous case, we need to estimate the entire subspace rather than a single state. 
+\section{Conclusion}
+We discussed the motivation to develop secure quantum money protocols and how quantum systems have the potential to be used in these areas. Wiesner Quantum Money scheme has been widely adopted across literature, and we analysed the protocol in detail. The attacks discussed in the analysis can easily be prevented if the bank returns a new quantum bill when the detected error in the input quantum state is above a certain threshold. However, such approaches have practical limitations as generating new bills is an expensive operation.
+
+In conclusion, the general secret-key schemes possess these security threats that make the commonly proposed systems ineffectual. The research for public-key schemes is still ongoing, and we are still at far with regards to such protocols.
+
+Nevertheless, the attacks presented in the report also depict the interesting properties of quantum phenomena such as the Zeno effect and protective measurements. These properties have vast potential applications for general quantum systems, and the analysis will help further our understanding of the quantum computing in general.
+\clearpage
+\bibliographystyle{unsrt}
+\bibliography{ref}
+\end{document}

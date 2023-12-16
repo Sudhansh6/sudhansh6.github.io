@@ -1,9 +1,15 @@
 ---
-layout: post
-title: Quantum Money
-comments: true
-categories: [Projects]
-excerpt: Motivation for Quantum Money. Description of different quantum money schemes - secret and public key based. Detailed analysis of various adaptive attacks on secret-key schemes and briefly touches upon the soundness of public-key schemes.
+author:
+- |
+  Sudhansh Peddabomma\
+  under the supervision of Qipeng Liu\
+  University of California San Diego
+bibliography:
+- ref.bib
+date: December 2023
+title: |
+  Quantum Money Schemes and Attacks\
+  Course Project\
 ---
 
 # Introduction
