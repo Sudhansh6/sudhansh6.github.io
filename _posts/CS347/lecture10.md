@@ -36,7 +36,7 @@ The optimal strategy would be to replace a page that is not needed for the longe
 
 ## Example - Page Replacement Policy
 
-![image-20210827230153801](assets/image-20210827230153801.png)
+![image-20210827230153801](/assets/img/Operating Systems/image-20210827230153801.png)
 
 Suppose we can store only 3 frames in the physical memory, and there are 4 pages in the process. The set of accesses is also known as the **reference string**. Note that the initial few accesses are definitely missed, as the cache is empty - cold misses. The goal is to reduce the number of page faults, which leads to reading from the swap space and is slow.
 

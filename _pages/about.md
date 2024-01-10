@@ -1,71 +1,34 @@
 ---
-layout: default
+layout: about
+title: About
 permalink: /
+subtitle: 
+
+profile:
+  align: right
+  image: PFP.jpg
+  image_circular: false # crops the image to make it circular
+  more_info: >
+    Email - 
+        <ul>
+          <li>sudhansh6[at]gmail[dot]com</li>
+          <li>speddabomma[at]ucsd[dot]edu</li>
+        </ul>
+
+news: true  # includes a list of news items
+latest_posts: true  # includes a list of the newest posts
+selected_papers: true # includes a list of papers marked as "selected={true}"
+social: true  # includes social icons at the bottom of the page
 ---
-<div class = "container grid">
-  <div class = "row">
-      <div class="col-sm-1">
-  Hi! I am Sudhansh, a fourth-year undergraduate at IIT Bombay majoring in Computer Science and Engineering with honors. My interests broadly lie in the domain of Artificial Intelligence under the context of Image Processing and Computer Vision. I am also pursuing a minor in Entrepreneurship.
-        <br><br>
-  I have worked with <a href="https://www.cse.iitb.ac.in/~ajitvr/">Prof. Ajit Rajwade</a> on the Likelihood Maximization method for Saturation Compressed Sensing. We are also working on developing algorithms for correction of Permutation Noise in Compressed Sensing. We are currently drafting a journal paper for this work. In addition to this, I have worked with <a href="http://www0.cs.ucl.ac.uk/people/M.Betcke.html">Prof. Marta Betcke</a> on Stochastic Primal Dual algorithms for Tomographic Reconstruction of 3D volumes in Low-Dose conditions, and we have a journal paper in preparation.
-        
-  <br><br>
-  <div class="text-center alert alert-primary">
-            <a class = "h4" href="https://drive.google.com/file/d/1Rq9Wp6J7d88Gw-4Su9zyjYtcsF4WJm0U/view?usp=sharing">CV</a>
-        </div>
-</div>
-<div class="col-sm-4 offset-sm-1" >
-        <div class="float-right">
-          <img src="https://drive.google.com/uc?export=view&id=1k8yF_-1ewZGjVlXkiuyvCZOwFxOZo797" class="img-fluid" alt="Responsive image">
-        </div>
-        </div>
-  </div>
 
-  <h1 class="display-4"> Projects </h1>
-    <div class="card-deck text-center row">
-      <div class="card box-shadow" style="margin: 10px;">
-        <div class="card-header">
-          <h5 class="card-title"> Saturation Noise in Compressed Sensing </h5>
-        </div>
-        <div class="card-body">
-            <p class="card-text">{{ post.excerpt }}</p>
-            <p class="card-text"><a class="text-muted" href="https://drive.google.com/file/d/1fnIdgTUYLmPAnmXGyrM319kw3BrjYkhI/view?usp=sharing" class="read-more">[Publication]</a></p>
-        </div>
-    </div>
-    <div class="card box-shadow" style="margin: 10px;">
-      <div class="card-header">
-        <h5 class="card-title"> Stochastic Primal-Dual Algorithm for Tomographic Reconstruction </h5>
-      </div>
-      <div class="card-body">
-          <p class="card-text"><a class="text-muted" href="https://drive.google.com/file/d/1fnIdgTUYLmPAnmXGyrM319kw3BrjYkhI/view?usp=sharing" class="read-more">[Publication]</a></p>
-      </div>
-  </div>
-  <div class="card box-shadow]" style="margin: 10px;">
-      <div class="card-header">
-        <h5 class="card-title"> Permutation Noise in Compressed Sensing </h5>
-      </div>
-      <div class="card-body">
-          <p class="card-text">{{ post.excerpt }}</p>
-          <p class="card-text"><a class="text-muted" href="https://drive.google.com/file/d/1_nMlRPJUfJW8DVqFggtD5Pos5sEKPXTY/view?usp=sharing" class="read-more">[Report]</a></p>
-      </div>
-  </div>
-      {% for post in paginator.posts %}
-          {% for category in post.categories %}
-              {% if category == "Projects" %}
-                  <div class="card box-shadow col-lg" style="margin: 10px;">
-                      <div class="card-header">
-                        <h5 class="card-title"> {{ post.title }} </h5>
-                      </div>
-                      <div class="card-body">
-                          <p class="card-text">{{ post.excerpt }}</p>
-                          <p class="card-text"><a class="text-muted" href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a></p>
-                      </div>
-                  </div>
-              {% endif %}
-          {% endfor %}
-      {% endfor %}
-  </div>
-</div>
+Hello! I'm Sudhansh, a first-year Masters in Computer Science student at [UC San Diego](https://ucsd.edu). I am a graduate of [IIT Bombay](https://www.iitb.ac.in), where I majored in Computer Science and Engineering with honors and pursued a minor in Entrepreneurship.
+  
+I have worked with [Prof. Ajit Rajwade](https://www.cse.iitb.ac.in/~ajitvr/) on the Likelihood Maximization method for Saturation Compressed Sensing. We are also working on developing algorithms for correction of Permutation Noise in Compressed Sensing. 
+We have submitted a journal paper to Elsevier Signal Processing 2023 based on this work. 
+In addition to this, I have worked with [Prof. Marta Betcke](http://www0.cs.ucl.ac.uk/people/M.Betcke.html) on Stochastic Primal Dual algorithms for Tomographic Reconstruction of 3D volumes in Low-Dose conditions, and we have a journal paper in preparation.
 
+`Research Interests` - Computer Vision, Image Processing, Robotics
 
-
+<p style="text-align: center;">
+<a href="/assets/pdf/SudhanshPeddabommaCV.pdf">CV</a> / <a href="/assets/pdf/SudhanshPeddabommaResume.pdf">Resume</a>
+</p>

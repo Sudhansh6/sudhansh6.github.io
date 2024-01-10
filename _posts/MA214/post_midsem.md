@@ -41,11 +41,11 @@
 
   For example, $$P_0(x) = 1, P_1(x) = x$$. $$P_2$$ can be computed from $$P_0$$ and $$P_1$$ as $$\int P_0P_2$$ and $$\int P_1P_2$$ are 0.
 
-  ![image-20220323155057163](assets/image-20220323155057163.png)
+  ![image-20220323155057163](/assets/img/Numerical Analysis/image-20220323155057163.png)
 
 - **Multidimensional integrals** - Composite trapezoidal rule has square of the number of function evaluations required for a single integral (for 2D).
 
-  ![image-20220323161302337](assets/image-20220323161302337.png)
+  ![image-20220323161302337](/assets/img/Numerical Analysis/image-20220323161302337.png)
 
   > See if problems to be practiced here.
 
@@ -72,11 +72,11 @@
   $$
   \mid f(t, y_1) - f(t, y_2) \mid \leq L\mid y_1 - y_2 \mid
   $$
-  ![image-20220323191549861](assets/image-20220323191549861.png)
+  ![image-20220323191549861](/assets/img/Numerical Analysis/image-20220323191549861.png)
 
   IVP is well-posed if it has a unique solutions, and an IVP obtained by small perturbations also has a unique solution. We consider IVPs of the form $$dy/dt = f(t, y)$$, $$a \leq t \leq b$$, $$y(a) = \alpha$$.
 
-  ![image-20220323193242124](assets/image-20220323193242124.png)
+  ![image-20220323193242124](/assets/img/Numerical Analysis/image-20220323193242124.png)
 
 -  **Euler’s method** - We generate *mesh points* and interpolate. As we are considering IVPs of a certain form, we can just use 1st degree Taylor’s polynomial to approximate the solution to the IVP. We take $$q_0 = \alpha$$ and $$w_{i + 1} = w_i + hf(t_i, w_i)$$ for $$i \geq 0$$ where $$w_i \approx y(t_i)$$. The error grows as $$t$$ increases, but it is controlled due to the stability of Euler’s method. It grows in a linear manner wrt to $$h$$. 
 
@@ -92,7 +92,7 @@
 
 - Now, we try to reduce the computation of higher order derivatives. **Runge-Kutta methods** - Based off Taylor’s theorem in two variables. 
 
-  ![image-20220323210229698](assets/image-20220323210229698.png)
+  ![image-20220323210229698](/assets/img/Numerical Analysis/image-20220323210229698.png)
 
   Order 2- We get $$a = 1, \alpha = h/2, \beta = f(t, y)h/2$$ by equating $$af(t + \alpha, y + \beta)$$ to $$T(t, y) = f(t, y) + h/2 f'(t, y)$$. This specific Runge-Kutta method of Order 2 is known as the **midpoint-method**. (2D of Taylor order 2) 
   $$
@@ -108,11 +108,11 @@
   $$
   **Higher-order Runge-Kutta methods** - The parameter values are used in the **Heun’s method**.
 
-  ![image-20220323212528107](assets/image-20220323212528107.png)
+  ![image-20220323212528107](/assets/img/Numerical Analysis/image-20220323212528107.png)
 
   The most common Runge-Kutta is order 4 whose local truncation error is $$\mathcal O(n^4)$$.
 
-  ![image-20220323212907583](assets/image-20220323212907583.png)
+  ![image-20220323212907583](/assets/img/Numerical Analysis/image-20220323212907583.png)
 
 - <u>Error control in Runge-Kutta methods</u>. Adaptive step size for lower error. Single step approximation - uses $$i-$$ for $$i$$. Given an $$\epsilon > 0$$, we need to be able to give a method that gives $$\mid y(t_i) - w_i\mid < \epsilon$$. 
   $$
@@ -128,7 +128,7 @@
 
 - **Multi-step methods**. Methods that use the approximation at more than one previous mesh point to determine the approximation at the next point. The general equation is implicit where $$w_{i + 1}$$ occurs on both sides of the equation. Implicit methods are more accurate than explicit methods.
 
-  ![image-20220324124220485](assets/image-20220324124220485.png)
+  ![image-20220324124220485](/assets/img/Numerical Analysis/image-20220324124220485.png)
 
 - **Predictor-Corrector Method** - How do we solve implicit methods? We can use the root-finding procedures we learnt. All of this can get quite cumbersome. We just use implicit methods to improve the prediction of the explicit methods. We insert the solution of explicit method (prediction) and insert it on the rhs of the implicit method (correction). 
 
@@ -352,7 +352,7 @@
   
   To find other eigenvalues, we use **Gram-Schmidt orthonormalisation**. 
   
-  ![image-20220415200748597](assets/image-20220415200748597.png)
+  ![image-20220415200748597](/assets/img/Numerical Analysis/image-20220415200748597.png)
   
   
 

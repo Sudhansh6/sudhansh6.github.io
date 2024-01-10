@@ -1,6 +1,6 @@
 ---
 layout: page
-permalink: /miscellaneous/
+permalink: /misc/
 title: Random
 ---
 <html>

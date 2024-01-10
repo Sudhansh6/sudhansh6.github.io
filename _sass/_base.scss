@@ -23,6 +23,24 @@ hr {
   border-top: 1px solid var(--global-divider-color);
 }
 
+// Search box
+
+.text-container {
+  text-align: center;
+}
+
+.text-entry {
+  width: 80%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 18px;
+  background-color: var(--global-bg-color);
+}
+
 table {
   td,
   th {
@@ -57,7 +75,7 @@ table.table a {
 
 figure,
 img {
-  max-width: 90vw;
+  max-width: 100%;
 }
 
 blockquote {
@@ -928,8 +946,8 @@ progress::-moz-progress-bar {
     font-size: medium;
     opacity: 0;
     position: absolute;
-    right: .5rem;
-    top: .5rem;
+    right: .2rem;
+    top: .2rem;
   }
 
   &:active .copy,
@@ -1057,6 +1075,10 @@ nav[data-toggle="toc"] {
     margin-bottom: 0;
     padding-top: 0.5rem;
   }
+}
+
+.unloaded {
+  display: none !important;
 }
 
 .medium-zoom-overlay,

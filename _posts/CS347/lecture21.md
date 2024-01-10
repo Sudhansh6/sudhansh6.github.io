@@ -104,7 +104,7 @@ Timeline of a function call is as follows (*Note.* Stack grows up from higher to
 - After the function execution, the current stack frame is popped to restore the old `ebp`.
 - The return address is popped and `eip` is restored by the `ret` instruction.
 
-![function stack](assets/Peek 2021-07-31 00-30.gif)
+![function stack](/assets/img/Operating Systems/Peek 2021-07-31 00-30.gif)
 
 Stack pointers: `ebp` stores the address of base of the current stack frame and `esp` stores the address of current top of stack. This way, function arguments are accessible from looking under the stack base pointer.
 

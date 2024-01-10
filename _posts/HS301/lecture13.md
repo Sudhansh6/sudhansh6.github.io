@@ -4,6 +4,6 @@ Forms are in an independent realm. Ideas, a metaphysical concept (?), are being 
 
 Plato's ideology in a nutshell:
 
-![image-20210908143925564](assets/image-20210908143925564.png)
+![image-20210908143925564](/assets/img/Philosophy/image-20210908143925564.png)
 
 I give up writing notes for this lec.

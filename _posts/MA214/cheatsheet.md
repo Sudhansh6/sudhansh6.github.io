@@ -68,7 +68,7 @@ $$
 
 
 
-<img src="/Users/sudhansh/Desktop/Projects/new_website/_posts/MA214/assets/image-20220127150002932.png" style="zoom:25%;" />
+<img src="/assets/img/Numerical Analysis/image-20220127150002932.png" style="zoom:25%;" />
 
 Nested polynomial reduces the error.
 
@@ -114,7 +114,7 @@ Can use divided differences as the polynomial is unique!
 
 Natural boundary $$f'(x_0) = P'(x_0),  f'(x_n) = P'(x_n)$$ and clamped boundary $$f'(x_0) = f'(x_n) = 0$$. The following for cubic spline!
 
-<img src="/Users/sudhansh/Library/Application Support/typora-user-images/image-20220421215701164.png" alt="image-20220421215701164" style="zoom:25%;" />
+<img src="/assets/img/image-20220421215701164.png" alt="image-20220421215701164" style="zoom:25%;" />
 
 Error for **clamped** spline - Let $$f$$ be 4 times continuously differentiable and $$M = \max_{a, b}f^{(4)}(x)$$. Then error is
 
@@ -126,9 +126,9 @@ $$
 
 ### Differentiation Approximation
 
-<img src="/Users/sudhansh/Library/Application Support/typora-user-images/image-20220421220149181.png" alt="image-20220421220149181" style="zoom:25%;" />
+<img src="/assets/img/image-20220421220149181.png" alt="image-20220421220149181" style="zoom:25%;" />
 
-<img src="/Users/sudhansh/Library/Application Support/typora-user-images/image-20220421220211615.png" alt="image-20220421220211615" style="zoom: 25%;" />
+<img src="/assets/img/image-20220421220211615.png" alt="image-20220421220211615" style="zoom: 25%;" />
 
 Remember that $$x_i = h + x_{i - 1}$$. To get the error formula, substitute $$\tilde f = f + \epsilon$$.
 
@@ -187,7 +187,7 @@ Instead of this, calculate manually using $$x^i$$ polynomials for $$i \in \{0, \
 
 #### Multidimensional integral
 
-<img src="assets/image-20220421222636533.png" alt="image-20220421222636533" style="zoom: 33%;" />
+<img src="/assets/img/Numerical Analysis/image-20220421222636533.png" alt="image-20220421222636533" style="zoom: 33%;" />
 
 For Simpson’s. Similarly, you can do for Trapezoidal.
 

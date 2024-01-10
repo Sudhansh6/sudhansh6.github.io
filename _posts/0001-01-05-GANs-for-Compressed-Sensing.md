@@ -3,7 +3,7 @@
 layout: post
 title: Generative Adversarial Networks for Compressed Sensing
 categories: [Research]
-excerpt: TBA
+description: 
 
 ---
 

@@ -4,7 +4,7 @@ layout: post
 title: Handling broken python packages 
 categories: [Articles, Ubuntu]
 comments: true
-excerpt: A post to guide you through mending python libraries on Ubuntu
+description: A post to guide you through mending python libraries on Ubuntu
 
 ---
 

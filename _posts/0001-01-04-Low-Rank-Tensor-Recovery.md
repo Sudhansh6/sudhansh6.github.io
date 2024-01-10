@@ -3,7 +3,7 @@
 layout: post
 title: Low Rank Tensor Recovery for Joint Probability Distribution
 categories: [Research]
-excerpt: An introduction to Tensors and notation. Summary of a few papers.
+description: An introduction to Tensors and notation. Summary of a few papers.
 
 ---
 

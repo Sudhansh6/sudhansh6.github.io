@@ -31,13 +31,13 @@ After this, the OS opens essential files (`STD IN`, `STD OUT`, `STD ERR`). Then 
 
 - **Dead** processes have finished executing and are terminated.
 
-  | ![image-20210726215935642](assets/image-20210726215935642.png) |
+  | ![image-20210726215935642](/assets/img/Operating Systems/image-20210726215935642.png) |
   | :----------------------------------------------------------: |
   |                 *Process State Transitions*                  |
 
 When one process is blocked, another process can be executed to utilize the resources effectively. Here is a simple example reflecting this situation.
 
-| ![image-20210726220829735](assets/image-20210726220829735.png) |
+| ![image-20210726220829735](/assets/img/Operating Systems/image-20210726220829735.png) |
 | :----------------------------------------------------------: |
 |                  *Example: Process States*                   |
 

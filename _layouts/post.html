@@ -1,48 +1,87 @@
 ---
 layout: default
 ---
+<!-- _layouts/post.html -->
+{%- assign year = page.date | date: "%Y" -%}
+{%- assign tags = page.tags | join: "" -%}
+{%- assign categories = page.categories | join: "" -%}
 
-<div class="mobile">
-  <div class="collapsible-menu">
-    <input type="checkbox" id="sidebar">
-    <label for="sidebar">Menu</label>
-    <div class="menu-content">
-      <div class="sidebar">
-        {% toc %}
-      </div>
-    </div>
-  </div>
-</div>
-<div id="main" role="main" class="container1">
-  <article class="post detailed">
-    <h1>{{ page.title }}</h1>
+{% if page._styles %}
+<!-- Page/Post style -->
+<style type="text/css">
+  {{ page._styles }}
+</style>
+{% endif %}
 
-    <div>
-      <!-- <p class="author_title">{{site.author}}  ·  {{ page.date | date: "%B %e, %Y" }}</p>
-      {% if page.last_modified_at %}
-      <p class="author_title" datetime="{{ page.last_modified_at | date_to_xmlschema }}">(Updated: {{ page.last_modified_at | date: "%b %-d, %Y" }})</p>
-      {% endif %} -->
-      <div class="post-tags">
-        {% if post %}
-          {% assign categories = post.categories %}
-        {% else %}
-          {% assign categories = page.categories %}
-        {% endif %}
-        {% for category in categories %}
-          <a href="{{site.baseurl}}/categories/#{{category|slugize}}">{{category}}</a>
-          {% unless forloop.last %}&nbsp;{% endunless %}
-        {% endfor %}
-      </div>
+{% assign url_beginning = page.url | slice: 0, 6 %}
+
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+    <p class="post-meta">{{ page.date | date: "%B %-d, %Y" }}{%- if page.author -%} • {{ page.author }}{%- endif -%}{%- if page.meta -%} • {{ page.meta }}{%- endif -%}</p>
+    <p class="post-tags">
+      {% if url_beginning == '/blog/' -%}
+      <a href="{{ year | prepend: '/blog/' | prepend: site.baseurl}}"> <i class="fa-solid fa-calendar fa-sm"></i> {{ year }} </a>
+      {% else %}
+      <i class="fa-solid fa-calendar fa-sm"></i> {{ year }}
+      {%- endif %}
+      {%- if tags != "" %}
+      &nbsp; &middot; &nbsp;
+        {% for tag in page.tags -%}
+          {% if url_beginning == '/blog/' -%}
+          <a href="{{ tag | slugify | prepend: '/blog/tag/' | prepend: site.baseurl}}"> <i class="fa-solid fa-hashtag fa-sm"></i> {{ tag }}</a> &nbsp;
+          {% else %}
+          <i class="fa-solid fa-hashtag fa-sm"></i> {{ tag }} &nbsp;
+          {%- endif %}
+
+          {% endfor -%}
+      {% endif %}
+
+      {%- if categories != "" %}
+      &nbsp; &middot; &nbsp;
+        {% for category in page.categories -%}
+          {% if url_beginning == '/blog/' -%}
+          <a href="{{ category | slugify | prepend: '/blog/category/' | prepend: site.baseurl}}"> <i class="fa-solid fa-tag fa-sm"></i> {{ category }}</a> &nbsp;
+          {% else %}
+          <i class="fa-solid fa-tag fa-sm"></i> {{ category }} &nbsp;
+          {%- endif %}
+        {% endfor -%}
+      {% endif %}
+
+    </p>
+  </header>
+
+  <article class="post-content">
+    {% if page.toc and page.toc.beginning %}
+    <div id="table-of-contents">
+      {% toc %}
     </div>
-    <div class="entry">
-      <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+    <hr>
+    {% endif %}
+    <div id="markdown-content">
       {{ content }}
     </div>
-
-
-    <!--<div class="date">
-      Written on {{ page.date | date: "%B %e, %Y" }}
-    </div>-->
-    {% include disqus.html %}
   </article>
+
+  {%- if page.related_publications -%}
+  <h2>References</h2>
+  <div class="publications">
+    {% bibliography --cited_in_order %}
+  </div>
+  {%- endif %}
+
+  {%- if site.related_blog_posts.enabled -%}
+    {%- if page.related_posts == null or page.related_posts -%}
+      {% include related_posts.html %}
+    {%- endif %}
+  {%- endif %}
+
+  {%- if site.disqus_shortname and page.disqus_comments -%}
+    {% include disqus.html %}
+  {%- endif %}
+  {%- if site.giscus and page.giscus_comments -%}
+    {% include giscus.html %}
+  {%- endif -%}
+
 </div>

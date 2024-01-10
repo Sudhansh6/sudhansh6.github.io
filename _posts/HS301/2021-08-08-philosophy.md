@@ -2,8 +2,9 @@
 layout: post
 title: Philosophy Notes
 categories: [Notes]
-excerpt: An introductory philosophical course discussing the transitions in philosophical thought from Greek philosophy to modern philosophy. The notes cover topics such as classical philosophy, Socratic period, Indian philosophy, and modern philosophy.
-toc: true
+description: An introductory philosophical course discussing the transitions in philosophical thought from Greek philosophy to modern philosophy. The notes cover topics such as classical philosophy, Socratic period, Indian philosophy, and modern philosophy.
+toc: 
+    sidebar: left
 ---
 
 {% include_relative lecture1.md %}

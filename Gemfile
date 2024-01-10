@@ -1,15 +1,26 @@
 source 'https://rubygems.org'
-
-gem 'reverie-theme', '~> 1.0', '>= 1.0.1'
-gem 'markdown_helper'
-gem 'jekyll-toc'
-
 group :jekyll_plugins do
-  gem 'jekyll-postfiles'
+    gem 'classifier-reborn'
+    gem 'jekyll'
+    gem 'jekyll-archives'
+    gem 'jekyll-email-protect'
+    gem 'jekyll-feed'
+    gem 'jekyll-get-json'
+    gem 'jekyll-imagemagick'
+    gem 'jekyll-jupyter-notebook'
+    gem 'jekyll-link-attributes'
+    gem 'jekyll-minifier'
+    gem 'jekyll-paginate-v2'
+    gem 'jekyll-scholar'
+    gem 'jekyll-sitemap'
+    gem 'jekyll-toc'
+    gem 'jekyll-twitter-plugin'
+    gem 'jemoji'
+    gem 'mini_racer'
+    gem 'unicode_utils'
+    gem 'webrick'
 end
-
-gem "webrick", "~> 1.7"
-gem 'bootstrap', '~> 4.3.1'
-
-# Gemfile
-gem 'jekyll-notion', '2.4.0'
+group :other_plugins do
+    gem 'feedjira'
+    gem 'httparty'
+end

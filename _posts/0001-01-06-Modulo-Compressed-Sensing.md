@@ -2,7 +2,7 @@
 layout: post
 title: Modulo Compressed Sensing
 categories: [Research]
-excerpt: An introduction to recovery methods for measurements using fixed dynamic range sensors.
+description: An introduction to recovery methods for measurements using fixed dynamic range sensors.
 ---
 
 ## Compressed Sensing
