@@ -49,7 +49,7 @@ For classification, the few common metrics we use to evaluate models are
 - f1-score
 - ROC curve, AUC
 
-![image-20210805235203493](2021-08-05-Machine-Learning-Cheatsheet./assets/img/ML/image-20210805235203493.png)
+![image-20210805235203493](/assets/img/ML/image-20210805235203493.png)
 
 Precision and recall are defined as 
 $$
@@ -70,7 +70,7 @@ $$
 
 We can tweak the threshold of our models to improve the preferable metric.  To visualise this change, we plot the effect of each threshold on the false and true positive rates. The curve looks like:
 
-<img src="2021-08-05-Machine-Learning-Cheatsheet./assets/img/ML/image-20210805235743911.png" alt="image-20210805235743911" style="zoom:200%;" />
+<img src="/assets/img/ML/image-20210805235743911.png" alt="image-20210805235743911" style="zoom:200%;" />
 
 ### SSIM
 
