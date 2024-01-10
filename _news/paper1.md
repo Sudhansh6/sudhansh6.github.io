@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Paper on bounds for compressive signal recovery accepted to Signal Processing 2024.
+Paper on bounds for compressive signal recovery accepted at Signal Processing 2024.
