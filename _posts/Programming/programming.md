@@ -960,3 +960,4 @@ Dijkstra_Algorithm(source, G):
 - Checking boxes in Sudoku grid using `1-9` loop of `i` and `j` : `int x = (i/3)*3 + j/3, y = (i%3)*3 + j%3;` 
 - In sequence problems, make sure you test your algorithm in the beginning, the middle and the end.
   - Continuously check the range of values reached by the variables you declare. It may happen that the value of a `int` is going beyond `32` bits. 
+- Use `bitset` instead of 2D vectors for "visited" matrices. `bitset<n> bits` declares `n` bits which can be accessed using `bits[i]`.
