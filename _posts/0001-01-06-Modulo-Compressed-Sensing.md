@@ -13,7 +13,7 @@ Recover a high dimensional vector $$x$$ with a very few non-zero values. Plethor
 
  - Loss of information due to clipping. One potential approach to fix this is to wrap around the signal.
 
-   ![image-20210610112718042](/images/0001-01-01-Modulo-Compressed-Sensing/image-20210610112718042.png)​
+   ![image-20210610112718042](/assets/img/0001-01-01-Modulo-Compressed-Sensing/image-20210610112718042.png)​
 
 This is where Modulo comes in. 
 

@@ -69,11 +69,11 @@ $$
 
 ## Linear algebra of Tensors
 
-![image-20210617172019075](../images/0001-01-01-Low-Rank-Tensor-Recovery/image-20210617172019075.png)
+![image-20210617172019075](/assets/img/0001-01-01-Low-Rank-Tensor-Recovery/image-20210617172019075.png)
 
-![image-20210617172120225](../images/0001-01-01-Low-Rank-Tensor-Recovery/image-20210617172120225.png)
+![image-20210617172120225](/assets/img/0001-01-01-Low-Rank-Tensor-Recovery/image-20210617172120225.png)
 
-![image-20210617172135319](../images/0001-01-01-Low-Rank-Tensor-Recovery/image-20210617172135319.png)
+![image-20210617172135319](/assets/img/0001-01-01-Low-Rank-Tensor-Recovery/image-20210617172135319.png)
 
 For the following analysis, we shall be using the *superscript* notation to denote each element of a vector. 
 
