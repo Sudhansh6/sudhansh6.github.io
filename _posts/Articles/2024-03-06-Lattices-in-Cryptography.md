@@ -23,7 +23,7 @@ Consider a few computational problems in Lattices -
 
 - Given $$v, B$$, compute whether $$v \in \mathcal L(B)$$. This is polynomial computable using Gaussian elimination.
 - Given $$B, B’$$, compute whether $$\mathcal L(B) = \mathcal L(B’)$$. This is polynomial computable as well, using the above problem. An equivalent way to find this is to consider $$B = UB’$$ iff $$U$$ has integer entries and $$det(U) = \pm 1$$ as seen above.
-- SVP (Shortest Vector Problem) - Given a basis $$B$$ in $$\mathbb R^n$$, find the non-zero shortest vector in $$\mathcal L(B)$$. This is computationally hard for higher $$n$$ (quantumly hard too). An approximation is given by $$SVP_\gamma$$ aims to find $$v \in \mathcal L(B)$$, $$\|v\| \leq \gamma |\text{shortest}|$$.
+- SVP (Shortest Vector Problem) - Given a basis $$B$$ in $$\mathbb R^n$$, find the non-zero shortest vector in $$\mathcal L(B)$$. This is computationally hard for higher $$n$$ (quantumly hard too). An approximation is given by $$SVP_\gamma$$ aims to find $$v \in \mathcal L(B)$$, $$\|v\| \leq \gamma \|\text{shortest}\|$$.
 - CVP (Closest Vector Problem) - Given a basis $$B \in \mathbb R^n$$ and $$v \in \mathbb R^n$$, find $$v \in \mathcal L(B)$$ such that $$\|u - v\|$$ is minimized. This problem is equivalent to the above problem.
 
 Conjectures - SVP and CVP are quantumly hard!
