@@ -12,7 +12,7 @@ If you knowingly or unknowingly deleted python files from your Ubuntu, this arti
 
 # How I stumbled across the problem
 
-I love updating my OS to the latest build available. On account of this, I updated my Ubuntu to [21.04 Hirsute Hippo](https://releases.ubuntu.com/21.04/) yesterday. The update took 3-4 hours to finish, and I was delighted with the new OS. After wasting a whole day updating the OS and testing out [Windows 11](https://sudhansh6.github.io/posts/Windows-11), I decided I should get back to work.
+I love updating my OS to the latest build available. On account of this, I updated my Ubuntu to [21.04 Hirsute Hippo](https://releases.ubuntu.com/21.04/) yesterday. The update took 3-4 hours to finish, and I was delighted with the new OS. After wasting a whole day updating the OS and testing out [Windows 11](https://sudhansh6.github.io/blog/Windows-11), I decided I should get back to work.
 
 I started out with a project which requires python. On executing, the code (which was working previously) gave an error saying some modules were missing. I realized the new OS update had replaced `python3.8` with `python3.9`. I was annoyed thinking that all my modules were deleted during the update.
 
