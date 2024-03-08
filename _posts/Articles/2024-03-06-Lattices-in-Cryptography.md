@@ -1,3 +1,14 @@
+---
+
+layout: post
+title: Lattices in Cryptography
+categories: [Notes]
+excerpt: Introduction to lattice problems and their relevance in post-quantum cryptography.
+toc: 
+  sidebar: true
+
+---
+
 ## Lattices
 
 Lattices are the most promising candidate for quantum security. We have been studying these problems since many years, and there is a significant amount of research in this topic. There are other schemes based on other assumptions like code based cryptographies, etc. These are important in the case Lattices are broken since these have completely independent assumptions.
