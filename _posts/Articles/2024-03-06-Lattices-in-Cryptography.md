@@ -1,9 +1,9 @@
 ---
 
 layout: post
-title: Lattices in Cryptography
+title: Lattices in Cryptography and Quantum Computers
 categories: [Notes]
-excerpt: Introduction to lattice problems and their relevance in post-quantum cryptography.
+excerpt: Introduction to lattice problems and their relevance in post-quantum cryptography. A brief discussion of the current state of quantum computers.
 toc: 
   sidebar: true
   
@@ -84,10 +84,63 @@ Let us see the definitions of these problems -
     More elegantly, the LWE problem is described using a matrix formulation - 
     
     Given $$A \in \mathbb Z^{n \times m}_q$$  and $$e \sim X^m$$ , determine $$s \in Z_q^n$$ from $$s^T A + e^T ({\sf mod} q)$$. This is known as the *search version* of LWE. *Distinguish LWE* is an equivalent formulation where, given $$A, e, s$$ with the same distributions as before, the goal is to distinguish $$A, s^T A + e^T$$ and $$A, r^T$$ where $$r \in \mathbb Z^m_q$$. To get an intuition, we consider the following example schemes - 
+
+1. Public-key Encryption - 
     
-    1. Public-key Encryption - 
-        
-        Kyber is one such scheme, motivated from this, which is now being used by Apple (as of 2024) to encrypt messages on iMessage.
-        
+    Kyber is one such scheme, motivated from this, which is now being used by Apple (as of 2024) to encrypt messages on iMessage. SABER, NTRU are other public-key encryption schemes.
     
-    LWE has properties such begin fully homomorphic and identity-based (encrypt the message for a specific group of secret-keys). LWE can also be used for the proof of quantumness.
+    - $pk = A, u = s^T A + e^T$
+    - $sk = s$
+    - ${\sf Enc} (pk, m \in \{0, 1\}^n) :=$ choose $x \in \{0, 1\}^m$ and output $c_0 = Ax ({\sf mod} q), c_1 = \left(ux + \left[\frac{q}{2}\right].m \right)({\sf mod} q)$
+    - ${\sf Dec}(sk, c_0, c_1) :=$ output
+        
+        $$
+        \begin{align*} 
+        c_1 - s^T c_0 &= \left(ux + \left[\frac{q}{2}\right].m - s^T Ax\right) {\sf mod } q \\ v &= \left(e^T x + \left[\frac{q}{2}\right].m \right) {\sf mod } q
+        \end{align*} 
+        $$
+        
+        Now, since $x \in \{0, 1\}^m$ and $e$ is ‘short’, we can bound $\|e^Tx \| < q/4$ (A loose bound). We have the following range for $v$.
+        
+        $$
+        \begin{align*}
+        0 |————|\underbrace{————|————}|————| q \\
+         m = 0  \quad\quad\quad\quad m = 1  \quad\quad\quad\quad m = 0 \quad
+        \end{align*}
+        
+        $$
+        
+    - **Security -** Consider the following two problems -
+        - Given $pk = A, u = s^T A + e^T$, and $c_0 = Ax, c_1 = ux + \frac{q}{2} m$, find $m$.
+        - Given $pk = A,  u = r^T$ and $c_0 = Ax, c_1 = ux + \frac{q}{2}m$, find $m$
+        
+        Now, distinguishing the above two scenarios is equivalent to solving the DLWE problem! This proves the security.
+        
+2. Key-Agreement Protocol - In this scenario, we want two parties $A, B$ to establish a secret key. Let us say $A, B$ have a common matrix $M \in \mathbb Z_q^{n \times n}$ they agree on.
+    - To do so, $A$ samples $r \in \mathbb Z^n$ and $B$ samples $s \in \mathbb Z^n$ such that $r, s$ are short. This ensures that $r, s$ are in $Z_q^n$ as well. They also have associated error distributions $e, e’$ respectively.
+    - $A$ sends $u^T = r^T M + e^T$ and $B$ sends $v = Ms + e$
+    - $A$ computes $r^Tv = r^T(As + e’) \approx r^T As$
+    - $B$ computes $u^T s = (rA + e^T) s \approx r^T As$
+    - To avoid the small chance of error, $A, B$ choose the first $m$ bits of the obtained values. The error will most likely not affect these bits, and both parties obtain the same key.
+    - For an eavesdropper, both $u^T, v$ are completely random and the security is guaranteed by LWE.
+
+LWE has properties such begin fully homomorphic and identity-based (encrypt the message for a specific group of secret-keys). LWE can also be used for the proof of quantumness.
+
+The bigger picture has more problems as compared to LWE. However, the theory for LWE is robust and therefore is widely used in post-quantum cryptographic protocols.
+
+## Quantum Computers
+
+How do we make qubits, gates and quantum computers. The first Turing complete programmable computer is the ENIAC. It was built using vacuum tubes and occupied a lot of space. After that we transitioned to transistors, and the growth has been exponential. Since 1950’s to 2010’s, we were able to progress from 1 transistor to 1-trillion transistors packed in the same area. This was correctly predicted by the Moore’s law - the number of transistors in an integrated circuit doubles roughly every two years (or eighteen months). 
+
+In quantum computers, we are currently at the initial stage like the ENIAC - trying to figure out how to efficiently store the qubits. The following technologies are being experimented with - 
+
+- Atoms - Trapped Ions, Cold Atoms - We prepare individual wells or *prisons* where ions are trapped electromagnetically. Two ions trapped can represent an entangled state. Lasers are used to control the properties of these ions. The qubits remain coherent for an impressive amount of time - for a few minutes. Typically, qubits are heavily influenced by the environment - the environment gets decohered easily. However, this technology is not easy to scale - the best we can do is 30 qubits. Also, applying 2-qubit gates using lasers is quite difficult.
+- Superconductors - The idea is to cool certain metals to $0K$ - The materials then lose their electromagnetic properties. When two metals close together are cooled down, then they form a qubit due to *quantum tunnelling effect*. The operations are still conducted by lasers but the scalability is better. The quantum computers currently being used by Google and IBM are made from this technology. The accuracy is not high but scalability is easy (these companies use those big numbers to increase stock prices). The longevity is in the order of microseconds!
+- Photons - There are some controversies with photons, with regards to using them as universal qubits. The qubits are formed using circulating in waveguides using the polarity of photons. This are difficult to scale and it is difficult to use them for ‘quantum speedup’ algorithms.
+- Silicon dots - Artificial atoms made by adding an electron to silicon and these are controlled by microwaves. This is still in the experimental stage.
+
+Currently, the accuracy for quantum gates is not as good for consumer use - the accuracy is 99.9%. IonQ based on trapped ions is currently at around ~35 qubits whereas IBM based on superconducting technology is at a 1000 qubits. However, the error per qubit in the latter case is around 2% making it infeasible to do any practical applications with these chips. Both these strides in accuracy and size are needed to reach quantum supremacy. How many years would it take to reach fault-tolerant quantum computers with a million qubits? We are not sure. The problem is not with the technology, but with the engineering - quantum computers require a lot of calibration to work with a good accuracy.
+
+Recently, a few noisy qubits (53 in total) were able to outperform the fastest classical computers on the Poisson sampling problem. The fastest classical computers would take around 10,000 years to solve this problem!<sup>[1](#footnote1)</sup> This shows promise in the era of quantum computing. 
+
+<a name="footnote1">1</a>: IBM showed that this result is feasible using their classical supercomputer which took 2 days to solve the problem. Even then, a few qubits solved this in minutes, so quantum supremacy is still a promising avenue.
