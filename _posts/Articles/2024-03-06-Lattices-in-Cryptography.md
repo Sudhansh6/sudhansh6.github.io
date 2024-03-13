@@ -89,10 +89,10 @@ Let us see the definitions of these problems -
     
     Kyber is one such scheme, motivated from this, which is now being used by Apple (as of 2024) to encrypt messages on iMessage. SABER, NTRU are other public-key encryption schemes.
     
-    - $pk = A, u = s^T A + e^T$
-    - $sk = s$
-    - ${\sf Enc} (pk, m \in \{0, 1\}^n) :=$ choose $x \in \{0, 1\}^m$ and output $c_0 = Ax ({\sf mod} q), c_1 = \left(ux + \left[\frac{q}{2}\right].m \right)({\sf mod} q)$
-    - ${\sf Dec}(sk, c_0, c_1) :=$ output
+    - $$pk = A, u = s^T A + e^T$$
+    - $$sk = s$$
+    - $${\sf Enc} (pk, m \in \{0, 1\}^n) :=$$ choose $$x \in \{0, 1\}^m$$ and output $$c_0 = Ax ({\sf mod} q), c_1 = \left(ux + \left[\frac{q}{2}\right].m \right)({\sf mod} q)$$
+    - $${\sf Dec}(sk, c_0, c_1) :=$$ output
         
         $$
         \begin{align*} 
@@ -100,7 +100,7 @@ Let us see the definitions of these problems -
         \end{align*} 
         $$
         
-        Now, since $x \in \{0, 1\}^m$ and $e$ is ‘short’, we can bound $\|e^Tx \| < q/4$ (A loose bound). We have the following range for $v$.
+        Now, since $$x \in \{0, 1\}^m$$ and $$e$$ is ‘short’, we can bound $$\|e^Tx \| < q/4$$ (A loose bound). We have the following range for $$v$$.
         
         $$
         \begin{align*}
@@ -111,18 +111,18 @@ Let us see the definitions of these problems -
         $$
         
     - **Security -** Consider the following two problems -
-        - Given $pk = A, u = s^T A + e^T$, and $c_0 = Ax, c_1 = ux + \frac{q}{2} m$, find $m$.
-        - Given $pk = A,  u = r^T$ and $c_0 = Ax, c_1 = ux + \frac{q}{2}m$, find $m$
+        - Given $$pk = A, u = s^T A + e^T$$, and $$c_0 = Ax, c_1 = ux + \frac{q}{2} m$$, find $$m$$.
+        - Given $$pk = A,  u = r^T$$ and $$c_0 = Ax, c_1 = ux + \frac{q}{2}m$$, find $$m$$
         
         Now, distinguishing the above two scenarios is equivalent to solving the DLWE problem! This proves the security.
         
-2. Key-Agreement Protocol - In this scenario, we want two parties $A, B$ to establish a secret key. Let us say $A, B$ have a common matrix $M \in \mathbb Z_q^{n \times n}$ they agree on.
-    - To do so, $A$ samples $r \in \mathbb Z^n$ and $B$ samples $s \in \mathbb Z^n$ such that $r, s$ are short. This ensures that $r, s$ are in $Z_q^n$ as well. They also have associated error distributions $e, e’$ respectively.
-    - $A$ sends $u^T = r^T M + e^T$ and $B$ sends $v = Ms + e$
-    - $A$ computes $r^Tv = r^T(As + e’) \approx r^T As$
-    - $B$ computes $u^T s = (rA + e^T) s \approx r^T As$
-    - To avoid the small chance of error, $A, B$ choose the first $m$ bits of the obtained values. The error will most likely not affect these bits, and both parties obtain the same key.
-    - For an eavesdropper, both $u^T, v$ are completely random and the security is guaranteed by LWE.
+2. Key-Agreement Protocol - In this scenario, we want two parties $$A, B$$ to establish a secret key. Let us say $$A, B$$ have a common matrix $$M \in \mathbb Z_q^{n \times n}$$ they agree on.
+    - To do so, $$A$$ samples $$r \in \mathbb Z^n$$ and $$B$$ samples $$s \in \mathbb Z^n$$ such that $$r, s$$ are short. This ensures that $$r, s$$ are in $$Z_q^n$$ as well. They also have associated error distributions $$e, e’$$ respectively.
+    - $$A$$ sends $$u^T = r^T M + e^T$$ and $$B$$ sends $$v = Ms + e$$
+    - $$A$$ computes $$r^Tv = r^T(As + e’) \approx r^T As$$
+    - $$B$$ computes $$u^T s = (rA + e^T) s \approx r^T As$$
+    - To avoid the small chance of error, $$A, B$$ choose the first $$m$$ bits of the obtained values. The error will most likely not affect these bits, and both parties obtain the same key.
+    - For an eavesdropper, both $$u^T, v$$ are completely random and the security is guaranteed by LWE.
 
 LWE has properties such begin fully homomorphic and identity-based (encrypt the message for a specific group of secret-keys). LWE can also be used for the proof of quantumness.
 
@@ -135,7 +135,7 @@ How do we make qubits, gates and quantum computers. The first Turing complete pr
 In quantum computers, we are currently at the initial stage like the ENIAC - trying to figure out how to efficiently store the qubits. The following technologies are being experimented with - 
 
 - Atoms - Trapped Ions, Cold Atoms - We prepare individual wells or *prisons* where ions are trapped electromagnetically. Two ions trapped can represent an entangled state. Lasers are used to control the properties of these ions. The qubits remain coherent for an impressive amount of time - for a few minutes. Typically, qubits are heavily influenced by the environment - the environment gets decohered easily. However, this technology is not easy to scale - the best we can do is 30 qubits. Also, applying 2-qubit gates using lasers is quite difficult.
-- Superconductors - The idea is to cool certain metals to $0K$ - The materials then lose their electromagnetic properties. When two metals close together are cooled down, then they form a qubit due to *quantum tunnelling effect*. The operations are still conducted by lasers but the scalability is better. The quantum computers currently being used by Google and IBM are made from this technology. The accuracy is not high but scalability is easy (these companies use those big numbers to increase stock prices). The longevity is in the order of microseconds!
+- Superconductors - The idea is to cool certain metals to $$0K$$ - The materials then lose their electromagnetic properties. When two metals close together are cooled down, then they form a qubit due to *quantum tunnelling effect*. The operations are still conducted by lasers but the scalability is better. The quantum computers currently being used by Google and IBM are made from this technology. The accuracy is not high but scalability is easy (these companies use those big numbers to increase stock prices). The longevity is in the order of microseconds!
 - Photons - There are some controversies with photons, with regards to using them as universal qubits. The qubits are formed using circulating in waveguides using the polarity of photons. This are difficult to scale and it is difficult to use them for ‘quantum speedup’ algorithms.
 - Silicon dots - Artificial atoms made by adding an electron to silicon and these are controlled by microwaves. This is still in the experimental stage.
 
