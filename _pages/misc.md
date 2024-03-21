@@ -78,6 +78,7 @@ I'm adding a list of useful websites that can be used for handy computations. Th
 - [Algorithms for Decision Making](https://algorithmsbook.com/)
 - [Machine Learning Concepts Overview](https://mlspring.beehiiv.com/)
 - [Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf)
+- [The best Geometric Processing Library](https://github.com/micycle1/PGS)
 
 # Fun Websites
 - [Oatmeal Comics](https://theoatmeal.com/comics/)
