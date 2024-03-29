@@ -25,7 +25,7 @@ A Generative Adversarial Network consists of a generator and a discriminator pai
 
 A variant of GANs, called _conditional_ GANs operate in a latent space. That is, we have multi-dimensional space where each point corresponds to a set of parameters that can be mapped to data in the target distribution. The generator is then 'conditioned' on a random vector sampled from this latent space as input. These vectors act as a source of randomness that the generator uses to produce diverse data samples. By exploring different points in the latent space, the generator can generate a wide variety of data, allowing it to produce novel and creative outputs.
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation0.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation0.png)
 
 ### GANs
 
@@ -75,15 +75,15 @@ Stable training process as compared to GANs
 
 DALL\-E uses transformers
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation2.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation2.png)
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation3.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation3.png)
 
 ---
 
 pixelCNN
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation4.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation4.png)
 
 * __Issues \-__
 * Accumulated errors \- Since pixels generated in sequence
@@ -102,9 +102,9 @@ A Diffusion Model is trained by finding the reverse Markov transitions that maxi
 
 x0 is the image and xT is the noise\!
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation5.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation5.png)
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation6.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation6.png)
 
 ---
 
@@ -118,9 +118,9 @@ With a large number of steps \- process is reversible \- mathematically shown
 
 Training motivated from VAEs
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation7.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation7.png)
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation8.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation8.png)
 
 ---
 
@@ -132,15 +132,15 @@ __Reverse Diffusion __ \- The parameters have to be learned via a neural network
 
 Encoder\-Decoder type architecture
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation9.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation9.png)
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation10.gif)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation10.gif)
 
 ---
 
 https://arxiv.org/pdf/2006.11239.pdf
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation11.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation11.png)
 
 ---
 
@@ -158,17 +158,17 @@ The model learns the data distribution p $$x$$  by denoising a normal variable
 
 These can be interpreted as a sequence of denoising autoencoders
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation12.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation12.png)
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation13.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation13.png)
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation14.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation14.png)
 
 ---
 
 https://arxiv.org/pdf/2006.11239.pdf
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation15.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation15.png)
 
 __Difference from GANs__
 
@@ -217,7 +217,7 @@ U Nets are encoder decoder with skip connections
 * Other conditional generation tasks
 
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation17.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation17.png)
 
 __Features__
 
@@ -231,7 +231,7 @@ Variable compression rate for the latent space
 
 Latent space once generated\, can be used for multiple DM models
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation18.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation18.png)
 
 ### Latent Spaces - Autoencoding
 
@@ -305,7 +305,7 @@ High factors cause stagnating fidelity after comparably few training steps \- sa
 
 Factors 4\, 8 and 16 strike a good balance
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation19.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation19.png)
 
 ### Image Generation
 
@@ -313,14 +313,14 @@ This model has half the parameters and requires 4 times lesser computation resou
 
 Precision and recall to assess the mode\-coverage
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation20.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation20.png)
 
 ---
 
 Precision and recall estimated by nearest neighbours
 
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation21.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation21.png)
 
 ### Conditional Tasks
 
@@ -328,25 +328,25 @@ __Transformer Encoders for LDMs__
 
 For text\-to\-image generation\, BERT\-tokenizer is used to infer a latent code that is mapped into the U\-Net via cross\-attention
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation22.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation22.png)
 
 __Image\-to\-Image translations__
 
 Semantic representations in the latent spaces are simply concatenated
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation23.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation23.png)
 
 ### Super-Resolution
 
 The low\-resolution image is simply concatenated as the conditioned input after bi\-cubic interpolation
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation24.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation24.png)
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation25.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation25.png)
 
 ### Image Inpainting
 
-![](Stable_Diffusion_Models.assets/KnowDis%20Presentation26.png)
+![](/assets/img/Stable_Diffusion_Models.assets/KnowDis%20Presentation26.png)
 
 
 
