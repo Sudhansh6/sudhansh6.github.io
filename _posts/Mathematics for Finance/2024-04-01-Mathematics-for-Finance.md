@@ -51,7 +51,7 @@ $$B$$ can invest the amount in the bank for a *continuous compound* interest rat
 
 So the fair price is $$S_0 e^{rT}$$ where neither $$A$$ nor $$B$$ can take advantage.
 
-### European Call Options
+## European Call Options
 
 Options are similar to forward contracts where the parties agree on a transaction in the future. The important difference is that the option holder *has the right to buy the instrument with no obligation* at $$t = T$$ for $$\$ K$$ called the **strike price**. At time $$T$$, if the market price of the instrument is greater than $$K$$, then the option holder exercises his right to gain a profit. Otherwise, he chooses to do nothing. We have the following assuming the option is free -
 
@@ -63,3 +63,7 @@ P = (S_T - K)^+ = \begin{cases}
 $$
 
 How do we decide the *fair price* at $$t = 0$$ for the option? We need to use probability results to model the price movement to decide this. In discrete time settings, we use different models like Cox, Ross and Rubenstein. In continuous time frame, we use Brownian motion using the Black-Scholes model. In both cases, there exists a unique fair price. However, if the product is slightly more complicated, then there is no unique fair price.
+
+We now delve into different pricing models.
+
+{% include_relative 02.md %}
