@@ -64,6 +64,17 @@ $$
 
 How do we decide the *fair price* at $$t = 0$$ for the option? We need to use probability results to model the price movement to decide this. In discrete time settings, we use different models like Cox, Ross and Rubenstein. In continuous time frame, we use Brownian motion using the Black-Scholes model. In both cases, there exists a unique fair price. However, if the product is slightly more complicated, then there is no unique fair price.
 
-We now delve into different pricing models.
+### Contingent Claim
+In general, we want to be able to price a contract with a general underlying random variable $$X$$ that evolves across time with $$X(w) \geq 0$$. For example, for the *call* option described above, we have
+$$ X(w) = (S(w)_t - K)^+ $$
+For a *put* option, where the holder has the right to sell a certain asset at a fixed price, we get
+$$X(w) = K - S_T)^+$$.
+
+There can be other kinds of *structured products* like
+- $$ X = \max(S_1, \dots, S_T) $$
+- $$ X = \left(\frac{1}{T} \sum_{t = 1}^T S_t - K\right)^+ $$
+
+In the above definitions, the variables $$w, S_t$$ capture the evolution of price across time, and are described in the next section.
 
 {% include_relative 02.md %}
+{% include_relative 03.md %}
