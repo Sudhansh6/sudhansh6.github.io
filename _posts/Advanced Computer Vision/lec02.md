@@ -1,6 +1,4 @@
----
 
----
 Limits of supervised deep learning
 • Large scale labeled data is not always available
 • Lack of generalization to unseen domains
@@ -58,6 +56,8 @@ However, in practice, the empirical receptive fields in the deeper networks is l
 
 Convolution networks are augmented with *dense* layers to get the output, to learn from the feature maps. 
 
+The vanishing gradient problem in deeper networks has been solved using **skip connections** wherein the features from the earlier layers are concatenated with the deeper ones to allow passage of information. This way, we provide the network with the original input allowing it to learn the smaller fluctuations in the input (rather than focusing on learning the input itself). 
+
 In summary, the key operations in convolutional layers are
 
 ```Input image -> Convlution -> Non-linearity -> Spatial Pooling -> Feature Maps```
@@ -67,6 +67,24 @@ CNNs have the above set of operations repeated many times. CNNs have been succes
 - Good inductive biases - Remarkable in transferring knowledge across tasks
 - Ease of implementation - Can be trained end-to-end, rather than hand-crafted for each task, and they can easily be implemented on parallel architectures.
 
-### 
+The key ideas - 
+- Convolutional layers leverage the local connectivity and weight sharing to reduce the number of learnable parameters
+- Pooling layers allow larger receptive fields
+- Smaller kernels limit the number of parameters without compromising the performance much. For example, $$(1 \times 1)$$ kernels are reduce the dimension in the channels dimension.
+- Skip connections allow easier optimization with greater depth.
+
+> Why are (1, 1) kernels useful? Use fewer channels instead?
+
+### Transformers
+Transformers have shown better results in almost every task that CNNs have shone previously in. CNNs require significant depth or larger kernels to share information between non-local spatial locations. Many tasks, such as question-answering, require *long-range* reasoning and transformers are very good at this. This is the primary intuition behind **attention mechanism** which is representative of foveated vision in humans.
+
+**Tokens** - A data type than can be understood as a set of neurons obtained from vectorizing patches of an image. Typically need not be vectors, but they can be any structured froup that alows a set of differentiable operations. Note that these tokens in hidden layers might not correspond to pixels or interpretable attributes.
+
+The following captures a very good intuition for transformers.
+>> A transformers acts on tokens similarly as neural network acts on neurons. That is, combining tokens is same as for neurons, except tokens are vectors $$ t_{out }= \sum_i w_i t_i$$. In neural networks, linear layers are represented by $$x_{out} = W x_{in}$$ and $$W$$ is data-free, whereas in transformers, $$T_{out} = AT_{in}$$, $$A$$ depends on the data (attention). Again, non-linearity in neural networks is implemented via functions like ReLU whereas transformers use dense layers for non-linearity.
+
+The attention layer is a spsecial kind of lienar transformation of tokens, wherein the attention function $$A = f(.)$$ tells how much importance to pay to each token dependinng on the input query and other signals. The required information is embedded in some dimension of the token representation. For example, the first dimension can count the number of horses in an iamge, and the bottom 3 dimensions can encode the color of the horse on the right. Attention has this flexibility to different allocations address different parts of a query.
+
+> Apply embedding and neural network (before CNNs and Transofrmers)? Same number of parameters? Essentially similar thing? Associated higher weight to more related embedding.
 
 
