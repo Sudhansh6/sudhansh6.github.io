@@ -9,4 +9,4 @@ toc:
   
 ---
 
-{% include lec02.md %}
+{% include_relative lec02.md %}
