@@ -216,6 +216,14 @@ plugins:
   - jekyll-toc
   - jekyll-twitter-plugin
   - jemoji
+  - jekyll-notion
+
+# --------------------------
+# Notion integration
+# --------------------------
+notion:
+  databases:
+    - id: 5cfed4de3bdc4f43ae8ba653a7a2219b
 
 # Sitemap settings
 defaults:

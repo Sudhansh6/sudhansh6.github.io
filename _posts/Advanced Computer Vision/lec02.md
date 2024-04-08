@@ -1,22 +1,23 @@
+Vision is a fundamental interface to the world, and it has become a crucial component in the development of intelligent systems. The field has deep and attractive scientific problems, which have been advancing at a rapid pace in the past few years.  
+In the early days of research, the focus in vision was on engineering “good” features coupled with a optimisation algorithm or a shallow neural network. As the processors became more powerful, the emphasis shifted to end-to-end approaches with inclusion of self-supervision and multi-modal learning paradigms.
 
-Limits of supervised deep learning
-• Large scale labeled data is not always available
-• Lack of generalization to unseen domains
-• Good at narrow “classification”, not at broad “reasoning”
-• Lack of interpretability
-• Lack of reliability, security or privacy guarantee
+It is often helpful to breakdown the perception tasks into known-algorithms. For example, in autonomous driving, the tasks include SLAM (visual, Structure from Motion), path planning (lane detection, obstacle detection, 3D localization), Semantic segmentation etc. Similarly, the tasks in augmented reality devices are gaze tracking, material and lighting estimation, head pose estimation, depth estimation, etc.
 
-In the recent years, the four big advances in computer vision can arguably be summarized as 
+Deep learning has opened new areas of research in vision. Features such as generation of high-quality content, end-to-end training, data-driven priors and highly parallelizable architectures have proven advantageous for many problems in computer vision. However, it is also important to note the limitations of these techniques -
+- Large scale labeled data is not always available
+- Lack of generalization to unseen domains
+- Good at narrow “classification", not at broad “reasoning"
+- Lack of interpretability
+- Lack of reliability, security or privacy guarantee
+
+To counter these problems, we typically couple our algorithms with self-supervision, physical modelling, multi-modal learning and *foundation models*. In the recent years, these techniques have been applied to various problems, and the following are arguably the biggest advances in Computer Vision -
 
 - Vision Transformers
 - Vision-Language Models
 - Diffusion Models
 - Neural Rendering
 
-The course will cover the following topics - 
-- Autonomous driving 
-- 3D content creation
-- Vision and Language
+These techniques show promise to solve keystone problems in augmented reality, interactive robotics, and autonomous driving. The course will cover the following these topics, along with other fundamentals required.
 
 > Demonstrate code in presentation
 
