@@ -1,3 +1,4 @@
+# Introduction
 Vision is a fundamental interface to the world, and it has become a crucial component in the development of intelligent systems. The field has deep and attractive scientific problems, which have been advancing at a rapid pace in the past few years.  
 In the early days of research, the focus in vision was on engineering “good” features coupled with a optimisation algorithm or a shallow neural network. As the processors became more powerful, the emphasis shifted to end-to-end approaches with inclusion of self-supervision and multi-modal learning paradigms.
 
