@@ -89,4 +89,3 @@ The attention layer is a spsecial kind of lienar transformation of tokens, where
 
 > Apply embedding and neural network (before CNNs and Transofrmers)? Same number of parameters? Essentially similar thing? Associated higher weight to more related embedding.
 
-
