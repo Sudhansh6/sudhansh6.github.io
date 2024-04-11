@@ -1,13 +1,13 @@
 ---
-
 layout: post
 title: Mathematics for Finance
 categories: [Notes]
 excerpt: Discussion on Discrete and continuous pricing models for Options, No-arbitrage pricing and the mathematics involved.
 toc: 
   sidebar: true
-  
+
 ---
+
 ## Introduction
 
 We will discuss mathematics for options, pricing methods, and optimizing the performance of a portfolio. We will cover discrete (finite probability spaces, tree models) as well as continuous math (Brownian Motion, Black-Scholes formula, Martingale theory).
@@ -41,13 +41,12 @@ We assume that $$A, B$$ don’t invest their own money, and borrow money from th
 $$B$$ can invest the amount in the bank for a *continuous compound* interest rate $$r$$ during this term. The claim is that $$F = S_0 e^{rT}$$ where $$S_0$$ is the price of the share at $$t = 0$$.  To analyze this, we consider the following cases -
 
 - $$F > S_0 e^{rT}$$
-    
+  
     $$A$$ sells the share for $$\$ F$$ and repays the loan of $$\$ S_0$$ with interest - $$\$ S_0 e^{rT}$$. The profit $$A$$ gets is $$F - S_0 e^{rT}$$
-    
+
 - $$F > S_0e^{rT}$$
-    
+  
     $$B$$ short sells one share for $$\$  S_0$$ and invests $$\$ S_0$$ in the bank. The money in the bank will grow to $$S_0 e^{rT}$$ at $$t = T$$, and $$B$$ buys one share at $$F$$. The profit for $$B$$ here is $$S_0 e^{rT} - F > 0$$
-    
 
 So the fair price is $$S_0 e^{rT}$$ where neither $$A$$ nor $$B$$ can take advantage.
 
@@ -65,12 +64,14 @@ $$
 How do we decide the *fair price* at $$t = 0$$ for the option? We need to use probability results to model the price movement to decide this. In discrete time settings, we use different models like Cox, Ross and Rubenstein. In continuous time frame, we use Brownian motion using the Black-Scholes model. In both cases, there exists a unique fair price. However, if the product is slightly more complicated, then there is no unique fair price.
 
 ### Contingent Claim
+
 In general, we want to be able to price a contract with a general underlying random variable $$X$$ that evolves across time with $$X(w) \geq 0$$. For example, for the *call* option described above, we have
 $$ X(w) = (S(w)_t - K)^+ $$
 For a *put* option, where the holder has the right to sell a certain asset at a fixed price, we get
 $$X(w) = K - S_T)^+$$.
 
 There can be other kinds of *structured products* like
+
 - $$ X = \max(S_1, \dots, S_T) $$
 - $$ X = \left(\frac{1}{T} \sum_{t = 1}^T S_t - K\right)^+ $$
 
@@ -79,3 +80,5 @@ In the above definitions, the variables $$w, S_t$$ capture the evolution of pric
 {% include_relative 02.md %}
 {% include_relative 03.md %}
 {% include_relative 04.md %}
+
+{% include_relative 05.md %}
