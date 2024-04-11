@@ -72,29 +72,31 @@ In summary, the key operations in convolutional layers are
 
 CNNs have the above set of operations repeated many times. CNNs have been successful due to the following reasons
 
-- Good Abstractions - Hierarchical and expressive feature representations
-- Good inductive biases - Remarkable in transferring knowledge across tasks
-- Ease of implementation - Can be trained end-to-end, rather than hand-crafted for each task, and they can easily be implemented on parallel architectures.
+- Good Abstractions - Hierarchical and expressive feature representations. Conventional image processing algorithms relied on a pyramidal representation of features, and this methodology has also paved its way in CNNs.
+- Good inductive biases - Remarkable in transferring knowledge across tasks. That is, pretrained networks can be easily augmented with other general tasks.
+- Ease of implementation - Can be trained end-to-end, rather than hand-crafted for each task, and they can easily be implemented on parallel architectures. 
 
 The key ideas - 
 
-- Convolutional layers leverage the local connectivity and weight sharing to reduce the number of learnable parameters
-- Pooling layers allow larger receptive fields
-- Smaller kernels limit the number of parameters without compromising the performance much. For example, $$(1 \times 1)$$ kernels are reduce the dimension in the channels dimension.
+- Convolutional layers leverage the local connectivity and weight sharing to reduce the number of learnable parameters. 
+- Pooling layers allow larger receptive fields letting us capture global features.
+- Smaller kernels limit the number of parameters without compromising the performance much. This design decision comes from preferring deeper networks over wider networks. For example, $$(1 \times 1)$$ kernels are reduce the dimension in the channels dimension. 
 - Skip connections allow easier optimization with greater depth.
 
 > Why are (1, 1) kernels useful? Use fewer channels instead?
 
 ## Transformers
 
-Transformers have shown better results in almost every task that CNNs have shone previously in. CNNs require significant depth or larger kernels to share information between non-local spatial locations. Many tasks, such as question-answering, require *long-range* reasoning and transformers are very good at this. This is the primary intuition behind **attention mechanism** which is representative of foveated vision in humans.
+Transformers have shown better results in almost every task that CNNs have shone previously in. CNNs require significant depth or larger kernels to share information between non-local spatial locations (recall receptive fields). 
+
+Many tasks, such as question-answering, require *long-range* reasoning and transformers are very good at this. For example, placing objects in augmented reality requires reasoning about light-sources, surface estimation, occlusion/shadow detection, etc. This is the primary intuition behind **attention mechanism** which is representative of foveated vision in humans.
 
 **Tokens** - A data type than can be understood as a set of neurons obtained from vectorizing patches of an image. Typically need not be vectors, but they can be any structured froup that alows a set of differentiable operations. Note that these tokens in hidden layers might not correspond to pixels or interpretable attributes.
 
 The following captures a very good intuition for transformers.
 
-*A transformers acts on tokens similarly as neural network acts on neurons. That is, combining tokens is same as for neurons, except tokens are vectors $$ t_{out }= \sum_i w_i t_i$$. In neural networks, linear layers are represented by $$x_{out} = W x_{in}$$ and $$W$$ is data-free, whereas in transformers, $$T_{out} = AT_{in}$$, $$A$$ depends on the data (attention). Again, non-linearity in neural networks is implemented via functions like ReLU whereas transformers use dense layers for non-linearity.*
+*A transformers acts on tokens similarly as neural network acts on neurons. That is, combining tokens is same as for neurons, except tokens are vectors $$ t_{out }= \sum_i w_i t_i$$. In neural networks, linear layers are represented by $$x_{out} = W x_{in}$$ and $$W$$ is data-free, whereas in transformers, $$T_{out} = AT_{in}$$, $$A$$ depends on the data (attention). Again, non-linearity in neural networks is implemented via functions like ReLU whereas transformers use dense layers for non-linearity (applied token wise).*
 
-The attention layer is a spsecial kind of lienar transformation of tokens, wherein the attention function $$A = f(.)$$ tells how much importance to pay to each token dependinng on the input query and other signals. The required information is embedded in some dimension of the token representation. For example, the first dimension can count the number of horses in an iamge, and the bottom 3 dimensions can encode the color of the horse on the right. Attention has this flexibility to different allocations address different parts of a query. They can "attend" to only certain patches which are important to the query. This kind of functionality is difficult with CNNs.
+The attention layer is a spsecial kind of lienar transformation of tokens, wherein the attention function $$A = f(.)$$ tells how much importance to pay to each token depending on the input query and other signals. *Attention-maps* help us visualize the global dependencies in the information. The required information is embedded in some dimension of the token representation. For example, the first dimension can count the number of horses in an iamge, and the bottom 3 dimensions can encode the color of the horse on the right. Attention has this flexibility to different allocations address different parts of a query. They can "attend" to only certain patches *which are important to the query*. This kind of functionality is difficult with CNNs.
 
 > Apply embedding and neural network (before CNNs and Transofrmers)? Same number of parameters? Essentially similar thing? Associated higher weight to more related embedding.
