@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Started teaching assistantship for Theory of Computing
+Started Teaching Assistantship for Theory of Computing
