@@ -91,6 +91,8 @@ Transformers have shown better results in almost every task that CNNs have shone
 
 Many tasks, such as question-answering, require *long-range* reasoning and transformers are very good at this. For example, placing objects in augmented reality requires reasoning about light-sources, surface estimation, occlusion/shadow detection, etc. This is the primary intuition behind **attention mechanism** which is representative of foveated vision in humans.
 
+![](C:\Users\ITSloaner\AppData\Roaming\marktext\images\2024-04-10-18-24-09-image.png)
+
 **Tokens** - A data type than can be understood as a set of neurons obtained from vectorizing patches of an image. Typically need not be vectors, but they can be any structured froup that alows a set of differentiable operations. Note that these tokens in hidden layers might not correspond to pixels or interpretable attributes.
 
 The following captures a very good intuition for transformers.

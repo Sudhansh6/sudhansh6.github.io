@@ -17,6 +17,38 @@ The purpose of "values" is to 'project' back the similarities between queries an
 
 Also note that, if the patch-size is too large, then we might lose the information within the patches. This is a tradeoff, and the decision is made based on the task at hand. For example, classification may work with large patches but tasks such as segmentation may not.
 
+#### Self-Attention
 
+How do we learn implicit representations that can work with general queries? We compute *self-attention* using the image tokens as the queries - information derived from the image itself. How does this process help us? For example, if we are performing instance segmentation of an image with horses. Then, the concept of 'horse' is learned by attending more to tother horse tokens and less to background. Similarly, 'a particular instance' is learned by attending less to the tokens from other horses. When we do this for all pairs across $$N$$ tokens gives us an $$N \times N$$ attention matrix. 
 
+<img src="https://jalammar.github.io/images/t/self-attention-matrix-calculation.png" title="" alt="" width="307">
 
+<img src="https://jalammar.github.io/images/t/self-attention-matrix-calculation-2.png" title="" alt="" width="393">
+
+Typically, this matrix is computed in the **encoder** part of a transformer. This matrix is then used in the decoder with an input query to obtain the required results. 
+
+### Encoders
+
+An encoder of a transformers typically consists of many identical blocks connected serially with one another. Each such encoder block, computes a self-attention matrix and passes it through a feed-forward neural network. Encoder blocks are applied *in parallel* to each of the tokens (patches in vision transformers) to obtain the embeddings. The original transformers paper divides the similarities with $$\sqrt{N}$$ where $$N$$ is the embedding dimension.  This allows the gradients to stabilise and gives much better performance. This a simplified view of the mechanisms used in transformers. 
+
+In addition to these, transformers also use *positional encoding* to encode the position of the tokens in the input sequence. In the context of images, is encodes where each patch occurs in the image.  
+
+![](C:\Users\ITSloaner\AppData\Roaming\marktext\images\2024-04-10-18-07-17-image.png) 
+
+Positional encoding is usually done via sinusoidal functions. Other "learning-based" representations have been explored but they don't have much different effect. This encoding structure allows extrapolation to sequnce lengths not seen in training.
+
+They also have *multi-head attention* which is equivalent to multiple channels in CNNs. That is, it allows patches to output more than one type of information. 
+
+![](https://jalammar.github.io/images/t/transformer_multi-headed_self-attention-recap.png)
+
+This [blog]([The Illustrated Transformer – Jay Alammar – Visualizing machine learning one concept at a time. (jalammar.github.io)](https://jalammar.github.io/illustrated-transformer/)) explains these mechanisms in-depth for interested readers. In summary, the functions of the encoder is visualized as
+
+![](https://jalammar.github.io/images/t/transformer_resideual_layer_norm_3.png)
+
+### Decoders
+
+A decoder block is similar to an encoder block, with auto-regressive . The attention values learned in Encoders are used as 'keys' in the decoder attention block. This is called as *cross attention*. 
+
+## Vision-Transformers
+
+They use onlt the encoder part of the architecture where the image is divided into patches which are flattened and projects with a linear layer or a CNN. One addition made in vision transformers is a learnable class embedding  that helps the model to understand the ??
