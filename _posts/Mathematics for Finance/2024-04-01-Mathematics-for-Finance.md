@@ -82,3 +82,5 @@ In the above definitions, the variables $$w, S_t$$ capture the evolution of pric
 {% include_relative 04.md %}
 
 {% include_relative 05.md %}
+
+{% include_relative 06.md %}

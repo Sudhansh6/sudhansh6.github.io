@@ -41,7 +41,7 @@ They also have *multi-head attention* which is equivalent to multiple channels i
 
 ![](https://jalammar.github.io/images/t/transformer_multi-headed_self-attention-recap.png)
 
-This [blog]([The Illustrated Transformer – Jay Alammar – Visualizing machine learning one concept at a time. (jalammar.github.io)](https://jalammar.github.io/illustrated-transformer/)) explains these mechanisms in-depth for interested readers. In summary, the functions of the encoder is visualized as
+This [blog](https://jalammar.github.io/illustrated-transformer/)explains these mechanisms in-depth for interested readers. In summary, the functions of the encoder is visualized as
 
 ![](https://jalammar.github.io/images/t/transformer_resideual_layer_norm_3.png)
 
