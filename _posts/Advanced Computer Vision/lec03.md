@@ -3,6 +3,7 @@
 The mechanisms described previously are implemented by projecting tokens into queries, keys and values. Each of these are a vector of dimensions $p$, where $p < d$. The **query** vector for the question is used to weigh the **key** vector for each token to obtain the **values**. This is done via computing the similarity between query and each key, and then the *attention* is given by the extent of similarities, normalized with softmax. The output token is obtained by summing all value vectors with weights assigned from the previous calculations. Roughly, the process looks like -
 
 $$
+\begin{align*}
 \left. 
 \begin{align*}
 q = W_q t \\ 
@@ -11,6 +12,7 @@ K_i = W_k t_i
 \right\} \implies s_i = q^T k_i \\ 
 a_i = softmax(s_i) \\
 t_{out} = \sum a_i v_i
+\end{align*}
 $$
 
 The purpose of "values" is to 'project' back the similarities between queries and keys to the 'token space'. 
@@ -29,7 +31,9 @@ Typically, this matrix is computed in the **encoder** part of a transformer. Thi
 
 ### Encoders
 
-An encoder of a transformers typically consists of many identical blocks connected serially with one another. Each such encoder block, computes a self-attention matrix and passes it through a feed-forward neural network. Encoder blocks are applied *in parallel* to each of the tokens (patches in vision transformers) to obtain the embeddings. The original transformers paper divides the similarities with $$\sqrt{N}$$ where $$N$$ is the embedding dimension.  This allows the gradients to stabilise and gives much better performance. This a simplified view of the mechanisms used in transformers. 
+An encoder of a transformer typically consists of many identical blocks connected serially with one another. Each such encoder block, computes a self-attention matrix and passes it through a feed-forward neural network, and they need to be applied across all the tokens in the input. Since the embeddings of tokens are independent of one another, each level of encoder blocks can be applied *in parallel* to all the tokens (patches in vision transformers) to obtain the embeddings. Such parallel computations were not possible in previous models like RNNs, which heavily relied on sequential dependencies. 
+
+The original transformers paper normalizes the similarities with $$\sqrt{N}$$ where $$N$$ is the embedding dimension.  This allows the gradients to stabilise and gives much better performance. This a simplified view of the mechanisms used in transformers. 
 
 In addition to these, transformers also use *positional encoding* to encode the position of the tokens in the input sequence. In the context of images, is encodes where each patch occurs in the image.  
 
@@ -41,7 +45,7 @@ They also have *multi-head attention* which is equivalent to multiple channels i
 
 ![](https://jalammar.github.io/images/t/transformer_multi-headed_self-attention-recap.png)
 
-This [blog](https://jalammar.github.io/illustrated-transformer/)explains these mechanisms in-depth for interested readers. In summary, the functions of the encoder is visualized as
+This [blog](https://jalammar.github.io/illustrated-transformer/) explains these mechanisms in-depth for interested readers. In summary, the functions of the encoder is visualized as
 
 ![](https://jalammar.github.io/images/t/transformer_resideual_layer_norm_3.png)
 
@@ -51,4 +55,4 @@ A decoder block is similar to an encoder block, with auto-regressive . The atten
 
 ## Vision-Transformers
 
-They use onlt the encoder part of the architecture where the image is divided into patches which are flattened and projects with a linear layer or a CNN. One addition made in vision transformers is a learnable class embedding  that helps the model to understand the ??
+Vision transformers build on the same ideas used in a transformer. Typically, they use only the encoder part of the architecture where patches are extracted from images and are flattened to form the tokens for the attention mechanism. They are usually  projected using a linear layer or a CNN before performing the calculations. Apart from this, vision transformers also include an additional *class token* in the embeddings to help learn the global information across the image.  

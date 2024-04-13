@@ -85,7 +85,7 @@ The key ideas -
 
 > Why are (1, 1) kernels useful? Use fewer channels instead?
 
-## Transformers
+# Transformers
 
 Transformers have shown better results in almost every task that CNNs have shone previously in. CNNs require significant depth or larger kernels to share information between non-local spatial locations (recall receptive fields). 
 
