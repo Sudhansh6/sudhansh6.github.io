@@ -101,3 +101,5 @@ How do we decide the *fair price* at $$t = 0$$ for the option? We need to use pr
 {% include_relative 04.md %}
 
 {% include_relative 05.md %}
+
+{% include_relative 06.md %}
