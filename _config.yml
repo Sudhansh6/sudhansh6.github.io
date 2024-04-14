@@ -2,7 +2,7 @@
 # Site settings
 # -----------------------------------------------------------------------------
 
-title: Sudhansh
+title: Sudhansh Peddabomma
 first_name: Sudhansh
 middle_name: 
 last_name: Peddabomma
@@ -47,7 +47,7 @@ navbar_fixed: true
 footer_fixed: true
 
 # Dimensions
-max_width: 800px
+max_width: 900px
 
 # TODO: add layout settings (single page vs. multi-page)
 
