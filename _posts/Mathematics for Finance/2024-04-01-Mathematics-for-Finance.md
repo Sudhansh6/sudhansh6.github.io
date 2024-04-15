@@ -15,6 +15,7 @@ We will discuss mathematics for options, pricing methods, and optimizing the per
 The theory in the course revolves around the “No Arbitrage theorem” which is closely related to one-price principle. Similarly, the idea of one-price principle theorizes that a set of investments with the same net outcome, albeit with different transactions, should have the same price.
 
 ## Financial Markets
+
 A *financial market* consists of tradable products such as stocks, bonds, currencies and indices. The market consists of two parties - the buyers and the sellers, who buy and sell these products respectively trying to make an *arbitrage* from the transactions. Formally, an *arbitrage opportunity* is a chance for a risk-free profit. 
 
 ### Odds and Arbitrage
@@ -31,6 +32,7 @@ A **derivative** or a **contingent claim** is a security whose value depends on 
 
 With such contrived products, it is important to choose a *fair price* to ensure there are no arbitrage opportunities in the market. To do so, we introduce the required mathematical notation - 
 $$X$$ is a real-valued random variable defined on a probability space $$(\Omega, \mathcal F, P)$$ and $$\mathcal G$$ is a sub-$$\sigma$$-algebra of $$\mathcal F$$. For unfamiliar readers, in probability theory, a probability space consists of three elements -
+
 - A sample space $$\Omega$$, which is the set of all possible outcomes. For example, the sample space for a dice roll is $$\Omega = \{1, 2, 3, 4, 5, 6\}$$. 
 - An event space or a set of events is represented by $$\mathcal F$$. For example, the events constituting an odd dice roll is $$\mathcal F = \{1, 3, 5\}$$.
 - A probability function $$P$$, assigns a probability (a number between $$0$$ and $$1$$) to each event in the event space. 
@@ -81,6 +83,7 @@ So the fair price is $$S_0 e^{rT}$$ where neither $$A$$ nor $$B$$ can take advan
 *Note.* A **futures contract** is similar to a forward contract but is traded on a financial exchange. They typically have a delivery month rather than a delivery date, and are followed by a settlement procedure called *marking to market*. 
 
 ### Options
+
 An **option** is a contract which gives the holder of the option the right, but not the obligation, to buy other sell a given security at a given price (called the *strike* price) within a fixed time period $$[0, T]$$. A **call option** gives the option holder the right to buy at the given price, whereas the *put option* gives the option holder the right to sell at the given price. 
 
 ## European Call Options
@@ -103,3 +106,5 @@ How do we decide the *fair price* at $$t = 0$$ for the option? We need to use pr
 {% include_relative 05.md %}
 
 {% include_relative 06.md %}
+
+{% include_relative 07.md %}
