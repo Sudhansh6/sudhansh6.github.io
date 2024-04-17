@@ -26,7 +26,7 @@ A *bookmaker* sets the odds for such scenarios. Consider an other example where 
 
 Ideally, one wants to make profit from such games. How do we do this? In the first example, we considered the probabilities and calculated the odds. To decide the odds for arbitrage, we do the reverse. In the above scenario, given the odds, the probabilities are $$P(S) \approx 71\%$$ and $$P(W) \approx 36\%$$. The probabilities add up to slightly above $$100\%$$, which makes up the arbitrage for the bookmaker.
 
-### Contingent Claim
+## Contingent Claim
 
 A **derivative** or a **contingent claim** is a security whose value depends on the value of an underlying asset. Forward contracts, futures contracts and options are examples of such securities. Interestingly, the markets around the world also use derivatives whose underlying asset is also a derivative. Such securities are called as *structured products*. 
 
@@ -45,7 +45,7 @@ $$ X(w) = (S(w)_t - K)^+ $$
 
 Similarly, for a *put* option, where the holder has the right to sell a certain asset at a fixed price, we get
 
-$$X(w) = K - S_T)^+$$.
+$$X(w) = (K - S_T)^+$$
 
 There can be other kinds of *structured products* like
 
@@ -86,7 +86,7 @@ So the fair price is $$S_0 e^{rT}$$ where neither $$A$$ nor $$B$$ can take advan
 
 An **option** is a contract which gives the holder of the option the right, but not the obligation, to buy other sell a given security at a given price (called the *strike* price) within a fixed time period $$[0, T]$$. A **call option** gives the option holder the right to buy at the given price, whereas the *put option* gives the option holder the right to sell at the given price. 
 
-## European Call Options
+# European Call Options
 
 A *European option* can only be exercised by the holder of the option at the expiration time $$T$$ (unlike an American Option, which will be discussed in the later sections). We have the following equation for profit of a *call option* holder, assuming the option is free -
 
