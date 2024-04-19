@@ -92,7 +92,7 @@ A *European option* can only be exercised by the holder of the option at the exp
 
 $$
 P = (S_T - K)^+ = \begin{cases} 
-  S_T - K & S_T > k \\
+  S_T - K & S_T > K \\
   0 & S_T \leq K
 \end{cases}
 $$
