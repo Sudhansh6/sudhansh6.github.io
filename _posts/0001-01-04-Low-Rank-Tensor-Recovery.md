@@ -1,5 +1,4 @@
 ---
-
 layout: post
 title: Low Rank Tensor Recovery for Joint Probability Distribution
 categories: [Research]
@@ -37,19 +36,19 @@ Matrices are a form of representation of rank-$$2$$ tensors. They are just an ar
 Both subscripts and superscripts are used for indices in tensors. 
 
 - Any twice repeated index in a single **term** is summed over. Index $$= 1, 2, \cdots , n$$. Typically, $$n = 3$$
-
+  
   For example, $$a_{ij}b_j = a_{i1} + a_{i2} + a_{i3}$$ 
-
+  
   Here, $$j$$ is a *dummy* variable and $$i$$ is a *free* variable.
-
+  
   Dummy indices can be replaced, whereas free indices can't be. A free index takes only **one** value in an expression.
 
 - No index may occur $$3$$ or more times in a given term.
-
+  
   $$a_{ij}b_{ij} \checkmark$$ $$a_{ii}b_{ij} \pmb\times$$ $$a_{ij}b_{jj} \pmb\times$$
-
+  
   We count subscripts and superscripts together. That is,
-
+  
   $$ a_j^j$$ - $$j$$ is a dummy variable
 
 - In an equation involving Einstein notation, the free indices on both sides must match.
@@ -64,8 +63,6 @@ Both subscripts and superscripts are used for indices in tensors.
 $$
 \delta_{ij} \equiv \delta_j^i \equiv \delta^{ij} \equiv \begin{cases}1 & i=j\\ 0 & i \neq j \end{cases}
 $$
-
- 
 
 ## Linear algebra of Tensors
 
@@ -86,7 +83,7 @@ For the following analysis, we shall be using the *superscript* notation to deno
 - Suppose that $$\bar x^i = \bar{x}^i(x^1, x^2, \cdots) : \mathcal{F}$$. If the functions  $$\bar x^i(x^1, x^2, \cdots) $$ are all real valued, have continuous $$2$$nd partial derivatives everywhere, and are all invertible then $$\mathcal{F}$$ is called a coordinate transformation.
 
 > The Jacobian is non-zero over a region $$U$$ in $$\mathbb R^n$$ iff the corresponding transformation $$\mathcal{T}$$ is locally bijective in that region $$U$$.
->
+> 
 > The Jacobian matrix of the inverse transformation $$\mathcal{T}^{-1}$$ is the inverse of the Jacobian matrix of  $$\mathcal{T}$$
 
 The above was taken from [here](https://www.youtube.com/playlist?list=PLdgVBOaXkb9D6zw47gsrtE5XqLeRPh27_)
@@ -104,6 +101,7 @@ If an $$N$$-way tensor $$X \in \mathbb R^{I_1 \times I_2 \times \cdots \times I_
 $$
 X(i_1, i_2, \cdots, i_N) = \sum_{f = 1}^{F} \lambda(f) \prod_{n = 1}^N A_n(i_n, f)
 $$
+
 </div>
 
 where $$A_n \in \mathbb R^{I_n \times F}$$ is called the mode-$$n$$ latent factor. In the above, $$\lambda = [\lambda(1), \cdots, \lambda(F)]^T$$ with $$\|\lambda\|_0 = F$$ is employed to 'absorb' the norms of columns. 
@@ -115,6 +113,7 @@ In other words an $$N$$-way tensor $$\mathcal{Z} \in \mathbb{R}^{I_1 \times I_2 
 $$
 \mathcal{Z} = \sum_{f = 1}^F \lambda(f)A_1(:,f)\otimes A_2(:,f) \otimes \cdots \otimes A_N(:,f)
 $$
+
 </div>
 
 Here, $$F$$ is the rank of the tensor.
@@ -128,11 +127,5 @@ Any joint PMF admits a naive Bayes (NB) model representation; i.e., any joint PM
 $$
 Pr(i_1, i_2, \cdots, i_N) = \sum_{f = 1}^F Pr(f) \prod_{n=1}^N Pr(i_n | f)
 $$
+
 </div> where $$Pr(f) := Pr(H = f)$$ is the prior distribution of a latent variable $$H$$ and $$Pr(i_n|f) := Pr(Z_n = z_n^{(i_n)} | H = f)$$ are the conditional distributions.
-
-
-
-
-
-
-
