@@ -3,7 +3,7 @@
 layout: post
 title: Structural Visualization for Neural Networks
 categories: [Research]
-description: An introduction to Tensors and notation. Summary of a few papers.
+description: Analysing learning patterns in neural networks using graph visualization algorithms.
 
 ---
 
