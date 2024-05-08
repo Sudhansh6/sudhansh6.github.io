@@ -50,5 +50,3 @@ We do not have a good behavior-realisitc simulator and sufficient human labor an
 - Real-world deployment - Online decision framework from MODIA.
 
 This approach has many limitations. Since the number of states is very large, the state-transition matrix is very sparse, and this is not good for determining the optimal policy. These can be fixed using generative simulators (which do not work quite well cuurently) or bridging large dataset by outsourcing the data collection.
-
-
