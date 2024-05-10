@@ -32,11 +32,11 @@ A model developed by Meta with zero-shot segmentation capabilities. The task thi
 
 ### Promptable segmentation
 
-The model generates a valid mask for a given primp (even if ambiguous) as input. How is the ambiguity resolved? Ambiguous cases arise when the mutiple objects lie on top of each other. 
+The model generates a valid mask for a given prompt (even if ambiguous) as input. How is the ambiguity resolved? Ambiguous cases arise when the mutiple objects lie on top of each other. 
 
 ![](../../assets/img/Computer%20Vision/2024-05-03-17-21-39-image.png)
 
-The image encoder is heavy - a pretrained ViT with masked autoencoder. The design choice for the masking involved masking around 75% of the patches. Unlike NLP tasks, vision tasks rely heavily on spatial information and neighbor patches can be reconstructed without much effort. Also, NLP tasks can get away with a simple MLP for decoders but vison taks require strong decoders.
+The image encoder is heavy - a pretrained ViT with masked autoencoder. The design choice for the masking involved masking around 75% of the patches. Unlike NLP tasks, vision tasks rely heavily on spatial information and neighbor patches can be reconstructed without much effort. Also, NLP tasks can get away with a simple MLP for decoders but vision taks require strong decoders.
 
 The model allows for prompts using points, box or text. The decoder has self-attention on the primpts followed by cross-attention with image and MLP for non-linearity to get masks. The model also estimates the IoU to rank masks.
 
@@ -52,6 +52,8 @@ The idea is to fine-tune the model for specific tasks like edge-derection, objec
 
 # Future Trajectory Prediction
 
-This problem arises in many applications, particularly in autonomous driving. Given traffic participants and scene elements whihc are inter-dependent, we need to predict trajectories with scene awareness and multimodality.  Humans are able to predict up to 10 seconds in highway scenes and plan their trajectory effectively whereas the SOTA models have a large gap in performance.
+This problem arises in many applications, particularly in autonomous driving. Given traffic participants and scene elements which are inter-dependent, we need to predict trajectories with scene awareness and multimodality.  Humans are able to predict up to 10 seconds in highway scenes and plan their trajectory effectively whereas the SOTA models have a large gap in performance.
 
-More concretely, the algorithm takes a video sequence as an input, and needs to predict probabilistic trajectories which are diverse, have 3D awareness, capture semantics interactions and focus on long-term rewards. There are many components in these solutions including 3D localization module, generative sampling modules, semantic scene modules and scene aware fusion modules with encoders and decoders.
+More concretely, the algorithm takes a video sequence as an input, and needs to predict **probabilistic** trajectories which are diverse, have 3D awareness, capture semantics interactions and focus on **long-term rewards**. There are many components in these solutions including 3D localization module, generative sampling modules, semantic scene modules and scene aware fusion modules with encoders and decoders.
+
+# 
