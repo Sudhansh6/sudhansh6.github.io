@@ -131,6 +131,8 @@ The fundamental matrix is scale-invariant and has rank $2$. Therefore, it has $7
 
 The essential matrix can be derived from $F$ using $RQ$ decomposition to obtain skew-symmetric and orthogonal matrices $[t]_\times$ and $R$.  Now, traingulation can be used to locate $x$ in the 3D space. 
 
+In unordered feature matching, the images to be compared are identified using vocabulary based retrieval methods to reduce the complexity from $\mathcal O(n^2)$ to $\log$ complexity. 
+
 How is this matrix useful in removing outliers?
 
 
