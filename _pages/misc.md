@@ -79,6 +79,7 @@ I'm adding a list of useful websites that can be used for handy computations. Th
 - [Machine Learning Concepts in depth](https://www.d2l.ai/)
 - [Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf)
 - [The best Geometric Processing Library](https://github.com/micycle1/PGS)
+- [Probability theory nicely explained](https://almostsuremath.com)
 
 # Fun Websites
 - [Oatmeal Comics](https://theoatmeal.com/comics/)
