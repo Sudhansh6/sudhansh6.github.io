@@ -114,3 +114,15 @@ How do we decide the *fair price* at $$t = 0$$ for the option? We need to use pr
 {% include_relative 10.md %}
 {% include_relative 11.md %}
 {% include_relative 12.md %}
+
+{% include_relative 13.md %}
+
+{% include_relative 14.md %}
+
+{% include_relative 15.md %}
+
+{% include_relative 16.md %}
+
+{% include_relative 17.md %}
+
+{% include_relative 18.md %}

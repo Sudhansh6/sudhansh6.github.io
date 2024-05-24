@@ -69,8 +69,6 @@ In all the architectures above, once you downsample the image, you lose a lot of
   - Add convolution layers at end of the network with progressively  lower dilation
   
   - Remove skip connections in new layers, can propogate gridding artefacts because skip connections transfer high-frequency information.
-  
-  
 
 - Skip-connections
 

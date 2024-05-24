@@ -16,4 +16,9 @@ toc:
 {% include_relative lec07.md %}
 {% include_relative lec08.md %}
 {% include_relative lec09.md %}
-
+{% include_relative lec10.md %}
+{% include_relative lec11.md %}
+{% include_relative lec12.md %}
+{% include_relative lec13.md %}
+{% include_relative lec14.md %}
+{% include_relative lec15.md %}
