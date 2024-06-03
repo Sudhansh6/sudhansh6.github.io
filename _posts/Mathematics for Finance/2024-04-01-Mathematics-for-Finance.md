@@ -122,3 +122,9 @@ How do we decide the *fair price* at $$t = 0$$ for the option? We need to use pr
 {% include_relative 22.md %}
 {% include_relative 23.md %}
 {% include_relative 24.md %}
+
+{% include_relative 25.md %}
+
+{% include_relative 26.md %}
+
+{% include_relative 27.md %}

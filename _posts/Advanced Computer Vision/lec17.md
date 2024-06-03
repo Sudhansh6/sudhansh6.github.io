@@ -66,7 +66,7 @@ The score distillation sampling function (mean-shifting) has a mode-seeking beha
 
 - *Speed* - Sampling speed can be improved using Gaussian Splatting
 
--  *Resolution* - Resolution can be improved using Coarse-to-Fine refinement
+- *Resolution* - Resolution can be improved using Coarse-to-Fine refinement
 
 ## Alternative Approaches
 
@@ -92,10 +92,4 @@ People are still figuring out other ways to solve this general problem, and it i
 
 Let us see some more papers which tried to address other issues in this problem.
 
-## ReconFusion
-
-
-
-
-
-
+# 
