@@ -6,8 +6,6 @@ To improve on this performance, the authors of Prolific Dreamer modified the SDS
 
 This is a difficult task as it is a sparse manifold in a complex high-dimensional space.
 
-
-
 Do we have a metric to quantitatively analyse these models? **T3 Bench** is a benchmark score that checks the text-3D model alignment and the quality of the result itself.
 
 ## ReconFusion
@@ -27,8 +25,6 @@ Interestingly, the authors choose DDIM for the diffusion model over stochastic s
 Also, they use a trajectory based novel view sampling to further maintain consistency across views.
 
 The resultant method is able to reconstruct a consistent 3D model even with inconsistent 2D views!
-
-
 
 # Vision and Language
 

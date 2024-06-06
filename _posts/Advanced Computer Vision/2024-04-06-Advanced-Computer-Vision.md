@@ -22,3 +22,9 @@ toc:
 {% include_relative lec13.md %}
 {% include_relative lec14.md %}
 {% include_relative lec15.md %}
+
+{% include_relative lec16.md %}
+
+{% include_relative lec17.md %}
+
+{% include_relative lec18.md %}
