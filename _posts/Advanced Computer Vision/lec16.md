@@ -49,8 +49,6 @@ $$
 C_0 = \int C_t \sigma_t \exp\left(-\int \sigma_u du\right) dt
 $$
 
-
-
 which is discretized as 
 
 $$
@@ -73,7 +71,6 @@ The original paper has two major assumptions -
 The outputs from NeRF had a lot of aliasing issues when these assumptions are broken. Instead of assuming rays shooting out from the camera, Mip-Nerf shoots out conical frustrums with multivariate Gaussians to represent 3D volumes in the scenes. This solves the problem of front-facing scenes. 
 To solve the problem of unbounded scenes, Mip-NeRF 360 uses "parameterization" to warp the points outside a certain radius using Kalman Filtering. Essentially, farther points are warped into a non-Euclidean space which is a tradeoff - for applications in SLAM and robotics, the geometry may be precisely needed which is sort of lost in such transformations.
 To speed up training in unbounded scenes, the authors proposed "distillation", wherein sampling is done in a hierarchical manner to identify regions with higher opacities. These higher opacity regions are then used to estimate the color in the finer-sampled regions. To supervise the training of "density finding network", the idea of distribution matching in multi-resolution histograms is used to formulate a loss function.
-Given limited number of camers, it is difficult to estimate all the parameters correctly - causing artefacts in the reconstructions. To solve this, the authors use a **distortion regularizer** to clump together points with higher densities. This acts as a prior to resolve some ambiguities in the scene.
+Given limited number of camera, it is difficult to estimate all the parameters correctly - causing artefacts in the reconstructions. To solve this, the authors use a **distortion regularizer** to clump together points with higher densities. This acts as a prior to resolve some ambiguities in the scene.
 
 - 
-  

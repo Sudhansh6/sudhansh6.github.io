@@ -16,6 +16,14 @@ How are models like CLIP trained?
 
 - N-pair loss with contrastive learning
 
-- 
+## BLIP-2
+
+combine any two VLM and LLM using Q-former
+
+## GLIP
+
+Generalisable object detection model. 
+
+
 
 
