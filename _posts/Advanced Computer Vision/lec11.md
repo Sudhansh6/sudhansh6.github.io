@@ -1,10 +1,10 @@
 ### Representation Framework
 
-The past observed trajectories are represented by X = \{X_{i, t - l + 1}, \dots, X_{i, t}\} usng we which we wish to predict future trajectory Y_i = \{Y_{i, t + 1}, \dots, Y_{i, t + \delta}\}. The parameter \delta represents how far ahead we want to look in the future.
+The past observed trajectories are represented by $$X = \{X_{i, t - l + 1}, \dots, X_{i, t}\}$$ using we which we wish to predict future trajectory $$Y_i = \{Y_{i, t + 1}, \dots, Y_{i, t + \delta}\}$$. The parameter $$\delta$$ represents how far ahead we want to look in the future.
 
-The *sample generation module* produces future hypotheses \hat Y, and then a ranking module assigns a reward to each hypothesis considering long-term rewards. Following this, the refinement step calculates the displacement \Delta Y_t for the selected trajectory.
+The *sample generation module* produces future hypotheses \hat Y, and then a ranking module assigns a reward to each hypothesis considering long-term rewards. Following this, the refinement step calculates the displacement $$\Delta Y_t$$ for the selected trajectory.
 
-Focusing on the sample generation module, the goal is to estimate posterior P(Y \vert X, I). Earlier, RNNs and other deterministic function maps from \{X, I\} to Y have been designed to address this. The problem with training in this approach is that the ground truth has a single future trajectory whereas the sampler predicts a distribution. How do we compare the two?
+Focusing on the sample generation module, the goal is to estimate posterior $$P(Y \vert X, I)$$. Earlier, RNNs and other deterministic function maps from $$\{X, I\}$$ to Y have been designed to address this. The problem with training in this approach is that the ground truth has a single future trajectory whereas the sampler predicts a distribution. How do we compare the two?
 
 ## Principal Component Analysis
 
@@ -20,7 +20,7 @@ Network with a bottleneck layer that tries to reconstruct the input. The decoder
 
 ## ###  Variational Autoencoder
 
-This network extends the idea in autoencoders and trains the network to learn a Gaussian distribution (parametrized by $\mu, \sigma$) for the latent space. After learning, say, the normal distribution, sampling is quite easy to generate new samples representative of the trianing dataset using the decoder.
+This network extends the idea in autoencoders and trains the network to learn a Gaussian distribution (parametrized by $$\mu, \sigma$$) for the latent space. After learning, say, the normal distribution, sampling is quite easy to generate new samples representative of the trianing dataset using the decoder.
 
 To train this network, a distribution loss, like the KL-divergence is added in the latent space. But how do we backpropagate through random sampling? The reparametrization trick!
 
@@ -34,4 +34,4 @@ Gradient of log, score function, conditioning at the cost of diversity - train a
 
 ## Classifier-Free Guidance
 
-learn unconditional diffusion model $p_\theta(x)$ and use the conditional model $p_\theta(x \vert y)$ for some part of the training. this would not require any external classifier for training. 
+learn unconditional diffusion model $$p_\theta(x)$$ and use the conditional model $$p_\theta(x \vert y)$$ for some part of the training. this would not require any external classifier for training. 

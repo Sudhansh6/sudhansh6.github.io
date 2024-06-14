@@ -42,9 +42,9 @@ Simply put, the goal is identify objects in a given image. The evolution of algo
 
 - Deformable Part Models (DPMs) - 
 
-- **CNN** - The vanilla approaches with CNNs proposed sliding a window across the image and use a classifier to determine if the window contains an object or not (one class is background). However, this is computationally expensive because we need to consider windows at several positions and scales. Following this, **region proposals** were designed to find blob-like regions in the image that could be an object. They do not consider the  class and have a high rate of false positives which are filtered out in the next stages. Such class of methods are called **multi-stage CNNs** (RCNN, Fast-RCNN, Faster-RCNN) and are covered in detailed below.  On the other hand, the sliding window approach has been optimised using anchor-boxes and this class of detectors are referred to as **single-stage CNNs** (YOLO series) which have been discussed in the next section. For more details, interested readers could also refer to 
+- **CNN** - The vanilla approaches with CNNs proposed sliding a window across the image and use a classifier to determine if the window contains an object or not (one class is background). However, this is computationally expensive because we need to consider windows at several positions and scales. Following this, **region proposals** were designed to find blob-like regions in the image that could be an object. They do not consider the  class and have a high rate of false positives which are filtered out in the next stages. Such class of methods are called **multi-stage CNNs** (RCNN, Fast-RCNN, Faster-RCNN) and are covered in detailed below.  On the other hand, the sliding window approach has been optimised using anchor-boxes and this class of detectors are referred to as **single-stage CNNs** (YOLO series) which have been discussed in the next section. For more details, interested readers could also refer to [my blog](https://sudhansh6.github.io/blog/Object-Detection/).
 
-- **Transformers** 
+- **Transformers** - These methods are inspired from CNNs and have a transformer back-end. Examples include DETR and DINO discussed in later sections.
 
 - Self-supervision
 
@@ -54,7 +54,7 @@ Simply put, the goal is identify objects in a given image. The evolution of algo
 
 ### RCNN
 
-The first demonstration that showed classification features from CNNs can be used to detect objects. Essentially, the last layer of the ImageNet classifier network was removed . Each region proposal is warped/cropped to match the CNN input size. The post-processing involves bounding box regression 
+For the region proposal network, an ImageNet pre-trained model (ResNet or like) is used. Since it has to be fine-tuned for detection, the last layer is modified to have 21 object classes (with background) instead of 1000 and is retrained for positive and negative regions in the image. The regions are then 
 
 ### FastRCNN
 
