@@ -20,9 +20,9 @@ q(x_{t - 1} \vert x_t, x_0) &= \mathcal N(x_{t - 1}; \tilde \mu_t(x_t, x_0), \ti
 \end{align*}
 $$
 
-## Sampling from Noise
+### Generative Adversarial Networks
 
-Generative Adversarial networks mainly fall in this domain. In these architectures, a generator network tries to fool the discriminator by generating real-looking images. In contrast, a discriminator network tries to distribguish between real and fake images. GANs don't produce as good images as diffusion models, but the concept of adversarial learning is a crucial concept in many fields.  The framework looks like this - 
+In these architectures, a generator network tries to fool the discriminator by generating real-looking images. In contrast, a discriminator network tries to distinguish between real and fake images. GANs don't produce as good images as diffusion models, but the concept of adversarial learning is a crucial concept in many fields.  The framework looks like this - 
 
 ![](../../assets/img/Computer%20Vision/2024-04-24-17-21-56-image.png)
 
@@ -40,11 +40,11 @@ Simply put, the goal is identify objects in a given image. The evolution of algo
 
 - HoG + SVM - Sliding window mechanism for feature detection.
 
-- Deformable Part Models - 
+- Deformable Part Models (DPMs) - 
 
-- CNN - Using a sliding window mechanism is computationally expensive. Instead, these methods use region proposals and filter out the ones with satisfying criteria.
+- **CNN** - The vanilla approaches with CNNs proposed sliding a window across the image and use a classifier to determine if the window contains an object or not (one class is background). However, this is computationally expensive because we need to consider windows at several positions and scales. Following this, **region proposals** were designed to find blob-like regions in the image that could be an object. They do not consider the  class and have a high rate of false positives which are filtered out in the next stages. Such class of methods are called **multi-stage CNNs** (RCNN, Fast-RCNN, Faster-RCNN) and are covered in detailed below.  On the other hand, the sliding window approach has been optimised using anchor-boxes and this class of detectors are referred to as **single-stage CNNs** (YOLO series) which have been discussed in the next section. For more details, interested readers could also refer to 
 
-- Transformers
+- **Transformers** 
 
 - Self-supervision
 

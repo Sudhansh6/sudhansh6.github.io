@@ -6,6 +6,7 @@ excerpt:
 toc: 
   sidebar: true
 
+featured: true
 ---
 
 {% include_relative lec02.md %}

@@ -22,7 +22,23 @@ To counter these problems, we typically couple our algorithms with self-supervis
 
 These techniques show promise to solve keystone problems in augmented reality, interactive robotics, and autonomous driving. The course will cover the following these topics, along with other fundamentals required.
 
-> Demonstrate code in presentation
+- Neural Architectures
+
+- Generative Models
+
+- Structure from Motion
+
+- Object Detection
+
+- image Segmentation
+
+- Prediction and Planning
+
+- Inverse Rendering
+
+- 3D GANs
+
+- Vision-Language
 
 ### Neural Architectures
 

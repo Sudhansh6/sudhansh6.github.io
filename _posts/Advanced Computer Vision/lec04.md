@@ -6,9 +6,9 @@ The vanilla vision transformer is restricted to classification tasks and is not 
 
 To address these limitations, **swin transformers** bring two key ideas from CNNs
 
-- Multi-scale feature maps - Feature maps from one resolution are downsampled to match the size in the next block.
+- Multi-scale feature maps - Feature maps from one resolution are down sampled to match the size in the next block.
   
-  <img src="../../assets/imgs/2024-04-12-17-27-50-image.png" title="" alt="" data-align="left">
+  ![](assets/2024-06-13-21-25-21-image.png)
 
 - Local connectivity - 
   
@@ -16,11 +16,11 @@ To address these limitations, **swin transformers** bring two key ideas from CNN
   
   - Shifted window self-attention - Allows windowed self-attention to learn long-range features using "shifts". Essentially, we move the patches around to bring farther patches close together.
 
-However, these modifications are not enough for tasks like segmentation. Instead, we use something called as a *dense prediction transformer* (**DPTs**) where we couple the transformer encoder with a convolutional decoder to upsample and predict the required output.
+However, these modifications are not enough for tasks like segmentation, which require reasoning at a pixel-level. Instead, we use something called as a *dense prediction transformer* (**DPTs**) where we couple the transformer encoder with a convolutional decoder to upsample and predict the required output.
 
 >  CNNs are shift-invariant whereas ViTs are permutation invariant. Why?
 
-![](../../assets/imgs/2024-04-12-17-36-33-image.png)
+![](assets/2024-06-13-21-32-22-image.png)
 
 At each scale level in the above picture, we *reassemble* the tokens by concatenating and convolving with appropriate kernels to recover image-like representations in the decoder layers.
 
@@ -32,19 +32,19 @@ Transformers allowed for easy multi-modal representations by tokenizing data fro
 
 ## Discriminative and Generative Models
 
-Disciminative models (classifiers) learn a many-to-one function $$f$$ to learn labels for a given input. A generative model $$g$$ maps these labels to the input space, and this function is one-to-many since one label can map to multiple inputs. It is difficult to model a stochastic function. Therefore, a generator model is coupled with a *noise vector* to construct a deterministic $$g$$ with stochastic input $$z$$. This variable $$z$$ is called a **latent variable** since it is not observed in training data composed of $$\{x, y\}$$ pairs. 
+Discriminative models (classifiers) learn a many-to-one function $$f$$ to learn labels for a given input. A generative model $$g$$ maps these labels to the input space, and this function is one-to-many since one label can map to multiple inputs. It is difficult to model a stochastic function. Therefore, a generator model is coupled with a *noise vector* to construct a deterministic $$g$$ with stochastic input $$z$$. This variable $$z$$ is called a **latent variable** since it is not observed in training data composed of $$\{x, y\}$$ pairs. 
 
 $$
 \begin{align*}
 \text{Discriminative Models learn } P(Y \vert X) \\
 \text{Generative Models learn } P(X, Y) \\
-\text{Conditional Generator learn } P(X \vert Y) \\
+\text{Conditional Generators learn } P(X \vert Y) \\
 \end{align*}
 $$
 
 Let us focus on image generative models. Then, each dimension of the latent variable can encode the various characteristics of the image essentially allowing us to generate a wide variety of images. The labels $$y$$ for images need not be classification labels, but textual descriptions can also be used for supervision.
 
-To understand how these models work, consider the case of uncoditional generative models. The goal is, given the real data $$x$$,  to generate synthetic data $$\hat x$$ that *looks like* the real data. How do we quantify 'looks like'?
+To understand how these models work, consider the case of unconditional generative models. The goal is, given the real data $$x$$,  to generate synthetic data $$\hat x$$ that *looks like* the real data. How do we quantify 'looks like'?
 
 - We can try and match some marginal statistics - mean, variance, edge statistics, etc of the real data. Such measures are very useful in techniques for texture synthesis. For example, [Heeger-Bergen texture synthesis [1995]](https://www.cns.nyu.edu/labs/heegerlab/content/publications/Heeger-siggraph95.pdf) uses an iterative process starting from the Gaussian noise and matches intensity histograms across different scales. Such design choices are used in modern techniques like [StyleGANs](https://en.wikipedia.org/wiki/StyleGAN) and [Diffusion models](https://en.wikipedia.org/wiki/Diffusion_model).
 

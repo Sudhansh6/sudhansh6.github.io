@@ -14,7 +14,7 @@ $$
 
 Intuitively, this way of optimization increases the density where the models are observed.
 
-The energy-based models have a slight modification wherein the energy function E_\theta is unnormalized unlike the probability density function p_\theta. Indeed, p_\theta can be determined as
+The energy-based models have a slight modification wherein the energy function $$E_\theta$$ is unnormalized unlike the probability density function $$p_\theta$$. Indeed, $$p_\theta$$ can be determined as
 
 $$
 \begin{align*}
@@ -23,7 +23,7 @@ p_\theta &= \frac{e^{-E_\theta}}{Z(\theta)}, \\
 \end{align*}
 $$
 
-This formulation is called as *Boltzmann or Gibbs* distibution. Learning energy function is convenient since normalization is intractable since we cannot see all the samples in the distribution. What is the motivation to use exponential functions?
+This formulation is called as *Boltzmann or Gibbs* distribution. Learning energy function is convenient since normalization is intractable since we cannot see all the samples in the distribution. What is the motivation to use exponential functions?
 
 1. It arises naturally in physical statistics
 
@@ -31,7 +31,9 @@ This formulation is called as *Boltzmann or Gibbs* distibution. Learning energy 
 
 3. Want to handle large variations in probability
 
-Although we don't have the probabilities, we can still compare different samples using ratios of their energies. How do we sample in these approaches? Sampling approaches **Markov Chain Monte Carlo** (MCMC) only require relative probabilities for generating data. We can also find data points that maximize the probability.
+Although we don't have the probabilities, we can still compare different samples using ratios of their energies. 
+
+After obtaining the energy distribution, how do we use it to sample in these approaches? Sampling approaches **Markov Chain Monte Carlo** (MCMC) only require relative probabilities for generating data. We can also find data points that maximize the probability.
 
 $$
 \nabla_x \log p_\theta(x) = -\nabla_x E_\theta(x)
@@ -50,7 +52,7 @@ $$
 
 #### Sampling
 
-We randomly initialize $$\hat x_0$$$ at $$t = 0$$. Then, we repeat the following
+We randomly initialize $$\hat x_0$$ at $$t = 0$$. Then, we repeat the following
 
 1. Let $$\hat x' = \hat x_t + \eta$$$ where $$\eta$$ is some noise
 
@@ -70,9 +72,11 @@ In practice, this algorithm takes a long time to converge. A variant of this cal
    
    where $$z_t \sim \mathcal N(0, I)$$. When $$\epsilon \to 0$$, and $$t \to \infty$$, we have $$\hat x_t \sim p_\theta$$
 
-## Diffusion Models
+## Sampling from Noise
 
-The inuition for these models builds from our previous approach. It is hard to map pure noise to $$x \sim N(0, I)$$ to structured data, but it is very easy to do the opposite. To readers familiar with autoregressive models, where we remove one pixel of information at a time, this is much more generalized.
+### Diffusion Models
+
+The intuition for these models builds from our previous approach. It is hard to map pure noise to $$x \sim N(0, I)$$ to structured data, but it is very easy to do the opposite. To readers familiar with autoregressive models, where we remove one pixel of information at a time, diffusion models  generalise this notion further. Diffusion models have two steps in training - 
 
 The forward process in these models involves adding noise to the image $$x_0$$ over many time steps. At time $$t$$, we add noise $$\epsilon_t$$ to obtain $$x_{t + 1}$$ from $$x_{t}$$. The noise addition is modeled with respect to the following equation
 
@@ -140,7 +144,7 @@ The goal is to start with noise and gradually denoise to generate images. We sta
 Therefore, we learn a model $$p_\theta$$ to reverse the process
 
 $$
-P_\theta(x_{t - 1} \vert x_t) = \mathcal N(x_{t - 1}; \mu_\theta(x_t, t), \Sigma
+P_\theta(x_{t - 1} \vert x_t) = \mathcal N(x_{t - 1}; \mu_\theta(x_t, t), \Sigma)
 $$
 
 # 
