@@ -25,7 +25,7 @@ Assuming we have a good $$R, t$$ robust to outliers with the above methods, we c
 
 ## Minimal Problems in computer Vision
 
-<insert image>
+
 
 ### Three—point absolute pose estimation
 
