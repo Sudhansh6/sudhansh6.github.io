@@ -1,5 +1,3 @@
-# Physiological Grouping for Perception
-
 ## DeepLab v3+
 
 ## Segformer
