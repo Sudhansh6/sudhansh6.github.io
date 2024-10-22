@@ -107,7 +107,7 @@ The time complexity of this algorithm is $$\mathcal O(T_{MST} + mn)$$ and can be
 
 Given two strings $$s, t$$, decide whether there is a subsequence (need not be contiguous) in $$s$$ that matches with $$t$$. A naive greedy algorithm is depicted as follows -
 
-```jsx
+```python
 i, j = 0, 0
 while True:
     if j == len(t):
@@ -118,7 +118,7 @@ while True:
         i += 1
 ```
 
-On first glance, it looks as if this is a very intuitive algorithm. However, there are more intricate details and the proof makes these clearer. The proof relies on the Exchange argument. If there exists a subsequence $$i_1 i_2 \dots i_m$$ in $$s$$ matching $$t$$ ($$|t| = m$$). If $$i^*_1 < i_1$$ is the first index that $$s[i_1] = t[1]$$, then $$i^*_1i_2\dots i_m$$ also matches $$t$$. This way we can find a set of indices $$i^*_1i^*_2 \dots i^*_m$$ through the greedy algorithm that gives the correct answer.
+On first glance, it looks as if this is a very intuitive algorithm. However, there are more intricate details and the proof makes these clearer. The proof relies on the Exchange argument. If there exists a subsequence $$i_1 i_2 \dots i_m$$ in $$s$$ matching $$t$$ ($$\vert t \vert = m$$). If $$i^*_1 < i_1$$ is the first index that $$s[i_1] = t[1]$$, then $$i^*_1i_2\dots i_m$$ also matches $$t$$. This way we can find a set of indices $$i^*_1i^*_2 \dots i^*_m$$ through the greedy algorithm that gives the correct answer.
 
 In general, greedy algorithms can be proven in two general ways
 
@@ -175,7 +175,7 @@ A prefix code for an alphabet $$T$$ is a function $$f:T \to \{0, 1\}^*$$, such t
 
 It can be shown that a prefix code gives unique decoding.
 
-How do we design an encoding that is most efficient? Let us define efficiency. For every letter $$x$$ in $$T$$, let its frequency be $$p_x (\sum_{x \in T} p_x = 1)$$. Let $$f$$ be a prefix code and for every letter $$x \in T$$, let $$|f(x)|$$ is the number of bits. The goal is to find a prefix code $$f$$ that minimizes the expected number of bits when encoding $$R$$ under the frequency $$\{p_x\}$$.
+How do we design an encoding that is most efficient? Let us define efficiency. For every letter $$x$$ in $$T$$, let its frequency be $$p_x (\sum_{x \in T} p_x = 1)$$. Let $$f$$ be a prefix code and for every letter $$x \in T$$, let $$\vert f(x)\vert$$ is the number of bits. The goal is to find a prefix code $$f$$ that minimizes the expected number of bits when encoding $$R$$ under the frequency $$\{p_x\}$$.
 
 $$
 \text{minimize } \sum_{x \in T} p_x \cdot |f(x)|
@@ -187,3 +187,61 @@ It is beneficial to represent prefix codes as a binary tree. Each node has two c
 - For prefix codes, no node of a symbol is an ancestor of node of another symbol (from the alphabet).
 - Another observation is that any optimal prefix code is a full tree (every inner node has two children) - if anode has a single chide, the parent node can itself be used for the symbol deleting the leaf node making the encoding more efficient.
 - There is an optimal tree (prefix code) such that two lower frequent letters are siblings, and are as deep as possible in the tree. This claim can be proved easily with the exchange argument.
+
+With these observations, consider the following algorithm
+
+- Initialize each letter $$x$$ as a node and label it with $$p_x$$
+
+- Put all nodes into a min-heap (according to the frequency)
+
+- While min-heap has atleast two elements
+  
+  - Pop out the two smallest elements $$u, v$$ (corresponds to two trees)
+  
+  - Combine them to a single tree
+  
+  - Push it into the heap, label with $$p_u + p_v$$
+
+This is the Huffman's coding algorithm which has a time complexity of $$n \log n$$.
+
+## Shannon's source coding theorem
+
+Let $$T$$ be an alphabet with frequency $$\{p_x\}$$. The entropy of the alphabet is defined as 
+
+$$
+H := \sum_{x \in T} p_x \cdot \log \frac{1}{p_x}
+$$
+
+The Shannon's source coding theorem then states that you cannot send a letter from $$T$$ with frequenct $$\{p_x\}$$, with expected bits less than $$H$$. Huffmman's encoding gives a solution with expected bits at most $$H + 1$$.
+
+**Important point**. One can suggest to increase the alphabet size with dummy symbols to virtually reduce the value of $$H$$ significantly. However, this introduces complexity for encoding algorithms. Therefore, there is a tradeoff with space occupied by encoding and the time for encoding. 
+
+> Even with augmented alphabet, the size of the encoding does not change for the original symbols in the alphabet?
+
+# Binary Search X Greedy Algorithms
+
+The basic binary search takes advantage of the monotone structure in arrays to identify elements with certain properties. Any binary search problem can be converted to the following simpler version: For an array $$B$$ that has binary elements with all zeros occurring before all ones, find the index of the first occuring $$1$$.
+
+The binary search algorithm can be simply proved using induction. 
+
+Let us consider an example - Ternary search. Given an array $$A[1\dots n]$$ that is first strictly increasing and then strictly decreasing, dind the largest element. The array $$B[1\dots n - 1]$$ is constructed as 
+
+-  $$B[i] = 1 \iff A[i + 1] > A[i]$$
+
+- $$B[i] = 0 \iff A[i + 1] < A[i]$$
+
+## Split-array largest sum
+
+## Minimum fractional ST
+
+Given an undirected graph $$G = (V, E)$$ and each edge has two costs $$a_e, b_e$$ both of which are positive, find a spanning tree $$T$$ that minimizes
+
+$$
+\frac{\sum_{e \in T} a_e}{\sum_{e \in T} b_e}
+$$
+
+How is this related to binary search? Firstly, we will convert this problem to a decisional version - Given an undirected graph $$G = (V, E)$$ and a real number $$U$$, decide whether there exists a spanning tree $$T$$ such that $$\frac{\sum_{e \in T} a_e}{\sum_{e \in T} b_e} \leq U$$.
+
+This is equivalent to find a spanning tree such that $$\sum_{e \in T} a_e - U b_e \leq 0$$. Construct a new graph with the weights $$a_e - Ub_e$$. The reduction is easy to follow.
+
+How do we find the monotone structure for binary search? If the decision problem $$(G, U)$$ is satisfiable, then $$(G, U')$$ is also satisfiable for any $$U' > U$$. Conceptually, assume a function $$B$$ (with continuous index) such that $$B[0, S] \to \{0, 1\}$$ where $$S$$ is an upper bound. $$B(U) = 1$$ iuf and only if $$(G, U)$$ is satisifiable, and $$B$$ is monotone. 
