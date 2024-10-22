@@ -34,6 +34,6 @@ In addition to this, I have worked with [Prof. Marta Betcke](http://www0.cs.ucl.
 You can read more about my experience here! - 
 <p style="text-align: center;">
 <a href="/assets/pdf/SudhanshPeddabommaCV.pdf">CV</a> / <a href="/assets/pdf/SudhanshPeddabommaResume.pdf">Resume</a>
-
+<br><br>
 The main content on my website is available in the <a href="{{ '/blog/' | relative_url }}">Articles section</a>.
 </p>

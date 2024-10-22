@@ -17,17 +17,17 @@ Using such representations, the paper [Multitrack Music Transformer](https://arx
 
 ### Total Information Flow
 
-The total information flow is the sum of transfer entropies from $X$ to $Y$ and $Y$ to $X$. 
+The total information flow is the sum of transfer entropies from $$X$$ to $$Y$$ and $$Y$$ to $$X$$. 
 
 $$
 T_{X \to Y} + T_{Y \to X} = H(X \vert \bar X) + H(Y \vert \bar Y) - H(XY \vert \bar{XY})
 $$
 
-If the combined sequence $XY$ does not make sense musically, then it will have a higher entropy, leading to lower total information flow. This concept is explored in depth in this context in this paper - [Evaluating Co-Creativity using Total Information Flow](https://arxiv.org/abs/2402.06810).
+If the combined sequence $$XY$$ does not make sense musically, then it will have a higher entropy, leading to lower total information flow. This concept is explored in depth in this context in this paper - [Evaluating Co-Creativity using Total Information Flow](https://arxiv.org/abs/2402.06810).
 
 ### Conditional Entropy
 
-Represented as $H(Y \vert X)$ it measures how unpredicatble $Y$ is, given that we have $X$. How is this useful? A pre-trained music transformer is used to model $p(X \vert \bar X)$ which represents the probability of a particular *token* (next part of music) after seeing a particular set of tokens (music till that point).
+Represented as $$H(Y \vert X)$$ it measures how unpredicatble $$Y$$ is, given that we have $$X$$. How is this useful? A pre-trained music transformer is used to model $$p(X \vert \bar X)$$ which represents the probability of a particular *token* (next part of music) after seeing a particular set of tokens (music till that point).
 
 ## Research
 

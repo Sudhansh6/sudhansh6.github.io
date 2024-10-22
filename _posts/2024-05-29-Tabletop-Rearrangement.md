@@ -37,7 +37,7 @@ We also want real-time execution time because we do not want the algorithm to ru
 
 ### Search Problem
 
-The problem can be converted to a search problem where the search space is a tree representing all the possibilities of movements of objects (to goal positions) possible with the current configuration. The actions would be of the form "move object 'i' to buffer", "move object 'i' to goal position", etc. At each state, we have at most $2n$ actions (if there are $n$ objects on the table) - moving each object to buffer or goal.
+The problem can be converted to a search problem where the search space is a tree representing all the possibilities of movements of objects (to goal positions) possible with the current configuration. The actions would be of the form "move object 'i' to buffer", "move object 'i' to goal position", etc. At each state, we have at most $$2n$$ actions (if there are $$n$$ objects on the table) - moving each object to buffer or goal.
 
 Obviously, this is a very high-dimensional space, and rudimentary search algorithms would not fare well if used directly.
 
@@ -59,7 +59,7 @@ The goal of this algorithm is to quickly calculate the solutions but it has a su
 
 ## ORLA*
 
-Aims to calculate the optimal path without considering the time as a heuristic. It essentially is $A^*$ adapted to the table-top rearrangement problem - $f(n) = g(n) + h(n)$ where $g(n)$ is the travel cost from start to current node and $h(n)$  expected travel cost from current node to goal.
+Aims to calculate the optimal path without considering the time as a heuristic. It essentially is $$A^*$$ adapted to the table-top rearrangement problem - $$f(n) = g(n) + h(n)$$ where $$g(n)$$ is the travel cost from start to current node and $$h(n)$$  expected travel cost from current node to goal.
 
 It results in an optimal plan but has a very long execution time. Another point to note is that ORLA* considers a mobile base which not many papers have considered previously.
 

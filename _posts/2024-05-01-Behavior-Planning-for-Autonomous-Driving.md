@@ -14,7 +14,7 @@ A typical urban scene has numerous people and vehicles with various behaviors pa
 
 The planning algorithms have two components to them 
 
-- Global planning - To plan the coarse waypoints from the source to the destination. Dijkstra's and A$^*$ search are typically used for these.
+- Global planning - To plan the coarse waypoints from the source to the destination. Dijkstra's and A$$^*$$ search are typically used for these.
 
 - Motion planning - To plan the control commands based on the environment between the waypoints. It involves behavior planning and path planning algorithms. Behavior planning involves predicting motion of objects on the road and analysing the traffic signs.  The path planning part involves generating multiple trajectories which are pruned down from the perception data (sorting them based on a cost function). 
 

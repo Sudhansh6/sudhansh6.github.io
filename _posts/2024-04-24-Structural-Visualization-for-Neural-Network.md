@@ -55,9 +55,7 @@ The motivation for this experiment is to figure out if some of the embeddings co
 
 # Observing Domains in Generative Models
 
-Focusing on VAE models, which are characterized with an encoder-decoder architectures to reduce the reconstruction loss (for the decoder) and simialrity loss (for the encoder). The assumption is that any input can be mapped to a lower-dimensional distribution which can then be sampled with a conditional variable to reproduce the high-dimensional input. The similarity loss acts like a regularization term, forcing the distribution learnt by the encoder to match the normal distribution. Depending on the application, the weight of the similarity loss (represented by $$\beta$$) can be varied. The results on varying this parameter are shown below -
-
-<Add image>
+Focusing on VAE models, which are characterized with an encoder-decoder architectures to reduce the reconstruction loss (for the decoder) and simialrity loss (for the encoder). The assumption is that any input can be mapped to a lower-dimensional distribution which can then be sampled with a conditional variable to reproduce the high-dimensional input. The similarity loss acts like a regularization term, forcing the distribution learnt by the encoder to match the normal distribution. Depending on the application, the weight of the similarity loss (represented by $$\beta$$) can be varied. 
 
 Increasing this parameter to a high value causes *posterior collapse*, reducing the generalizability of the network. Essentially, the network generates only a certain instance/class from the distribution.
 
@@ -73,4 +71,4 @@ These approaches can be used for the following
 
 - Learning towards interpretability - Visualizing why models behave in certain ways through the lens of a graph
 
-- Learning towards robustness - Visualizing scrambled data points <>
+- Learning towards robustness - Visualizing scrambled data points 
