@@ -134,7 +134,7 @@ A finite matroid $$M$$ consists of $$(E, I)$$ where
 
 $$(E, I)$$ should satisfy the following properties -
 
-- $$\phi \in I$$
+- Null set should be in $$I$$ - $$\phi \in I$$
 - if $$A \subset B$$ and $$B \in I$$ then $$A \in I$$
 - If $$A, B \in I$$, $$|A| > |B|$$ then $$\exists e \in A - B$$, such that $$B \cup \{e\} \in I$$
 
@@ -145,7 +145,7 @@ How does this data structure help us? Suppose we have a graph $$G = (V, E)$$ wit
 - Sort $$e$$ in decreasing order of weights
 - Let $$S = \phi$$. Add $$e$$ to $$S$$ if $$e$$ does not add cycles in $$S$$
 
-This algorithm is very similar to the reverse deletion algorithm and has a time complexity $$\mathcal O(|E|\log |E| + T_{check \text{ IS}})$$.
+This algorithm is very similar to the reverse deletion algorithm and has a time complexity $$\mathcal O(\vert E \vert \log \vert E \vert + T_{check \text{ IS}})$$.
 
 **Lemma.** Let $$e \in E$$ have the maximum cost $$c_e$$m then there always exists an IS $$A$$ with maximum weight containing $$e$$.
 
@@ -226,7 +226,7 @@ The binary search algorithm can be simply proved using induction.
 
 Let us consider an example - Ternary search. Given an array $$A[1\dots n]$$ that is first strictly increasing and then strictly decreasing, dind the largest element. The array $$B[1\dots n - 1]$$ is constructed as 
 
--  $$B[i] = 1 \iff A[i + 1] > A[i]$$
+- $$B[i] = 1 \iff A[i + 1] > A[i]$$
 
 - $$B[i] = 0 \iff A[i + 1] < A[i]$$
 
