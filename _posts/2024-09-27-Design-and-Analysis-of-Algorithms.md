@@ -136,7 +136,7 @@ $$(E, I)$$ should satisfy the following properties -
 
 - Null set should be in $$I$$ - $$\phi \in I$$
 - if $$A \subset B$$ and $$B \in I$$ then $$A \in I$$
-- If $$A, B \in I$$, $$|A| > |B|$$ then $$\exists e \in A - B$$, such that $$B \cup \{e\} \in I$$
+- If $$A, B \in I$$, $$\vert A\vert > \vert B \vert$$ then $$\exists e \in A - B$$, such that $$B \cup \{e\} \in I$$
 
 Isn’t 2 inclusive of 1 and 3?
 
