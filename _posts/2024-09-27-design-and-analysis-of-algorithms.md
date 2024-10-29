@@ -5,7 +5,9 @@ categories: [Notes]
 description: A collection of ideas for design algorithms and analyzing them.
 ---
 
-# Minimum Spanning Tree
+# Greedy Algorithms
+
+## Minimum Spanning Tree
 
 Consider a graph $$G$$ describe by $$V$$ and $$E$$ (positive weights). A **spanning tree** of a graph is defined as an edge set $$T \subset E$$ such that $$(V, T)$$ is a tree. A minimum spanning tree is such that $$\sum_{l \in T} l_e$$ is minimized.
 
@@ -151,7 +153,7 @@ This algorithm is very similar to the reverse deletion algorithm and has a time 
 
 The proof is very similar to what we have shown with MSTs. This example can be applied to MSTs, and it demonstrates how Matroids can be useful for greedy algorithms.
 
-# Task Scheduling
+## Task Scheduling
 
 Given $$n$$ jobs each with $$t_i$$ time to finish and deadlines $$d_i$$. Consider that there is a single resource solving tasks sequentially from time $$0$$, and a job has to completely finished before moving onto the next one.
 
@@ -165,7 +167,7 @@ Sort all jobs according to the increasing order of these deadlines $$d_i$$, then
 
 **Proof.** Generalize the previous two observations to $$n$$ jobs.
 
-# Huffman Codes
+## Huffman Codes
 
 How do we encode an alphabet in binaries to have no ambiguities.
 
@@ -245,3 +247,105 @@ How is this related to binary search? Firstly, we will convert this problem to a
 This is equivalent to find a spanning tree such that $$\sum_{e \in T} a_e - U b_e \leq 0$$. Construct a new graph with the weights $$a_e - Ub_e$$. The reduction is easy to follow.
 
 How do we find the monotone structure for binary search? If the decision problem $$(G, U)$$ is satisfiable, then $$(G, U')$$ is also satisfiable for any $$U' > U$$. Conceptually, assume a function $$B$$ (with continuous index) such that $$B[0, S] \to \{0, 1\}$$ where $$S$$ is an upper bound. $$B(U) = 1$$ iuf and only if $$(G, U)$$ is satisifiable, and $$B$$ is monotone. 
+
+# Divide and Conquer
+
+## Master Theorem
+
+Consider an algorithm that has the following relationship for running time complexity - 
+
+$$
+T(n) = 2T \left(\frac{n}{2}\right) + c n \log^k n \quad (k \geq 0)
+$$
+
+then $$T(n) = \mathcal O(n \log^{k + 1} n)$$.
+
+## Closest Point
+
+## Fast Multiplication
+
+Suppose we have two integers in binary $$a = \sum_{0 \leq 1 \leq n} a_i \cdot 2^i, b = \sum_{0 \leq 1 \leq n} b_i \cdot 2^i$$. The goal is to compute $$c = ab = \sum_{0 \leq j < 2n} c_j \cdot 2^j$$ where $$c_j = \sum_{0 \leq k \leq j} a_k b_{j - k}$. The naïve brute force approach takes $$\mathcal O(n^2)$ to compute the answer.
+
+This question is related to matrix multiplication as well. The naïve algorithm takes $\mathcal O(n^3)$. 
+
+### Algorithm 1
+
+We segment $a, b$ as follows - 
+
+- $a = A_1 \cdot 2^{\frac{n}{2}} + A_0$ where $A_0 = \sum_{0 \leq 1 < n/2} a_i \cdot 2^i$ and $A_1 = \sum_{n/2 \leq i < n} a_i \cdot 2^{i - n/2}$
+
+- $b = B_1 \cdot 2^{\frac{n}{2}} + B_0$ similarly.
+
+Then, $ab = (A_1 \cdot 2^{\frac{n}{2}} + A_0)(B_1 \cdot 2^{\frac{n}{2}} + B_0)$. The strategy then is to do a divide and conquer on these halves to get the final answer.
+
+$$
+ab = A_1 B_1 2^n + (A_0 B_1 + A_1 B_0)2^{n/2} + A_0B_0
+$$
+
+The time complexity is then $T(n) = 4T(\frac{n}{2}) + \mathcal O(n)$. This is essentially $$\mathcal O(n^2)$$ that does not give any improvement.
+
+This can be optimized further -
+
+$$
+ab = A_1 B_1 2^n + ((A_0 + A_1)(B_0 + B_1) - A_0B_0 - A_1 B_1)2^{n/2} + A_0B_0
+$$
+
+The number of multiplications reduced to 3 - $T(n) = 3T(\frac{n}{2}) + \mathcal O(n)$. Deriving the final expression, $T(n) = cn + cn\frac{3}{2} + \dots + cn\left(\frac{3}{2}\right)^{\log n} = \mathcal(3^{\log n})$.
+
+This algorithm can be extended to matrix multiplications as well. 
+
+$$
+C = AB = \begin{bmatrix} A_{00}B_{00} + A_{01}B_{10} & A_{00}B_{01}  + A_{01} B_{11} \\A_{10}B_{00} + A_{11}B_{10} & A_{10}B_{01} + A_{11}B_{11}\end{bmatrix}
+$$
+
+The naïve algorithm shown above is still $O(n^3)$. Strassen's algorithm reduces the number of multiplications to $$7$$ providing an improvement over the $$\mathcal O(n^3)$$ algorithm giving $$\approx \mathcal O(n^{2.81})$.
+
+The current state of the art algorithm for matrix multiplication achieves $\mathcal O(n^{2.371552})$. We do not know if there is an algorithm that achieves $\mathcal O (n^{2 + o(1)})$.
+
+### Algorithm 2
+
+Multiplication can be seen as a special case of convolution and we can use **Fast Fourier Transform (FFT)** to perform this in $\mathcal O(n \log n)$. The details will be elaborated in the next section.
+
+## Convolution
+
+Consider two vectors of the following form -
+
+- $a = (a_{n - 1}, a_{n - 2}, \dots, a_2, a_1, a_0)$
+
+- $b = (b_{n - 1}, b_{n - 2}, \dots, b_2, b_1, b_0)$
+
+The convolution operation $\star$ is defined as
+
+$$
+c = a\star b = (c_{n - 1}, \dots, c_0) \quad \text{ where } c_j = \sum_{0 \leq k < n} a_j b_{(j - k)\mod n}
+$$
+
+Convolution is a generalization of integer multiplication (padding + convolution = multiplication). Also, convolution is a central operation in signal processing - used for blurring images and also to learn features from spatial data.
+
+The naïve algorithm can be done in $\mathcal O(n^2)$ time. We can perform convolution using $\mathcal O(n\log n )$ using **Fourier Transform**. 
+
+# Fourier Transform
+
+Consider the $n$ dimensional vector $a = (a_{n - 1}, a_{n - 2}, \dots, a_2, a_1, a_0)$ and $b = (b_{n - 1}, b_{n - 2}, \dots, b_2, b_1, b_0)$. Let $\{e_i\}_i$ form a unit basis of $$\mathbb R^n$ such that $a = \sum_{0 \leq i < n} a_i e_i, b = \sum_{0 \leq i < n} b_i e_i$.
+
+Consider another basis $\hat e_i(j) = \omega_n^{ij}$ where $\omega_n = e^{\frac{1\pi \bf{i}}{n}}$ is the $n$-th root of unity. Therefore, $\hat e_i = \frac{1}{\sqrt{n}} \omega_n^{(n - 1)i}, \dots, \omega_n^{2i}, \omega_n^{i}, 1)$.
+
+It is easy to check that this is a valid basis. So, again, $a, b$ can be uniquely represented as 
+
+- $a = \sum_{0 \leq i < n} \hat a_i \hat e_i$, $\hat a_i = \langle a_i, \hat e_i\rangle = \frac{1}{\sqrt{n}} \sum_j a_j \omega_n^{-ij}$
+
+- $b = \sum_{0 \leq i < n} \hat b_i \hat e_i$
+
+A **Fourier transform** is then defined as - Given $\{a_i\}_{i \in [n]}$, compute $F(a) = \{\hat{a_i}\}_{i \in [n]}$.
+
+The **inverse problem** is to find $F^{-1} (\hat a) = \{a_i \}_{i \in [n]}$. It essentially is a change of basis between $\{e_i\} \iff \{\hat e_i\}$.
+
+## Convolution Theorem
+
+Let $a, b$ be two vectors in $\mathbb R^n$; then, 
+
+$$
+a \star b = F^{-1} (F(a) \cdot F(b))
+$$
+
+With this claim, convolution can be f=done in $\mathcal O(2T_{FT} + T_{IFT} + n)$.
