@@ -164,3 +164,51 @@ We have seen how chain of thought improves problem solving capabilities. However
 ![](/Users/s/Desktop/Projects/Website/assets/img/2024-10-30-10-17-51-image.png)
 
 The authors explore such effects in the paper. They consider
+
+# [Least-to-most prompting enables complex reasoning in Large Language Models](https://arxiv.org/pdf/2205.10625)
+
+The key motivators for the paper are as follows - 
+
+- Given a new task 
+
+In the prior works, CoT reasoning has been effective for many tasks but struggled with "Easy-to-hard generalization". Inspired from educational philosophies, the model is implemented by few-show ptompting in 2 stages - decomposition stage and subproblem solving stage.
+
+-  Decomposition stage - The problem is divided into subtasks *once* before solving
+
+- Subsequent solving stage - Solve the subsequent problems one by one.
+
+The key difference from CoT prompting is that CoT starts each sub-problem from scratch and is unable to build from previous reasoning. This behaviour is depicted using the symbolic manipulation task in the paper - The performance of CoT progressively decreases as the length of the list increases. 
+
+This method of prompting achieves significantly better results borrowing the context from the previous subproblems to arrive at the final answer.
+
+However, decomposition thoughts don't generalize across domains. This limitation mainly shows up for math problems where the subproblems need to be correctly decomposed to solve the original problem. 
+
+# [Chain of Thoughtlessness](https://arxiv.org/pdf/2405.04776)
+
+CoT prompting sounds too good to be true. The paper aims to test this paradigm rigorously to verify the claims. The paper also tries to identify the difference between complex reasoning and pattern matching - What seems like "complex reasoning" may just be a case of pattern matching? 
+
+Consider the chain of thought reasoning - 
+
+- How specific do the prompt examples have to be to the original problem?
+
+- How generalizable are these prompts or how specific do they need ot be?
+
+- How much human effort is needed to craft prompts for each problem subclass?
+
+Furthermore, there are issues with the test domains as well. For example, GSM8K
+
+- They are non scalable - problem instances cannot be scaled
+
+- The problems are static and be easily found in the training data
+
+The main point the paper is trying to address the question - "Is it really possible to teach an LLM how to solve a generalizable problem?". To test this claim, the authors choose "Blocks world" as the problem domain - given an initial and end configuration, output a series of steps to reach the end configuration from the initial configuration.
+
+They perform the following experiments
+
+- **Zero shot CoT** - Simply append "Let's think step by step" to the prompts.
+
+- **Progression proof** - Specific to planning problems. Each example's steps describe the init state, action taken, reason of the action and the final step.
+
+They see that zero-shot CoT achieves insignificant performance gains from zero-shot prompting. The progression proof CoT achieves a lower performance - this may be due to overfitting to the training examples.  The LLM fails to learn the *universal block algorithm* (break the tower and put everything back) even with multiple version of CoT prompting. The authors chose a planning domain on purpose because these problems can be scaled up very well.
+
+The authors just wanted to highlight that there is a need for more rigorous testing. One might argue that planning problems are way out of domain of LLMs. So, the authors test the findings with commonly tested problems, and they find similar trends.
