@@ -264,25 +264,25 @@ then $$T(n) = \mathcal O(n \log^{k + 1} n)$$.
 
 ## Fast Multiplication
 
-Suppose we have two integers in binary $$a = \sum_{0 \leq 1 \leq n} a_i \cdot 2^i, b = \sum_{0 \leq 1 \leq n} b_i \cdot 2^i$$. The goal is to compute $$c = ab = \sum_{0 \leq j < 2n} c_j \cdot 2^j$$ where $$c_j = \sum_{0 \leq k \leq j} a_k b_{j - k}$. The naïve brute force approach takes $$\mathcal O(n^2)$ to compute the answer.
+Suppose we have two integers in binary $$a = \sum_{0 \leq 1 \leq n} a_i \cdot 2^i, b = \sum_{0 \leq 1 \leq n} b_i \cdot 2^i$$. The goal is to compute $$c = ab = \sum_{0 \leq j < 2n} c_j \cdot 2^j$$ where $$c_j = \sum_{0 \leq k \leq j} a_k b_{j - k}$$. The naïve brute force approach takes $$\mathcal O(n^2)$$ to compute the answer.
 
-This question is related to matrix multiplication as well. The naïve algorithm takes $\mathcal O(n^3)$. 
+This question is related to matrix multiplication as well. The naïve algorithm takes $$\mathcal O(n^3)$$. 
 
 ### Algorithm 1
 
-We segment $a, b$ as follows - 
+We segment $$a, b$$ as follows - 
 
-- $a = A_1 \cdot 2^{\frac{n}{2}} + A_0$ where $A_0 = \sum_{0 \leq 1 < n/2} a_i \cdot 2^i$ and $A_1 = \sum_{n/2 \leq i < n} a_i \cdot 2^{i - n/2}$
+- $$a = A_1 \cdot 2^{\frac{n}{2}} + A_0$$ where $$A_0 = \sum_{0 \leq 1 < n/2} a_i \cdot 2^i$$ and $$A_1 = \sum_{n/2 \leq i < n} a_i \cdot 2^{i - n/2}$$
 
-- $b = B_1 \cdot 2^{\frac{n}{2}} + B_0$ similarly.
+- $$b = B_1 \cdot 2^{\frac{n}{2}} + B_0$$ similarly.
 
-Then, $ab = (A_1 \cdot 2^{\frac{n}{2}} + A_0)(B_1 \cdot 2^{\frac{n}{2}} + B_0)$. The strategy then is to do a divide and conquer on these halves to get the final answer.
+Then, $$ab = (A_1 \cdot 2^{\frac{n}{2}} + A_0)(B_1 \cdot 2^{\frac{n}{2}} + B_0)$$. The strategy then is to do a divide and conquer on these halves to get the final answer.
 
 $$
 ab = A_1 B_1 2^n + (A_0 B_1 + A_1 B_0)2^{n/2} + A_0B_0
 $$
 
-The time complexity is then $T(n) = 4T(\frac{n}{2}) + \mathcal O(n)$. This is essentially $$\mathcal O(n^2)$$ that does not give any improvement.
+The time complexity is then $$T(n) = 4T(\frac{n}{2}) + \mathcal O(n)$$. This is essentially $$\mathcal O(n^2)$$ that does not give any improvement.
 
 This can be optimized further -
 
@@ -290,7 +290,7 @@ $$
 ab = A_1 B_1 2^n + ((A_0 + A_1)(B_0 + B_1) - A_0B_0 - A_1 B_1)2^{n/2} + A_0B_0
 $$
 
-The number of multiplications reduced to 3 - $T(n) = 3T(\frac{n}{2}) + \mathcal O(n)$. Deriving the final expression, $T(n) = cn + cn\frac{3}{2} + \dots + cn\left(\frac{3}{2}\right)^{\log n} = \mathcal(3^{\log n})$.
+The number of multiplications reduced to 3 - $$T(n) = 3T(\frac{n}{2}) + \mathcal O(n)$$. Deriving the final expression, $$T(n) = cn + cn\frac{3}{2} + \dots + cn\left(\frac{3}{2}\right)^{\log n} = \mathcal(3^{\log n})$$.
 
 This algorithm can be extended to matrix multiplications as well. 
 
@@ -298,23 +298,23 @@ $$
 C = AB = \begin{bmatrix} A_{00}B_{00} + A_{01}B_{10} & A_{00}B_{01}  + A_{01} B_{11} \\A_{10}B_{00} + A_{11}B_{10} & A_{10}B_{01} + A_{11}B_{11}\end{bmatrix}
 $$
 
-The naïve algorithm shown above is still $O(n^3)$. Strassen's algorithm reduces the number of multiplications to $$7$$ providing an improvement over the $$\mathcal O(n^3)$$ algorithm giving $$\approx \mathcal O(n^{2.81})$.
+The naïve algorithm shown above is still $$O(n^3)$$. Strassen's algorithm reduces the number of multiplications to $$7$$ providing an improvement over the $$\mathcal O(n^3)$$ algorithm giving $$\approx \mathcal O(n^{2.81})$$.
 
-The current state of the art algorithm for matrix multiplication achieves $\mathcal O(n^{2.371552})$. We do not know if there is an algorithm that achieves $\mathcal O (n^{2 + o(1)})$.
+The current state of the art algorithm for matrix multiplication achieves $$\mathcal O(n^{2.371552})$$. We do not know if there is an algorithm that achieves $$\mathcal O (n^{2 + o(1)})$$.
 
 ### Algorithm 2
 
-Multiplication can be seen as a special case of convolution and we can use **Fast Fourier Transform (FFT)** to perform this in $\mathcal O(n \log n)$. The details will be elaborated in the next section.
+Multiplication can be seen as a special case of convolution and we can use **Fast Fourier Transform (FFT)** to perform this in $$\mathcal O(n \log n)$$. The details will be elaborated in the next section.
 
 ## Convolution
 
 Consider two vectors of the following form -
 
-- $a = (a_{n - 1}, a_{n - 2}, \dots, a_2, a_1, a_0)$
+- $$a = (a_{n - 1}, a_{n - 2}, \dots, a_2, a_1, a_0)$$
 
-- $b = (b_{n - 1}, b_{n - 2}, \dots, b_2, b_1, b_0)$
+- $$b = (b_{n - 1}, b_{n - 2}, \dots, b_2, b_1, b_0)$$
 
-The convolution operation $\star$ is defined as
+The convolution operation $$\star$$ is defined as
 
 $$
 c = a\star b = (c_{n - 1}, \dots, c_0) \quad \text{ where } c_j = \sum_{0 \leq k < n} a_j b_{(j - k)\mod n}
@@ -322,30 +322,119 @@ $$
 
 Convolution is a generalization of integer multiplication (padding + convolution = multiplication). Also, convolution is a central operation in signal processing - used for blurring images and also to learn features from spatial data.
 
-The naïve algorithm can be done in $\mathcal O(n^2)$ time. We can perform convolution using $\mathcal O(n\log n )$ using **Fourier Transform**. 
+The naïve algorithm can be done in $$\mathcal O(n^2)$$ time. We can perform convolution using $$\mathcal O(n\log n )$$ using **Fourier Transform**. 
 
 # Fourier Transform
 
-Consider the $n$ dimensional vector $a = (a_{n - 1}, a_{n - 2}, \dots, a_2, a_1, a_0)$ and $b = (b_{n - 1}, b_{n - 2}, \dots, b_2, b_1, b_0)$. Let $\{e_i\}_i$ form a unit basis of $$\mathbb R^n$ such that $a = \sum_{0 \leq i < n} a_i e_i, b = \sum_{0 \leq i < n} b_i e_i$.
+Consider the $$n$$ dimensional vector $$a = (a_{n - 1}, a_{n - 2}, \dots, a_2, a_1, a_0)$$ and $$b = (b_{n - 1}, b_{n - 2}, \dots, b_2, b_1, b_0)$$. Let $$\{e_i\}_i$$ form a unit basis of $$\mathbb R^n$$ such that $$a = \sum_{0 \leq i < n} a_i e_i, b = \sum_{0 \leq i < n} b_i e_i$$.
 
-Consider another basis $\hat e_i(j) = \omega_n^{ij}$ where $\omega_n = e^{\frac{1\pi \bf{i}}{n}}$ is the $n$-th root of unity. Therefore, $\hat e_i = \frac{1}{\sqrt{n}} \omega_n^{(n - 1)i}, \dots, \omega_n^{2i}, \omega_n^{i}, 1)$.
+Consider another basis $$\hat e_i(j) = \omega_n^{ij}$$ where $$\omega_n = e^{\frac{1\pi \bf{i}}{n}}$$ is the $$n$$-th root of unity. Therefore, $$\hat e_i = \frac{1}{\sqrt{n}} \omega_n^{(n - 1)i}, \dots, \omega_n^{2i}, \omega_n^{i}, 1)$$.
 
-It is easy to check that this is a valid basis. So, again, $a, b$ can be uniquely represented as 
+It is easy to check that this is a valid basis. So, again, $$a, b$$ can be uniquely represented as 
 
-- $a = \sum_{0 \leq i < n} \hat a_i \hat e_i$, $\hat a_i = \langle a_i, \hat e_i\rangle = \frac{1}{\sqrt{n}} \sum_j a_j \omega_n^{-ij}$
+- $$a = \sum_{0 \leq i < n} \hat a_i \hat e_i$$, $$\hat a_i = \langle a_i, \hat e_i\rangle = \frac{1}{\sqrt{n}} \sum_j a_j \omega_n^{-ij}$$
 
-- $b = \sum_{0 \leq i < n} \hat b_i \hat e_i$
+- $$b = \sum_{0 \leq i < n} \hat b_i \hat e_i$$
 
-A **Fourier transform** is then defined as - Given $\{a_i\}_{i \in [n]}$, compute $F(a) = \{\hat{a_i}\}_{i \in [n]}$.
+A **Fourier transform** is then defined as - Given $$\{a_i\}_{i \in [n]}$$, compute $$F(a) = \{\hat{a_i}\}_{i \in [n]}$$.
 
-The **inverse problem** is to find $F^{-1} (\hat a) = \{a_i \}_{i \in [n]}$. It essentially is a change of basis between $\{e_i\} \iff \{\hat e_i\}$.
+The **inverse problem** is to find $$F^{-1} (\hat a) = \{a_i \}_{i \in [n]}$$. It essentially is a change of basis between $$\{e_i\} \iff \{\hat e_i\}$$.
 
 ## Convolution Theorem
 
-Let $a, b$ be two vectors in $\mathbb R^n$; then, 
+Let $$a, b$$ be two vectors in $$\mathbb R^n$$; then, 
 
 $$
 a \star b = F^{-1} (F(a) \cdot F(b))
 $$
 
-With this claim, convolution can be f=done in $\mathcal O(2T_{FT} + T_{IFT} + n)$.
+With this claim, convolution can be f=done in $$\mathcal O(2T_{FT} + T_{IFT} + n)$$.
+
+# Dynamic Programming
+
+## Longest path on a DAG
+
+Given a DAF with $$n$$ vertices, $$m$$ edges, every edge $$e$$ has a weight $$l_e$$, compute the longest path on the DAG. The length of a path is defined as the weight sum over all edges in the path.
+
+Consider the following algorithm
+
+```pseudocode
+DFS(u):
+    if marked[u] = true:
+        return DP[u]
+    cost <- 0
+    for all v that (v, u) in E:
+        cost <- max(cost, DFS(v) + l_{v, u})
+    marked[u] <- true
+    DP[u] <- cost
+    return cost
+```
+
+The time complexity of the algorithm is $$\mathcal O(n + m)$$. The key point to notice is that instead of recomputing the cost of each path, we have essentially stored the costs in the array `DP` to reduce the redundant calculations. This step is known as **memoization**.
+
+## Knapsack Problem
+
+Consider an integer $$U$$ representing total capacity and a list of integers $$\{v_i, c_i\}$$ that represents the volume and cost of each item respectively. The goal is to pick items such that their total volume is at most $$U$$ and their value is maximized. 
+
+**Idea 1**. Sort everything by $$v_i/c_i$$ and pick the items until value if $$U$$. It is easy to see that this greedy algorithm will not work.
+
+### A Backtracking algorithm
+
+Consider an iterative algorithm that at step $$i$$ has $$C$$ volume left and is considering whether to pick or skip the $$i$$-th item. Considering these two possibilities, we can implement a brute force algorithm with memoization for dynamic programming.
+
+We set a 2D matrix of size $$(U, n)$$ where each row $$i$$ represents the set of items that need to be picked to maximize the cost within volume $$U$$. The time complexity of this algorithm would be $$\mathcal O(2^n)$$.
+
+The algorithm is as follows -
+
+```pseudocodedfs(C,
+   dfs(C, i):
+       if i = 0: return 0
+       Cost <- dfs(C, i - 1)
+       if C >= c_i:
+           Cost <- max(Cost, dfs(C - c_i, i - 1) + v_i)
+       return Cost
+```
+
+### Alternative view
+
+We can treat every possible $$(C, i)$$ as a vertex in a graph. Every vertex has at most two outcoming edges - $$(C, i) \to (C - c_i, i - 1)$$ with cost $$v_i$$ and $$(C, i) \to (C, i - 1)$$ with cost $$0$$. This constructed graph is a DAG and we essentially reduced Knapsack problem to longest path on a DAG.
+
+Based on the algorithm we have seen earlier, we modify the algorithm to include memoization
+
+```psuedocode
+   dfs(C, i):
+       if marked[C][i] = true: return DP[C][i] // Modification
+       if i = 0: return 0
+       Cost <- dfs(C, i - 1)
+       if C >= c_i:
+           Cost <- max(Cost, dfs(C - c_i, i - 1) + v_i)
+       marked[C][i] <- true // Modification
+       DP[C][i] <- cost // Modification
+       return Cost
+```
+
+The modified algorithm now has the time complexity $$\mathcal O(Un)$$ since there are $$Un$$ vertices in total with atmost 2 edges each.
+
+## General observation
+
+Dynamic Programming problems can be typically thought og as a decision-making processes. These decision problems can be converted to graphs where the states are vertices on a graph and the transitions are edges on a graph. Typically, the problem have a DP solution if the graph is a DAG and the number of states is not too large.
+
+The algorithm shown above can then be used as a general procedure to solve the problems. Sometimes, it is beneficial to implement the algorithms with a loop rather than recursion.
+
+## Knapsack with unlimited items
+
+The algorithm remains pretty much the same except that teh recrusion call has `dfs(C - c_i, i)` instead of `dfs(C - c_i, i - 1)`. 
+
+## Knapsack with limited items
+
+We can consider another variant where item $$i$$ can be used at most $$k_i$$ times. Then, a similar algorithm would have the time complexity $$\mathcal (U \sum_i k_i)$$. 
+
+A better solution treats the $$i$$th item as $$\lceil \log k_i\rceil$$ items. For example, if $$k_i = 8$$, then divide the item as $$(c_i, v_i), (2c_i, 2v_i), (4c_i, 4v_i), (c_i, v_i)$$. Then the time complexity would be reduced to $$\mathcal O(U \sum_i \log k_i)$$. 
+
+However, it can be improved to $$\mathcal O(Un)$$ using a **monotonic queue**.
+
+## 2D Knapsack
+
+In this variant, each item has value $$v_i$$, volume integer $$c_i > 0$$ and a weight integer $$w_i > 0$$. The goal is to find a subset of items that has the total volume at most $$U$$, total weight at most $$W$$ and the total value is maximized. The dynamic programming algorithm has a runtime of $$\mathcal O(WUn)$$.
+
+In the loop variant of the algorithm, it is better to iterate over the items first rather than the weights. Why is that? Furthermore, it is better to iterate decreasing the costs, because
