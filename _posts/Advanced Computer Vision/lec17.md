@@ -16,7 +16,7 @@ Parametric encodings on the other hand are more complicated, and can be used to 
 
 The scene is divided into multiple grids - the corners of each cube are hashed and stored in a hash table. For any point outside this lattice, we simply use a linear combination based on distances - this ensures continuity and differentiability.
 
-What exactly is hashed? The high-dimensional vector embedding for each 3D point is stored. Furthermore, the authors implement a low-level CUDA kernel to realise fast matrix multiplications.
+What exactly is hashed? The high-dimensional vector embedding for each 3D point is stored. Furthermore, the authors implement a low-level CUDA kernel to realize fast matrix multiplications.
 
 This implementation greatly reduces the training time and reduces the memory used. It takes days to train NeRFs, and with this the model could be trained in a couple of seconds.
 
@@ -36,7 +36,7 @@ This idea is not only for NeRFs but can be used for other primitives like Gigapi
 
 Taking motivation from 2D generation, we use noise-sampling based approaches to build 3D scenes. While our 2D models are able to generate very high quality results, 3D models aren't able to match these outputs. The first limitation is due to the unavailability of data (Objaverse-XL 10M vs LAION 5B). The dataset itself has very simple models, so it is difficult to build highly-detailed models.
 
-## Pretrained 2D Diffusion Models
+## Pre-trained 2D Diffusion Models
 
 How about [Lifting Pretrained 2D Diffusion Models for 3D Generation](https://arxiv.org/abs/2212.00774)? After the advent of NeRFs, this approach became feasible. The problem of creating a 3D model can be distilled to updated view-dependent 2D images! 
 

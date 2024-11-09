@@ -24,7 +24,7 @@ $$
 
 In these architectures, a generator network tries to fool the discriminator by generating real-looking images. In contrast, a discriminator network tries to distinguish between real and fake images. GANs don't produce as good images as diffusion models, but the concept of adversarial learning is a crucial concept in many fields.  The framework looks like this - 
 
-![](../../assets/img/Computer%20Vision/2024-04-24-17-21-56-image.png)
+![](/assets/img/Computer%20Vision/2024-04-24-17-21-56-image.png)
 
 The objective function for a GAN is formulated as a mini-max game - the generator tries to maximize the loss function whereas the discriminator tries to reduce it. 
 

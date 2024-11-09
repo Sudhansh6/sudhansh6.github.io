@@ -8,7 +8,7 @@ To address these limitations, **swin transformers** bring two key ideas from CNN
 
 - Multi-scale feature maps - Feature maps from one resolution are down sampled to match the size in the next block.
   
-  ![](assets/2024-06-13-21-25-21-image.png)
+  ![](/assets/img/Computer%20Vision/2024-06-13-21-25-21-image.png)
 
 - Local connectivity - 
   
@@ -20,7 +20,7 @@ However, these modifications are not enough for tasks like segmentation, which r
 
 >  CNNs are shift-invariant whereas ViTs are permutation invariant. Why?
 
-![](assets/2024-06-13-21-32-22-image.png)
+![](/assets/img/Computer%20Vision/2024-06-13-21-32-22-image.png)
 
 At each scale level in the above picture, we *reassemble* the tokens by concatenating and convolving with appropriate kernels to recover image-like representations in the decoder layers.
 

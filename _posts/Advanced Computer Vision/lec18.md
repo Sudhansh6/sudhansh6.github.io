@@ -6,11 +6,11 @@ To improve on this performance, the authors of Prolific Dreamer modified the SDS
 
 This is a difficult task as it is a sparse manifold in a complex high-dimensional space.
 
-Do we have a metric to quantitatively analyse these models? **T3 Bench** is a benchmark score that checks the text-3D model alignment and the quality of the result itself.
+Do we have a metric to quantitatively analyze these models? **T3 Bench** is a benchmark score that checks the text-3D model alignment and the quality of the result itself.
 
 ## ReconFusion
 
-ZeroNVS is a modification over Zero-1-2-3 that does not require any pretraining on 3D models to generate models. However, this paper along with other approaches during this time required heavy pretrained models, with high computational requirements and scene specific fine-tuning. Along with these, they also had floater artifacts and inconsistencies in multi-view generation. 
+ZeroNVS is a modification over Zero-1-2-3 that does not require any pre-training on 3D models to generate models. However, this paper along with other approaches during this time required heavy pre-trained models, with high computational requirements and scene specific fine-tuning. Along with these, they also had floater artifacts and inconsistencies in multi-view generation. 
 
 PixelNerf is one of the state-of-the-art 3D reconstruction papers that does not require dense training data because it relies on underlying pixel structure. The idea is to use this scene representation with latent diffusion models to address the limitations of the previous papers.
 

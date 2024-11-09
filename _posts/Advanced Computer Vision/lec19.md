@@ -22,8 +22,4 @@ combine any two VLM and LLM using Q-former
 
 ## GLIP
 
-Generalisable object detection model. 
-
-
-
-
+Generalizable object detection model. 

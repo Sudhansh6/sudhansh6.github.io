@@ -72,7 +72,7 @@ I'm adding a list of useful websites that can be used for handy computations. Th
 
 - [Differentiation of matrices](http://www.matrixcalculus.org/)
 - [Merge PDFs](https://www.adobe.com/in/acrobat/online/merge-pdf.html#:~:text=Click%20the%20Select%20files%20button,Click%20Merge%20files.)
-- [Remove Background from images](https://www.remove.bg/)
+- [Remove Background from images](https://www.remove.bg/) - this is not free anymore :(
 - [Image Color Picker](https://imagecolorpicker.com/)
 - [Other png tool](https://onlinepngtools.com/)
 - [LateX symbol decoder](https://detexify.kirelabs.org/classify.html)

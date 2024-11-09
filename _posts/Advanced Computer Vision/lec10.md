@@ -34,7 +34,7 @@ A model developed by Meta with zero-shot segmentation capabilities. The task thi
 
 The model generates a valid mask for a given prompt (even if ambiguous) as input. How is the ambiguity resolved? Ambiguous cases arise when the mutiple objects lie on top of each other. 
 
-![](../../assets/img/Computer%20Vision/2024-05-03-17-21-39-image.png)
+![](/assets/img/Computer%20Vision/2024-05-03-17-21-39-image.png)
 
 The image encoder is heavy - a pretrained ViT with masked autoencoder. The design choice for the masking involved masking around 75% of the patches. Unlike NLP tasks, vision tasks rely heavily on spatial information and neighbor patches can be reconstructed without much effort. Also, NLP tasks can get away with a simple MLP for decoders but vision taks require strong decoders.
 

@@ -26,7 +26,7 @@ Since, multiple anchor boxes can map to an object, we iteratively choose the hig
 
 Faster R-CNN has many steps, handcrafted architecture and potentially non-differentiable steps. In contrast, DETR was proposed - an end-to-end transformer based architecture for object detection. The motivation was to capture all the human-designed optimization parts of the pipeline into one black-box using a transformer.
 
-![](../../assets/img/Computer%20Vision/2024-04-24-17-53-05-image.png)
+![](/assets/img/Computer%20Vision/2024-04-24-17-53-05-image.png)
 
 Why do we want such an end-to-end architecture? They are more flexible to diverse data, capturing large datasets, finetuning, etc. 
 
