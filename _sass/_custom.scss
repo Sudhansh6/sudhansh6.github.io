@@ -1,0 +1,46 @@
+
+.toggle-container {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.tabs label {
+  padding: 5px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+.tab.A {
+  background-color: #007acc;
+  color: white;
+  border-bottom: none;
+}
+
+.toggle-checkbox {
+  display: none;
+}
+
+.toggle-checkbox:checked ~ .tabs .tab.A {
+  background-color: white;
+  color: black;
+}
+
+.toggle-checkbox:checked ~ .tabs .tab.B {
+  background-color: #007acc;
+  color: white;
+  border-bottom: none;
+}
+
+.content-A, .content-B {
+  display: none;
+  margin-top: 10px;
+}
+
+.toggle-checkbox:not(:checked) ~ .content .content-A {
+  display: block;
+}
+
+.toggle-checkbox:checked ~ .content .content-B {
+  display: block;
+}

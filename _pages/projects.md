@@ -2,9 +2,9 @@
 layout: page
 title: Projects
 permalink: /projects/
-description: A few projects...
+description: A collection of projects I've worked on, including personal and professional endeavors.
 nav: true
-nav_order: 3
+nav_order: 4
 display_categories: [research, self]
 horizontal: false
 ---
@@ -20,7 +20,7 @@ horizontal: false
   <!-- Generate cards for each project -->
   {% if page.horizontal -%}
   <div class="container">
-    <div class="row row-cols-2">
+    <div class="row row-cols-3">
     {%- for project in sorted_projects -%}
       {% include projects_horizontal.html %}
     {%- endfor %}
