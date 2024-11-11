@@ -36,7 +36,7 @@ From 90's to early 2000s, methods like logistic regression, Support Vector Machi
 
 The main language models during this time were n-grams with smoothing.
 
-![](assets/2024-11-03-Statistical-NLP/2024-11-09-15-15-16-image.png)
+![](/assets/2024-11-03-Statistical-NLP/2024-11-09-15-15-16-image.png)
 
 ### Dawn of Deep Learning Era
 
@@ -52,7 +52,7 @@ Then, in 2015 came the notion of **Attention** - to reduce the bottleneck of seq
 
 In 2020, people realized instead of just pre-training the word-embedding layer they could just pre-train the whole network and add a layer-head in the end if required for other specialized tasks. Pre-trained LMs then acted as an initialization for fine-tuning on downstream tasks - ELMo (Peters et al., 2018), ULMFiT (Howard and Ruder, 2018), GPT (Radford et al., 2018), and BERT (Devlin et al,. 2019). The impact of pre-training all the layers was significant.
 
-![](assets/2024-11-03-Statistical-NLP/2024-11-09-15-15-02-image.png)
+![](/assets/2024-11-03-Statistical-NLP/2024-11-09-15-15-02-image.png)
 
 ### Present Date
 
@@ -60,15 +60,15 @@ NLP systems are increasing used in everyday life - in the form of chatbots and o
 
 The key advantage os language models is that there is no need of annotation - nearly unlimited training data*. People also realized that using larger and larger models gives higher performance as data scales. The final ingredient to achieve all this is compute - GPU gave a huge advantage over CPU to train these networks. These three key ingredient - hardware scalability (GPUs), Model scalability (Transformer with many deep layers) and Data scalability (Large datasets with lots of text) enabled the success of GPT models. 
 
-![](assets/2024-11-03-Statistical-NLP/2024-11-09-15-14-43-image.png)
+![](/assets/2024-11-03-Statistical-NLP/2024-11-09-15-14-43-image.png)
 
 Realizing the power of scale, GPT1 was trained with a few million parameters and now GPT4 has a few hundred billion parameters. In 2022, researchers at OpenAI realized some tasks were only possible at larger scales - scaling LMs leads to emergent abilities. Another paper (one of the best papers in NeurIPS) questioned this asking whether this finding is just an artifact of how we designed our metrics. The metrics used in the OpenAI paper did not allow continuous rewards which caused the sudden jump in performance after a certain point in scale. With a more continuous metric, the gains due to scale increase continuously without sudden jumps.
 
 Then came the question of prompting - how do we talk to these LMs? **Prompt** is a cue given to the pre-trained LM to allow it to better understand people's questions (Best paper in NeurIPS 2020). 
 
-GPT3.5 introduced the notion of **Instruction Tuning** - collect examples of (instruction, output) pairs across many tasks and then evaluate on unseen tasks. Furthermore, the output of LMs can be tuned with **Reinforcement Learning with Human Feedback** (RLHF) -  explicitly attempt to satisfy human preferences using RL. This was implemented in an ingenious manner - 
+GPT3.5 introduced the notion of **Instruction Tuning** - collect examples of (instruction, output) pairs across many tasks and then evaluate on unseen tasks. Furthermore, the output of LMs can be tuned with **Reinforcement Learning with Human Feedback** (RLHF) -  explicitly attempt to  satisfy human preferences using RL. This was implemented in an ingenious manner - 
 
-![](assets/2024-11-03-Statistical-NLP/2024-11-09-15-13-21-image.png)
+![](/assets/2024-11-03-Statistical-NLP/2024-11-09-15-13-21-image.png)
 
 After adding some safety features, GPT3.5 was transformed into ChatGPT. 
 
@@ -204,6 +204,40 @@ The naïve version of gradient descent can be optimized much further using bette
 
 How do we convert words to numerical values? A simple idea is to consider a **one-hot vector** - maps words into fixed length vectors and they contain only the identity information of the object without any semantic information. **Bag-of-words** is essentially the summation of one-hot vectors across the input text.
 
-An interesting result is that word meanings can also be captured through vectors of real numbers - a vector space where similar words (by meaning) have similar vectors (by some distance metric).
+An interesting result is that word meanings can also be captured through vectors of real numbers - a vector space where similar words (by meaning) have similar vectors (by some distance metric). How do we come up with such vectors that also have a reasonable size?
+
+### Distributional Semantics
+
+Words that appear in similar contexts have similar meanings. The idea is to understand the context around the word and their relative ordering to understand the meaning of the word itself. To do so, we will build a dense vector for each word, chosen so that it is similar to vectors of words that appear in similar contexts, measuring similarity as the vector dot (scalar) product.
+
+### Word2Vec
+
+A simple and fast model to capture semantic meanings. They use two algorithms - skip-gram and Continuous Bag of Words (CBOW). 
+
+**Skip-gram** - Given a corpus of text as the input, the output is a set of embeddings which is a real valued vector. To generate these embeddings, we set up a fake prediction task - predict a word's context from that word. For example, in the sentence "the dog bit the man", for the *word* "bit", the *context* can be "dog" or "the".
+
+For each position $t = 1, \dots, T$ in the corpus, we predict context words within a window of fixed size $$m$$ (*context window size*), given a center word $$w_j$$. The joint probability expression is given by
+
+$$
+\text{ Data Likelihood } = \prod_{t = 1}^{T} \prod_{-m \leq j \leq m; j \neq 0} P(w_{t + j} \vert w_t; \theta)
+$$
+
+where $$\theta$$ are all the parameters of the model. The loss function can be chosen as 
+
+$$
+L(\theta) = -\frac{1}{T} \sum_{t = 1}^T \sum_{-m \leq j \leq m; j \neq 0}\log P(W_{t + j} \vert w_t; \theta)
+$$
+
+The ground truth probability is calculated by looking at all examples of the word occurring in the training corpus. The original paper predicts two vectors per word $$w$$ - $$v_w$$ when $$w$$ is a center word, $$u_w$$ when $$w$$ is a context word. The probability is then given by
+
+$$
+P(o \vert c) = \frac{\exp (u_o^T v_c)}{\sum_{w \in V} \exp(u^T_w v_c)}
+$$
+
+The gradient of this loss function comes out to be expected context vector subtracted from the observed context vector. The center word is pulled otwards words that are observed in its context and away from those that are not
+
+$$
+v_c^{new } = v_c^{old} + \text{observed} - \text{expected}
+$$
 
 
