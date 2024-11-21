@@ -85,6 +85,7 @@ I'm adding a list of useful websites that can be used for handy computations. Th
 - [The best Geometric Processing Library](https://github.com/micycle1/PGS)
 - [Probability theory nicely explained](https://almostsuremath.com)
 - [More Machine Learning concepts in depth with everything covered](https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/scaling/JAX/overview.html)
+- [Nice blog for ML and every other interesting domain](https://www.greaterwrong.com/posts/ZHrpjDc3CepSeeBuE/gpt-3-a-disappointing-paper)
 
 # Fun Websites
 

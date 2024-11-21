@@ -234,10 +234,104 @@ $$
 P(o \vert c) = \frac{\exp (u_o^T v_c)}{\sum_{w \in V} \exp(u^T_w v_c)}
 $$
 
-The gradient of this loss function comes out to be expected context vector subtracted from the observed context vector. The center word is pulled otwards words that are observed in its context and away from those that are not
+The gradient of this loss function comes out to be expected context vector subtracted from the observed context vector. The center word is pulled towards words that are observed in its context and away from those that are not
 
 $$
 v_c^{new } = v_c^{old} + \text{observed} - \text{expected}
 $$
 
+# Low-rank Adaptation (LoRA)
 
+$$
+h = W
+$$
+
+# Multi-layer Prompt Tuning
+
+Continuous prompts $$\phi_i$$ are concatenated with the keys and values in the self-attention layer
+
+# Adapters in Transformer Models
+
+An adapter in a Transformer layer
+
+$$
+f_{\phi_i}(x) = W^U(\sigma(W^D x))
+$$
+
+where $$W_^D \in \mathbb R^{d\times r}, $$W^U$$
+
+# Towards a Unified View for Parameter Efficient fine-tuning
+
+This works shoes that LoRA, prefix-tuning, and adapters can be expressed with a similar functional form - all methods can be expressed as modifying a model's hidden representation $$h$$
+
+### Optimizer State comparison
+
+## Model compression
+
+### Knowledge Distillation
+
+A classic approach from Hinton et. al 
+
+### DistilBERT
+
+The idea is to use the classification model with output $$P_{\text{teacher}} (y \vert x)$$ to minimize $$KL(P_{\text{teacher}}\vert\vert P_{\text{student}})$$ to bring student distribution close to the teacher. Note that this approach does not require any labels since the student uses *pseudo-labels* that the teacher has.
+
+For example, we can choose BERT as the teacher model and create a small student model that has half the layers of BERT. The number of parameters reduce by half and so does the inference time. The performance difference is negligible and this is a huge gain for efficiency.
+
+# Knowledge Representation in Transformer LMs
+
+Factual knowledge is captured by the model during the training is stored in the form of model parameters. Which part of the transformer is this information stored? Token embeddings, feedforward laters or attention layers?
+
+### Parameter Distribution in Transformers
+
+- Self-attention layers
+  
+  - Query, Key, Value matrices - $$W_q, W_k, W_v$$ each of dimension $$d \times d$$
+  
+  - Output matrix is $$W_o$$ of dimension $$d \times d$$
+  
+  - $$4d^2$$ attention parameters per layer.
+
+- Feed-forward Network Layers
+  
+  - First linear transformation via $$W_1: 4d^s$$ (input to $$4d$$)
+  
+  - Second linear transformation via $$W_2: 4d^2$$ ($$4d$$ to output)
+  
+  - $$8d^2$$ feedforward parameters per layer
+
+- The embedding parameters are not usually considered since the vocabulary across all the models is assumed to be the same
+
+Note that feedforward layers have much higher number of parameters than the attention layers - they account for 2/3 of the total parameters.
+
+## Transformer Feed-Forward Layers Are Key-Values Memories
+
+An interesting paper that explores the previous ideas. The feedforward layer is represented as $$y = W_2 \sigma(W_1 x)$$.
+
+$$W_1$$ corresponds to keys, and $$W_2$$ to values - when the output from the first weight matrix is passed through ReLU - it is similar to *selecting* some entries of the vector (positive ones) which then choose the corresponding rows in $$W_2$$.
+
+The authors tested this idea by considering which neurons are selected in the feedforward layers for different tokens - **key trigger analysis**. They analyzed the patterns in the activations to categorize them.
+
+Given a key $$k_i^l$$ corresponding to $$i$$th row of the $$l$$th feed-forward layer $$W_1$$ computer memory efficient for every prefix $$x_1, \dots, x_j$$ of every sentence in the training data.
+
+**Memory coefficient calculation** - calculate $$ReLU(x_j^l \cdot k)$$ - incomplete
+
+They found the following results -
+
+- Shallow layers detect shallow patterns
+
+- Middle FF layers store knowledge; Upper attention layers “aggregate” relevant knowledge for prediction
+
+## Editing Knowledge in Transformer LMs
+
+Can we directly edit LM parameters to fix incorrect, obsolete facts? The edits must be deep - 
+
+- Eiffel tower is located in the city __\_\_ (change from Paris to Rome)
+
+- Model should understand full implications - The tallest building in Rome is ___Eiffel Tower_\_\_
+
+The edit must be robust, should not edit all the facts in the model.
+
+Can we simply modify the columns of $$W_2$$ to change the model's behavior? This ends up breaking the model. Another work, Meg et al.,  suggested applying a rank-1 update $$W_2 \to W_1 + uv^T$$ to maximize the probability of the edit output. This change minimizes the change in the behavior of $$W_2$$ on other inputs.
+
+It works well in some scenarios and does not in some other - it is a new research direction!

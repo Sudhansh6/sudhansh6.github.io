@@ -438,3 +438,35 @@ However, it can be improved to $$\mathcal O(Un)$$ using a **monotonic queue**.
 In this variant, each item has value $$v_i$$, volume integer $$c_i > 0$$ and a weight integer $$w_i > 0$$. The goal is to find a subset of items that has the total volume at most $$U$$, total weight at most $$W$$ and the total value is maximized. The dynamic programming algorithm has a runtime of $$\mathcal O(WUn)$$.
 
 In the loop variant of the algorithm, it is better to iterate over the items first rather than the weights. Why is that? Furthermore, it is better to iterate decreasing the costs, because
+
+## Summary
+
+Many intractable problems can be efficiently solved on trees - combining with DFS enforces the computation ordering.
+
+# Bellman-Ford algorithm
+
+### Single Source Shortest Path (SSSP)
+
+Given a directed graph of $$n$$ vertices and $$m $$ edge, find the shortest paths for a vertex pair $$(s, t)$$.
+
+Recently, researchers showed that Dijkstra's algorithm is the most optimal algorithm possible with a *specially* designed heap.
+
+Would dynamic programming work for SSSP? $$dp[u][i]$$ represents a path from $$s$$ to $$u$$ using at most $$i - 1$$ edges. This simply is the Bellman-Ford algorithm.
+
+# Floyd-Warshall algorithm
+
+All pair shortest path algorithm in $$O(n^3)$$.
+
+# Traveling Salesman Problem
+
+Given.a complete graph of $$n$$ vertices, every edge has a cost $$l_e$$. The goal is to find a path that visits every node exactly once while minimizing the total cost. It is an NP-hard problem where the brute-force algorithm takes $$\\mathcal O(n!)$$ - enumerating all possible permutations of nodes.
+
+There is a dynamic programming solutions of the order $$O(2^n n^2)$$. This is computable with the modern computers upto $$n = 15$$. We discuss the framework here -
+
+- **States** - At node $$u$$, set of all unvisited states - minimum cost to finish the rest of the task. The number of states is $$\mathcal O(n2^n)$$.
+
+- **Decision-making**
+
+- What will be the next node to visit? If we choose $$v \in S$$, then the next state will be $$(v, S - \{v\})$
+
+This can be implemented using a bitmask for representing the state - saves space and is faster.

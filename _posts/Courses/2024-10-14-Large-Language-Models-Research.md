@@ -10,7 +10,7 @@ description: A survey of papers to better understand the workings of Large Langu
 
 As a part of this article, we delve into the paradigm of Chain of Though reasoning in Large Language Models. The aim is to highlight the importance of this idea and summarize the main research in this area. The blog should provide enough context for the reader in the field of AI to understand the basic concepts and think about the potential research ideas addressing the limitations of the current models.
 
-# Chain of thought Reasoning
+# [Chain of thought Reasoning](https://arxiv.org/pdf/2201.11903)
 
 Chain of thought (CoT) refers to manifesting the human thought process in large language models by endowing language models with the ability to generate a chain of thought - a coherent series of intermediate reasoning steps.
 
@@ -27,7 +27,7 @@ However, there are some limitations with this paradigm of reasoning with the cur
   - **Symbol mapping error** - When there are too many variables involved, LLMs sometimes mix up the variables and arrive at the wrong answer. Again, the problem arises from the fundamental architecture flaw highlighted in the previous point.
   - Other than these major errors, the models also have semnatic understanding problems, missing steps, incoherent chain of thought errors
 
-# [Large Language Models are Human-level prompt engineers]([[2211.01910] Large Language Models Are Human-Level Prompt Engineers](https://arxiv.org/abs/2211.01910))
+# [Large Language Models are Human-level prompt engineers](https://arxiv.org/abs/2211.01910)
 
 The motivation of this paper is as follows - 
 
@@ -99,7 +99,7 @@ Although this is a very simple example, the work shows potential in taking such 
 
 Another interesting approach is to not generate the prompts from scratch, but to help humans design better prompts. Essentially, augment with context from humans to generate better prompts. On the flipside, RLHF can be used to improve these APE. 
 
-# [Tree of Thoughts](https://proceedings.neurips.cc/paper_files/paper/2023/file/271db9922b8d1f4dd7aaef84ed5ac703-Paper-Conference.pdf)
+# [Tree of Thoughts](https://arxiv.org/abs/2305.10601)
 
 The early Language Models were limited by their token-level, left-to-right decision making. However, some tasks require exploration, stratefic lookahead, planning, and backtracking. The vanilla architecture does not support such mechanisms.
 
@@ -173,7 +173,7 @@ The key motivators for the paper are as follows -
 
 In the prior works, CoT reasoning has been effective for many tasks but struggled with "Easy-to-hard generalization". Inspired from educational philosophies, the model is implemented by few-show ptompting in 2 stages - decomposition stage and subproblem solving stage.
 
--  Decomposition stage - The problem is divided into subtasks *once* before solving
+- Decomposition stage - The problem is divided into subtasks *once* before solving
 
 - Subsequent solving stage - Solve the subsequent problems one by one.
 
@@ -212,3 +212,11 @@ They perform the following experiments
 They see that zero-shot CoT achieves insignificant performance gains from zero-shot prompting. The progression proof CoT achieves a lower performance - this may be due to overfitting to the training examples.  The LLM fails to learn the *universal block algorithm* (break the tower and put everything back) even with multiple version of CoT prompting. The authors chose a planning domain on purpose because these problems can be scaled up very well.
 
 The authors just wanted to highlight that there is a need for more rigorous testing. One might argue that planning problems are way out of domain of LLMs. So, the authors test the findings with commonly tested problems, and they find similar trends.
+
+# [Chain of Thought without prompting](https://arxiv.org/abs/2402.10200)
+
+Prompting techniques, while effective, often encode task-specific human priors, thereby making it difficult to assess a language model’s intrinsic reasoning abilities. Ideally, a language model should be able to reason independently and provide the optimal response, without requiring humans to tweak the prompts or refine repeatedly if the initial response is unsatisfactory. Model-tuning can be expensive and requires a substantial amount of supervised data. In this work, we explore a different perspective and ask: Can LLMs reason effectively without prompting? And to what extent can they reason? We find that, perhaps surprisingly, there exists a task-agnostic way to elicit CoT reasoning from pre-trained LLMs by simply altering the decoding procedure. Figure 1 illustrates this phenomenon: given a reasoning question, the LLM generates a wrong answer via the standard greedy decoding path, yet alternative top-𝑘 token inspection unveiled inherent CoT paths (e.g., decoding paths 2 and 4), which accurately resolved the query. This decoding modification bypasses prompting and is entirely unsupervised without the need for model tuning.
+
+**Why can't LLMs reason if we only consider greedy decoding path?**
+
+# [Large Language Models are Zero-shot reasoners](https://arxiv.org/abs/2205.11916)
