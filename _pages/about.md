@@ -14,6 +14,7 @@ profile:
           <li>sudhansh6[at]gmail[dot]com</li>
           <li>speddabomma[at]ucsd[dot]edu</li>
         </ul>
+        
 
 news: true  # includes a list of news items
 latest_posts: true  # includes a list of the newest posts
