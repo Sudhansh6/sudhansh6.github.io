@@ -2,7 +2,7 @@
 layout: page
 title: Stable Diffusion Models
 comments: true
-category: research
+category: Generative AI
 description: A brief introduction to image synthesis applications, stable diffusion models and its applications. 
 importance: 2
 img: /assets/video/diffusion.gif

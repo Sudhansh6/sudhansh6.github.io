@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Image Colorization
+title: Generative AI
 description: An image colorization application that converts black and white images to colored ones using pix2pix model. Also includes interactive digit recognition webapp.
 img: /assets/video/colorization.gif
 importance: 3

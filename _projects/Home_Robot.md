@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Perception for Home Robot
-category: research
+category: 3D Reconstruction
 importance: 1
 description: Experimenting with various NeRF and Gaussian Splatting based SLAM algorithms to build a real-time 3D reconstruction of the environment. The methods used include NeRF-SLAM, Nice SLAM, Mip-NeRF and Splatam. 
 img: /assets/video/homerobot.gif
