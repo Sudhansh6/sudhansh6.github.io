@@ -1,10 +1,10 @@
 ---
 layout: page
-title: Generative AI
+title: Image Colorization
+category: Generative AI
 description: An image colorization application that converts black and white images to colored ones using pix2pix model. Also includes interactive digit recognition webapp.
 img: /assets/video/colorization.gif
 importance: 3
-category: self
 ---
 
 <!-- Special thanks to https://www.codicode.com/art/how_to_draw_on_a_html5_canvas_with_a_mouse.aspx -->

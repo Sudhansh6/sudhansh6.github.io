@@ -5,7 +5,7 @@ permalink: /projects/
 description: A collection of projects I've worked on, including personal and professional endeavors.
 nav: true
 nav_order: 4
-display_categories: [research, self]
+display_categories: [Generative AI, 3D Reconstruction, Statistical Image Processing, Self/Research]
 horizontal: false
 ---
 

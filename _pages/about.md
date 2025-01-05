@@ -44,7 +44,7 @@ Hello! I'm Sudhansh, a second-year Masters in Computer Science student at [UC Sa
        I collaborated with <a href="http://hichristensen.net">Prof. Henrik Christensen</a> on real-time dense 3D SLAM using NeRFs and Gaussian Splatting, along with some traditional techniques. We submitted a conference paper to <a href="https://2025.ieee-icra.org">ICRA '25</a> on a novel table-top rearrangement algorithm with scalable and optimal performance over the existing algorithms.
     </p>
     <p>
-        At IIT Bombay, I worked with <a href="https://www.cse.iitb.ac.in/~ajitvr/">Prof. Ajit Rajwade</a> on the Likelihood Maximization for Saturated Compressed Sensing. We published a journal paper in <a href="https://www.sciencedirect.com/science/article/pii/S0165168423004231">Elsevier Signal Processing 2023</a> and submitted a paper to <a href="https://2025.ieeeicassp.org">ICASSP '25</a> on permutation error correction in compressed-sensing based group testing.
+        At IIT Bombay, I worked with <a href="https://www.cse.iitb.ac.in/~ajitvr/">Prof. Ajit Rajwade</a> on the Likelihood Maximization for Saturated Compressed Sensing. We published a journal paper in <a href="https://www.sciencedirect.com/science/article/pii/S0165168423004231">Elsevier Signal Processing 2023</a> and a conference paper in <a href="https://2025.ieeeicassp.org">ICASSP '25</a> on permutation error correction in compressed-sensing based group testing.
     </p>
     <p>
         I also worked with <a href="http://www0.cs.ucl.ac.uk/people/M.Betcke.html">Prof. Marta Betcke</a> from University College London on Stochastic Primal Dual algorithms for Tomographic Reconstruction of 3D volumes in Low-Dose conditions, and we have a journal paper in preparation.

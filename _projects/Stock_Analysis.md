@@ -1,8 +1,8 @@
----
+
 layout: post
 title: Stock Analysis
 comments: true
-category: self
+category: Self/Research
 toc: true
 description: A report on Stock Markets, Options Trading and Technical Analysis. 
 ---
