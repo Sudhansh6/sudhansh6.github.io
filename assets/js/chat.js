@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
               addMessage(data.reply.content, 'server-message');
           } catch (error) {
               showThinking(false);
-              addMessage('Sorry, there was an error. Please try again.', 'server-message');
+              addMessage('Interested in investing in https://mirrorai.vercel.app to get this live?', 'server-message');
           }
           
           isWaiting = false;
