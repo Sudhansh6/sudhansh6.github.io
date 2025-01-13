@@ -22,15 +22,17 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-Hello! I'm Sudhansh, a second-year Masters in Computer Science student at [UC San Diego](https://ucsd.edu). I am a graduate of [IIT Bombay](https://www.iitb.ac.in), where I majored in Computer Science and Engineering with honors and pursued a minor in Entrepreneurship.
+Hello! I’m Sudhansh, a second-year Master’s student in Computer Science at [UC San Diego](https://ucsd.edu), specializing in Artificial Intelligence. I graduated with honors in Computer Science and Engineering from [IIT Bombay](https://www.iitb.ac.in), where I also pursued a minor in Entrepreneurship.
+
+I emphasize learning and am deeply curious about exploring new domains and ideas. I enjoy connecting concepts across fields to develop novel algorithms and solve complex problems. I’m passionate about solving challenging problems in Computer Vision, Machine Learning, and Spatial Computing, particularly in bridging cutting-edge research and real-world applications. My work spans areas like 3D reconstruction, Generative AI, and Statistical Modeling, with a strong emphasis on delivering robust and efficient systems.
 
 <div class="container-toggle">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-      <a class="nav-link active" id="tab-A" data-toggle="tab" href="#content-A" role="tab" aria-controls="content-A" aria-selected="true">Research</a>
+      <a class="nav-link" id="tab-B" data-toggle="tab" href="#content-B" role="tab" aria-controls="content-B" aria-selected="true">Industry</a>
     </li>
     <li class="nav-item" role="presentation">
-      <a class="nav-link" id="tab-B" data-toggle="tab" href="#content-B" role="tab" aria-controls="content-B" aria-selected="false">Industry</a>
+      <a class="nav-link active" id="tab-A" data-toggle="tab" href="#content-A" role="tab" aria-controls="content-A" aria-selected="false">Research</a>
     </li>
     <li class="nav-item" role="presentation">
       <a class="nav-link" id="tab-C" data-toggle="tab" href="#content-C" role="tab" aria-controls="content-C" aria-selected="false">More..</a>
@@ -41,28 +43,28 @@ Hello! I'm Sudhansh, a second-year Masters in Computer Science student at [UC Sa
     <div class="tab-pane fade show active" id="content-A" role="tabpanel" aria-labelledby="tab-A">
     <br>
     <p>
-       I collaborated with <a href="http://hichristensen.net">Prof. Henrik Christensen</a> on real-time dense 3D SLAM using NeRFs and Gaussian Splatting, along with some traditional techniques. We submitted a conference paper to <a href="https://2025.ieee-icra.org">ICRA '25</a> on a novel table-top rearrangement algorithm with scalable and optimal performance over the existing algorithms.
+          I collaborated with <a href="http://hichristensen.net">Prof. Henrik Christensen</a> on real-time dense 3D SLAM using NeRFs and Gaussian Splatting, integrating these techniques for robot navigation and scene understanding. Our work includes a <a href="https://2025.ieee-icra.org">ICRA '25</a> submission presenting a novel table-top rearrangement algorithm with scalable and optimal performance.
     </p>
     <p>
-        At IIT Bombay, I worked with <a href="https://www.cse.iitb.ac.in/~ajitvr/">Prof. Ajit Rajwade</a> on the Likelihood Maximization for Saturated Compressed Sensing. We published a journal paper in <a href="https://www.sciencedirect.com/science/article/pii/S0165168423004231">Elsevier Signal Processing 2023</a> and a conference paper in <a href="https://2025.ieeeicassp.org">ICASSP '25</a> on permutation error correction in compressed-sensing based group testing.
+        At IIT Bombay, I worked with <a href="https://www.cse.iitb.ac.in/~ajitvr/">Prof. Ajit Rajwade</a> on a likelihood maximization approach for saturated compressed sensing, resulting in a <a href="https://www.sciencedirect.com/science/article/pii/S0165168423004231">journal paper</a> at Elsevier Signal Processing 2023 and a <a href="https://2025.ieeeicassp.org">ICASSP '25</a> conference paper on permutation error correction for group testing.
     </p>
     <p>
-        I also worked with <a href="http://www0.cs.ucl.ac.uk/people/M.Betcke.html">Prof. Marta Betcke</a> from University College London on Stochastic Primal Dual algorithms for Tomographic Reconstruction of 3D volumes in Low-Dose conditions, and we have a journal paper in preparation.
+          I also contributed to 3D tomographic reconstruction research with <a href="http://www0.cs.ucl.ac.uk/people/M.Betcke.html">Prof. Marta Betcke</a> at University College London, developing stochastic primal-dual algorithms to achieve high-accuracy reconstructions in low-dosage conditions.
     </p>
-        <code>Research Interests</code> - Computer Vision, Image Processing, Robotics
+        <code>Research Interests</code> - 3D Computer Vision, Spatial Computing, Neural Rendering, Robotics Perception, Statistical Image Processing, Deep Learning.
         <br><br>
     </div>
-    
     <div class="tab-pane fade" id="content-B" role="tabpanel" aria-labelledby="tab-B">
     <br>
-      <p> In summer 2024, I worked as a Computer Vision intern <a href="https://www.duality.ai/">Duality AI</a>, engineering pipelines to import digital twins generated by Gaussian Splatting on Unreal Engine. I also developed algorithms for robust reconstructions from multi-view camera poses of <b>feature-less objects</b>.
+      <p>
+      In summer 2024, I worked as a Computer Vision intern at <a href="https://www.duality.ai/">Duality AI</a>, where I developed pipelines to integrate Gaussian Splatting with Unreal Engine for digital twin generation. My work reduced the digital-twin creation time by 40% and enabled robust reconstructions of featureless objects from multi-view camera setups.
+        </p>
+      <p>
+      Previously, as a Data and Applied Scientist intern at <a href="https://www.microsoft.com/en-in/msidc/">Microsoft</a>, I developed pipelines to generate user-personalized contextual features for Outlook email recommendations.
       </p>
       <p>
-      Previously, I worked as a data and applied scientist intern at <a href="https://www.microsoft.com/en-in/msidc/">Microsoft</a>, developing pipelines to generate user-personalized contextual features for Outlook email recommendations.
-      </p>
-      <p>
-       As a software engineer intern at <a href="https://finiq.com/">FinIQ</a>, I developed pricing models for financial derivatives, including the Heston stochastic model to backsolve asset volatility. I also contributed to developing a parser to screen email quotations and reduce trade discard rates.
-      </p>
+       During my Software Engineer internship at <a href="https://finiq.com/">FinIQ</a>, I implemented pricing models for financial derivatives, including the Heston stochastic model to backsolve asset volatility. I also contributed to developing a parser to screen email quotations and reduce trade discard rates.
+        </p>
       <br>
     </div>
     <div class="tab-pane fade" id="content-C" role="tabpanel" aria-labelledby="tab-C">
