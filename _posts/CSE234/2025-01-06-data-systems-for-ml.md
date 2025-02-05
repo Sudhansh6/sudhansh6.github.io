@@ -15,3 +15,6 @@ toc:
 
 {% include_relative 04.md %}
 {% include_relative 05.md %}
+{% include_relative 06.md %}
+{% include_relative 07.md %}
+{% include_relative 08.md %}
