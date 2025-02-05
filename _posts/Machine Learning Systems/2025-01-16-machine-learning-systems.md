@@ -11,5 +11,6 @@ toc:
 > Acknowledging use of Perplexity, ChatGPT and the reference books and papers to aid with the content.
 
 {% include_relative reading01.md %}
-
 {% include_relative reading02.md %}
+{% include_relative reading03.md %}
+{% include_relative reading04.md %}
