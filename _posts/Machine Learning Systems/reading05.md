@@ -30,7 +30,7 @@ Overall, with all these methods combined, the pipeline saves over $$30\times$$ i
 
 The authors analyze a bit more on how these methods work together with one another. They noticed that the accuracy of the networks starts dropping sharply after a certain threshold in each method. 
 
-![](assets/reading05/2025-02-12-18-35-58-image.png)
+![](/assets/img/Machine Learning Systems/reading05/2025-02-12-18-35-58-image.png)
 
 They also point out that quantization works well with pruned networks due to lesser number of parameters to quantize. In fact, they notice that pruning virtually does not affect the performance obtained after quantization. Basically, with more savings, you get the same performance. 
 
