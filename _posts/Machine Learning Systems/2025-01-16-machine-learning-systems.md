@@ -2,7 +2,7 @@
 layout: post
 title: Machine Learning Systems
 categories: [Notes]
-description: Few keypoints from the amazing book at mlsysbook.ai and other important papers in the field.
+description: Few keypoints from books other important papers in the field.
 toc:
  sidebar: true
 
@@ -14,5 +14,3 @@ toc:
 {% include_relative reading02.md %}
 {% include_relative reading03.md %}
 {% include_relative reading04.md %}
-{% include_relative reading05.md %}
-{% include_relative reading06.md %}

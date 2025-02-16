@@ -11,3 +11,7 @@ package.json
 *.gem
 *.gemspec
 .jekyll-cache
+assets/libs/
+.ruby-version
+vendor
+.idea

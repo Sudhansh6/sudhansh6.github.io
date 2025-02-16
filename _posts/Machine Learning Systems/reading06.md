@@ -18,8 +18,6 @@ These are the core strategies but there can be hybrid approaches based on the ne
 
 [DeepSpeed's ZeRO]([[1910.02054] ZeRO: Memory Optimizations Toward Training Trillion Parameter Models](https://arxiv.org/abs/1910.02054)) (Zero-Redundancy) is one of the most efficient and popular strategies for distributed training. It is a data parallelization strategy that leverages memory redundancy in data-parallel training and the inter-GPU connects to improve throughput. It comprises of two components - ZeRO-DP (data parallelism) and ZeRO-R (residual memory). The team has also proposed newer architectures such as ZeRO-Offload/Infinity (offloading computation to CPU/ NVMe disk) and ZeRO++ (with flexible multi-node training and quantized weights). 
 
-![Different Stages of ZeRO](https://sumanthrh.com/post/distributed-and-efficient-finetuning/zero_huadd67ed54d9443c1208b20053d79cf40_169124_2235167097bc40c1b2f5b36ae9fb3208.webp)
-
 It boasts up to 64x memory reduction for a specific example across different hardware setups and model sizes!
 
 The base method is PyTorch DDP that has been described before. Each GPU worker has **a copy** of the model weights, optimizer state and gradients. To average the gradients, **all-reduce** step is used. All-reduce is a two-step approach - *reduce-scatter* operation to reduce different parts of the data on different processes and an *all-gather* operation to gather the reduced data on all the processes. It requires $$2\psi$$ amount of communication cost for $$\psi$$ number of parameters. The paper suggests three ways of doing this -
@@ -45,8 +43,6 @@ These were the base methods. The authors proposed a wide-array of variations on 
 FSDP is another data-parallelism technique aimed at improving memory efficiency with limited communication overhead. It's based on the previous approaches and has two sharding strategies - Full Sharding and Hybrid Sharding. 
 
 - **Full-sharding** - Similar to ZeRO-3, the parameters, optimizer state and gradient are sharded across workers. 
-
-![FSDP](https://sumanthrh.com/post/distributed-and-efficient-finetuning/fsdp_hufdef68c740eef12ec5f56b917cc75b3b_570277_63f78939c0fc2a016f7ae7f8574a0854.webp)
 
     The high level procedure is -
 

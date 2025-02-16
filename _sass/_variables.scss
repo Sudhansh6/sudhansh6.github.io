@@ -3,6 +3,8 @@
  * To adjust anything, simply edit the variables below and rebuild the theme.
  ******************************************************************************/
 
+ @use "sass:color";
+ 
 // Colors
 $red-color:           #FF3636 !default;
 $red-color-dark:      #B71C1C !default;
@@ -30,6 +32,7 @@ $grey-900:            #212529;
 $white-color: #ffffff !default;
 $black-color: #000000 !default;
 
+
 // Theme colors
 
 $code-bg-color-light:     rgba($purple-color, 0.05);
@@ -37,6 +40,10 @@ $code-bg-color-dark:      #2c3237 !default;
 
 // Font awesome location
 $fa-font-path: "../webfonts";
+
+// Tabler icons location
+$ti-font-path: "../fonts";
+
 
 // Chat variables
 $chat-bg-color: #f8f9fa;
@@ -48,3 +55,11 @@ $user-msg-bg: #007bff;
 $server-msg-bg: #e9ecef;
 $chat-bg-color-light: #f8f9fa;
 $chat-bg-color-dark: #2c3237;
+
+// Back To Top button config
+$back-to-top-z-index: 10;
+$back-to-top-bottom: 30px;
+$back-to-top-right: 30px;
+$back-to-top-diameter: 40px;
+$back-to-top-height: $back-to-top-diameter;
+$back-to-top-width: $back-to-top-diameter;

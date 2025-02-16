@@ -9,7 +9,7 @@
 .chat-toggle-container {
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  left: 20px;
   z-index: 1050;
   display: flex;
   align-items: center;
@@ -52,7 +52,7 @@
   display: none;
   position: fixed;
   bottom: 90px;
-  right: 20px;
+  left: 20px;
   width: 350px;
   background-color: var(--chat-bg-color);
   border-radius: 15px;
