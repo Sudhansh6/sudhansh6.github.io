@@ -21,17 +21,17 @@ announcements:
   scrollable: true # adds a vertical scroll bar if there are more than 3 news items
   limit: 5 # leave blank to include all the news in the `_news` folder
 
-latest_posts: true  # includes a list of the newest posts
+latest_posts: 
   enabled: true
-    scrollable: true # adds a vertical scroll bar if there are more than 3 new posts items
-    limit: 3 # leave blank to include all the blog posts
+  scrollable: true
+  limit: 3
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-Hello! I’m Sudhansh, a second-year Master’s student in Computer Science at [UC San Diego](https://ucsd.edu), specializing in Artificial Intelligence. I graduated with honors in Computer Science and Engineering from [IIT Bombay](https://www.iitb.ac.in), where I also pursued a minor in Entrepreneurship.
+Hello! I'm Sudhansh, a second-year Master's student in Computer Science at [UC San Diego](https://ucsd.edu), specializing in Artificial Intelligence. I graduated with honors in Computer Science and Engineering from [IIT Bombay](https://www.iitb.ac.in), where I also pursued a minor in Entrepreneurship.
 
-I emphasize learning and am deeply curious about exploring new domains and ideas. I enjoy connecting concepts across fields to develop novel algorithms and solve complex problems. I’m passionate about solving challenging problems in Computer Vision, Machine Learning, and Spatial Computing, particularly in bridging cutting-edge research and real-world applications. My work spans areas like 3D reconstruction, Generative AI, and Statistical Modeling, with a strong emphasis on delivering robust and efficient systems.
+I emphasize learning and am deeply curious about exploring new domains and ideas. I enjoy connecting concepts across fields to develop novel algorithms and solve complex problems. I'm passionate about solving challenging problems in Computer Vision, Machine Learning, and Spatial Computing, particularly in bridging cutting-edge research and real-world applications. My work spans areas like 3D reconstruction, Generative AI, and Statistical Modeling, with a strong emphasis on delivering robust and efficient systems.
 
 <div class="container-toggle">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -76,7 +76,7 @@ I emphasize learning and am deeply curious about exploring new domains and ideas
     </div>
     <div class="tab-pane fade" id="content-C" role="tabpanel" aria-labelledby="tab-C">
     <br>
-      <p> I’m passionate about entrepreneurship and collaboration. Hit me up to discuss research, startup ideas, or even sitcoms!
+      <p> I'm passionate about entrepreneurship and collaboration. Hit me up to discuss research, startup ideas, or even sitcoms!
       </p>
       <p> In high school, I participated in many competitive exams. Here are some of my achievements. 
       <ul>

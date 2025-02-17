@@ -6,7 +6,7 @@ description: A collection of projects I've worked on, including personal and pro
 nav: true
 nav_order: 4
 display_categories: [Generative AI, 3D Reconstruction, Statistical Image Processing, Self/Research]
-horizontal: false
+horizontal: true
 ---
 
 <!-- pages/projects.md -->
