@@ -961,3 +961,9 @@ Dijkstra_Algorithm(source, G):
 - In sequence problems, make sure you test your algorithm in the beginning, the middle and the end.
   - Continuously check the range of values reached by the variables you declare. It may happen that the value of a `int` is going beyond `32` bits. 
 - Use `bitset` instead of 2D vectors for "visited" matrices. `bitset<n> bits` declares `n` bits which can be accessed using `bits[i]`.
+
+
+# Tips
+Got back to Leetcode again in 2025, so writing some silly mistakes that I came across 
+1. Always use BFS for shortest path. This may seem obvious, but in one example I thought I did it correctly with DFS because I was exploring all possibilities. However, I did not realize that DFS memoizes the first path it encounters which may not be the shortest path. 
+2. Visited array in BFS - You need to mark a node as visited before pushing to the queue rather than while popping. The latter way results in adding nodes repeatedly leading to incorrect results.

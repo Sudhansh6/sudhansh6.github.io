@@ -14,3 +14,7 @@ toc:
 {% include_relative reading02.md %}
 {% include_relative reading03.md %}
 {% include_relative reading04.md %}
+{% include_relative reading05.md %}
+{% include_relative reading06.md %}
+{% include_relative reading07.md %}
+{% include_relative reading08.md %}
