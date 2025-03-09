@@ -14,7 +14,7 @@ During the forward pass, every mini-batch of size $$N$$ is split into $$M$$ micr
 
 For batch-normalization layers, the statistics of inputs across micro-batches and moving averages across the mini-batch are calculated and communicated. 
 
-![](assets/reading07/2025-02-25-22-13-11-image.png)
+![](/assets/img/Machine Learning Systems/2025-02-25-22-13-11-image.png)
 
 To further decrease the memory consumption, GPipe supports gradient checkpointing - each accelerator only stores the output activates at the partition boundaries. As a result, the peak activation memory is reduced to $$O(N + \frac{L N }{KM})$$ from $$O(NL)$$ (without gradient checkpointing and partitioning) where $$N/M$$ is the micro-batch size and $$L/K$$ is the number of layers per partition. 
 
@@ -46,7 +46,7 @@ Alpa automates model-parallel training of deep-learning models by generating exe
    
    Inter-operator parallelism only requires communication between adjacent stages which can be light if sliced efficiently. However, it results in device idle time due to pipeline bubbles as we discussed before. 
 
-![](assets/reading07/2025-02-25-23-05-39-image.png)
+![](/assets/img/Machine Learning Systems/2025-02-25-23-05-39-image.png)
 
 Parallel to these tradeoffs, the communication bandwidth on the device cluster also has an asymmetric nature. The intra-operator parallelism can use the high communication bandwidth, while the inter-operator parallelism is handled between distance devices with relatively lower bandwidth. The joint execution plan may not be globally optimal, it obtains high performance across different large models. 
 
@@ -88,7 +88,7 @@ The goal of intra-op pass is to pick one parallel algorithm for every operator t
 
 Through this, we can succinctly represent different ways of partitioning a matmul.
 
-![](assets/reading07/2025-02-25-23-31-35-image.png)
+![](/assets/img/Machine Learning Systems/2025-02-25-23-31-35-image.png)
 
 The model graph is represented in XLA's HLO format, that summarizes common DL operators into less than 80 primitive operators whose parallel algorithms can be manually enumerated. 
 

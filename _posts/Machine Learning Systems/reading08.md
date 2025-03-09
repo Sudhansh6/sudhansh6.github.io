@@ -36,7 +36,7 @@ One concern people have with large datasets is the memorization of downstream te
 
 Previous works showed that larger datasets perform better with larger batch sizes and a smaller learning rate. The authors use a gradient noise scale during training to guide the choice of the batch size. They use model parallelism (both intra-op and inter-op) to reduce the peak memory usage. All models were trained on V100 GPUs from Microsoft. 
 
-![](assets/reading08/2025-03-04-16-31-21-image.png)
+![](/assets/img/Machine Learning Systems/2025-03-04-16-31-21-image.png)
 
 With this experiment, a strong paradigm in this field of research has been established - **scaling both compute and model size has a power-law effect on the performance**. 
 
