@@ -37,26 +37,26 @@ ninja.data = [{
               handler: () => {
                 window.location.href = "";
               },
-            },{id: "post-brains-and-ai",
+            },{id: "post-key-works-in-ml-systems",
       
-        title: "Brains and AI",
-      
-      description: "The primary motivation for AI stems from our brains. How has our research in cognitive science shaped the modern AI systems?",
-      section: "Posts",
-      handler: () => {
-        
-          window.location.href = "/blog/brains-and-ai/";
-        
-      },
-    },{id: "post-machine-learning-systems",
-      
-        title: "Machine Learning Systems",
+        title: "Key Works in ML Systems",
       
       description: "Few keypoints from books other important papers in the field.",
       section: "Posts",
       handler: () => {
         
           window.location.href = "/blog/machine-learning-systems/";
+        
+      },
+    },{id: "post-data-systems-for-machine-learning",
+      
+        title: "Data Systems for Machine Learning",
+      
+      description: "Prompting ChatGPT is not enough. To build large-scale AI systems, it is imperative to understand how to design the proper systems to optimize all the computations. The following blog is a deep-dive into system/data design for Machine Learning frameworks.",
+      section: "Posts",
+      handler: () => {
+        
+          window.location.href = "/blog/data-systems-for-ml/";
         
       },
     },{id: "post-ai-agents",
@@ -81,15 +81,15 @@ ninja.data = [{
           window.location.href = "/blog/rl-theory/";
         
       },
-    },{id: "post-data-systems-for-machine-learning",
+    },{id: "post-brains-and-ai",
       
-        title: "Data Systems for Machine Learning",
+        title: "Brains and AI",
       
-      description: "Prompting ChatGPT is not enough. To build large-scale AI systems, it is imperative to understand how to design the proper systems to optimize all the computations. The following blog is a deep-dive into system/data design for Machine Learning frameworks.",
+      description: "The primary motivation for AI stems from our brains. How has our research in cognitive science shaped the modern AI systems?",
       section: "Posts",
       handler: () => {
         
-          window.location.href = "/blog/data-systems-for-ml/";
+          window.location.href = "/blog/brains-and-ai/";
         
       },
     },{id: "post-statistical-natural-language-processing",
