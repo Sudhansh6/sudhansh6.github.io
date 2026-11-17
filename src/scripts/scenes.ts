@@ -881,5 +881,116 @@ function bandits(): Scene {
   };
 }
 
-export const SCENES: Record<string, () => Scene> = { mathprompter, yolo, permutation, quantum, recipes, stocks, journal, navicane, sudoku, bandits };
+/* ------------------------------------------------------------------------------------------
+ * ooxml: a slide is DrawingML underneath. Dragging a shape rewrites its <a:off> in EMUs, and a
+ * collaborating peer's typing lands in the title's <a:t>, so the source and the render stay in
+ * step. The pointer drags the body text box; otherwise it drifts on its own.
+ * ---------------------------------------------------------------------------------------- */
+function ooxml(): Scene {
+  const SX = 192, SY = 40, SW = 194, SH = 109;              // slide on screen
+  const EMU = 12192000 / SW;                                 // 16:9 slide, 12,192,000 EMU wide
+  const title = 'Quarterly review';
+  const bodyW = 88, bodyH = 54;
+  return {
+    still: 3.2,
+    draw({ ctx, t, p, c }) {
+      // Body text box position, in slide pixels.
+      let bx: number, by: number;
+      if (p.active) {
+        bx = clamp((p.x * W - SX) - bodyW / 2, 4, SW - bodyW - 4);
+        by = clamp((p.y * H - SY) - bodyH / 2, 30, SH - bodyH - 4);
+      } else {
+        const u = ease((Math.sin(t * 0.55) + 1) / 2);
+        bx = lerp(12, 54, u); by = lerp(38, 46, u);
+      }
+      const dragging = p.active || Math.abs(Math.cos(t * 0.55)) > 0.35;
+
+      // Peer types the title, pauses, then clears it.
+      const cyc = t % 7;
+      const typed = cyc < 3.2 ? Math.floor((cyc / 3.2) * title.length) : cyc < 6.2 ? title.length : 0;
+      const shown = title.slice(0, typed);
+      const typing = cyc < 3.2;
+
+      // XML source.
+      text(ctx, 'slide1.xml', 14, 20, { size: 8.5, color: c.muted, weight: 600 });
+      const off = (v: number) => String(Math.round(v * EMU));
+      const lines: [string, 'title' | 'body' | ''][] = [
+        ['<p:sp>', ''],
+        ['  <p:cNvPr name="Title 1"/>', ''],
+        [`  <a:t>${shown}</a:t>`, 'title'],
+        ['</p:sp>', ''],
+        ['<p:sp>', ''],
+        ['  <p:cNvPr name="Body 2"/>', ''],
+        [`  <a:off x="${off(bx)}"`, 'body'],
+        [`         y="${off(by)}"/>`, 'body'],
+        [`  <a:ext cx="${off(bodyW)}" cy="${off(bodyH)}"/>`, ''],
+        ['</p:sp>', ''],
+        ['<p:graphicFrame>', ''],
+        ['  <c:chart r:id="rId2"/>', ''],
+        ['</p:graphicFrame>', ''],
+      ];
+      lines.forEach(([s, k], i) => {
+        const y = 38 + i * 11.2;
+        const hot = (k === 'body' && dragging) || (k === 'title' && typing);
+        if (hot) {
+          ctx.save(); ctx.globalAlpha = 0.12; rr(ctx, 10, y - 5.5, 170, 11, 3);
+          ctx.fillStyle = k === 'title' ? c.cool : c.accent; ctx.fill(); ctx.restore();
+        }
+        const tag = s.trimStart().startsWith('<') || s.trimStart().startsWith('y=');
+        text(ctx, s, 14, y, { size: 7, font: MONO, color: hot ? (k === 'title' ? c.cool : c.accent) : tag ? c.muted : c.faint, weight: hot ? 600 : 400 });
+      });
+
+      // Two-way arrow between source and render.
+      text(ctx, '⇄', 185.5, 95, { size: 10, color: c.faint, align: 'center' });
+
+      // Rendered slide.
+      ctx.save();
+      rr(ctx, SX, SY, SW, SH, 4); ctx.fillStyle = c.surface; ctx.fill();
+      ctx.strokeStyle = c.border; ctx.stroke(); ctx.clip();
+      const tx = SX + 12, ty = SY + 18;
+      text(ctx, shown, tx, ty, { size: 11, color: c.text, weight: 600 });
+      ctx.font = `600 11px ${SANS}`;
+      const caretX = tx + ctx.measureText(shown).width + 1;
+      if (typing && Math.sin(t * 12) > -0.2) { ctx.fillStyle = c.cool; ctx.fillRect(caretX, ty - 6, 1.2, 12); }
+      // Chart.
+      const chX = SX + 120, chY = SY + 40;
+      [0.45, 0.7, 0.55, 0.9].forEach((v, i) => {
+        const h = v * 44 * (0.94 + 0.06 * Math.sin(t * 1.3 + i));
+        rr(ctx, chX + i * 15, chY + 50 - h, 10, h, 2); ctx.fillStyle = i === 3 ? c.accent : c.faint; ctx.fill();
+      });
+      ctx.strokeStyle = c.border; ctx.beginPath(); ctx.moveTo(chX - 4, chY + 50.5); ctx.lineTo(chX + 62, chY + 50.5); ctx.stroke();
+      // Body text box with bullets.
+      const X = SX + bx, Y = SY + by;
+      rr(ctx, X, Y, bodyW, bodyH, 2); ctx.fillStyle = c.surface; ctx.fill();
+      [0.86, 0.68, 0.76].forEach((w, i) => {
+        const ly = Y + 12 + i * 14;
+        ctx.fillStyle = c.muted; ctx.beginPath(); ctx.arc(X + 8, ly, 1.6, 0, Math.PI * 2); ctx.fill();
+        rr(ctx, X + 14, ly - 2, (bodyW - 22) * w, 4, 2); ctx.fillStyle = c.faint; ctx.fill();
+      });
+      if (dragging) {
+        ctx.strokeStyle = c.accent; ctx.lineWidth = 1; ctx.setLineDash([3, 2]);
+        ctx.strokeRect(X + 0.5, Y + 0.5, bodyW, bodyH); ctx.setLineDash([]);
+        ctx.fillStyle = c.bg;
+        for (const [hx, hy] of [[0, 0], [1, 0], [0, 1], [1, 1], [0.5, 0], [0.5, 1], [0, 0.5], [1, 0.5]]) {
+          ctx.fillRect(X + hx * bodyW - 2, Y + hy * bodyH - 2, 5, 5); ctx.strokeRect(X + hx * bodyW - 2, Y + hy * bodyH - 2, 5, 5);
+        }
+      }
+      ctx.restore();
+
+      // Peer cursor beside the title caret.
+      const px = caretX + 3, py = ty + 4;
+      ctx.fillStyle = c.cool; ctx.beginPath();
+      ctx.moveTo(px, py); ctx.lineTo(px, py + 10); ctx.lineTo(px + 3, py + 7.5); ctx.lineTo(px + 7, py + 8); ctx.closePath(); ctx.fill();
+      chip(ctx, 'peer', px + 7, py + 15, '#fff', c.cool, 7);
+
+      // Status.
+      const sync = typing || dragging ? 'syncing' : 'in sync';
+      ctx.fillStyle = typing || dragging ? c.accent : c.good;
+      ctx.beginPath(); ctx.arc(SX + 4, 166, 2.5, 0, Math.PI * 2); ctx.fill();
+      text(ctx, `2 clients ${sync} · saved to .pptx`, SX + 11, 166, { size: 8, color: c.muted });
+    },
+  };
+}
+
+export const SCENES: Record<string, () => Scene> = { mathprompter, yolo, permutation, quantum, recipes, stocks, journal, navicane, sudoku, bandits, ooxml };
 void W; void SANS;

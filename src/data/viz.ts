@@ -90,4 +90,5 @@ export const VIZ: Record<string, Viz> = {
   navicane: { kind: 'canvas', scene: 'navicane', caption: 'Depth sensing · haptic guidance', hint: 'Move to probe distance' },
   sudoku: { kind: 'canvas', scene: 'sudoku', caption: 'AlexNet digits · registered overlay', hint: 'Move to tilt the board' },
   learningAgents: { kind: 'canvas', scene: 'bandits', caption: 'Beta posteriors · live regret', hint: 'Move to inspect an arm' },
+  ooxml: { kind: 'canvas', scene: 'ooxml', caption: 'DrawingML ⇄ rendered slide', hint: 'Move to drag a shape' },
 };
