@@ -3,7 +3,7 @@ import ProjectMedia from '../../components/ProjectMedia.astro';
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.importance - b.data.importance);
+const projects = (await getCollection('projects', (p) => !p.data.unlisted)).sort((a, b) => a.data.importance - b.data.importance);
 
 const byCategory = new Map();
 for (const p of projects) {

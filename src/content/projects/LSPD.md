@@ -5,6 +5,8 @@ category: 3D Reconstruction
 importance: 3
 img: /assets/video/lspd.gif
 viz: tomography
+# Hidden until co-authors approve; the page is still reachable at /projects/LSPD/.
+unlisted: true
 links:
   - label: ICMS talk abstract
     url: https://icms.ac.uk/wp-content/uploads/archive/downloads/MARTA-BETCKE.pdf
@@ -73,5 +75,3 @@ For low-dose data we used 300 angles per orbit (900 projections) and simulated P
 | --- | --- | --- | --- |
 | Nesterov gradient (30 iterations) | 36.10 | 0.841 | – |
 | LSPD, 1 epoch | 46.73 | 0.993 | 65 h |
-
-My part was the experiments: a Python framework with custom TensorFlow layers and an ASTRA-based library for the 2D and 3D runs, with Elliott on the 3D reconstructions.

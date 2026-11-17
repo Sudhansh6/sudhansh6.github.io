@@ -17,7 +17,13 @@ const { report, repo, links = [] } = project.data;
 const hasBody = (project.body ?? '').trim().length > 0;
 ---
 
-<Base title={`${project.data.title} — Sudhansh Peddabomma`} description={project.data.description} active="projects">
+<Base
+  title={`${project.data.title} — Sudhansh Peddabomma`}
+  description={project.data.description}
+  active="projects"
+  searchable={!project.data.unlisted}
+  noindex={project.data.unlisted}
+>
   <div class="wrap">
     <section style="padding-top: 56px;">
       <a class="back-link" href="/projects">← All projects</a>

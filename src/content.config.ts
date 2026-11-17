@@ -12,6 +12,8 @@ const projects = defineCollection({
     links: z.array(z.object({ label: z.string(), url: z.string().url() })).optional(),
     // Key into src/data/viz.ts: the interactive or animated visual for this project.
     viz: z.string().optional(),
+    // Built and reachable by URL, but left out of listings, site search and search engines.
+    unlisted: z.boolean().default(false),
   }),
 });
 const news = defineCollection({

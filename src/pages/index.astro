@@ -6,7 +6,7 @@ import { getCollection, render } from 'astro:content';
 import papers from '../data/papers.json';
 import { ELSEWHERE as articles } from '../data/elsewhere';
 
-const projects = (await getCollection('projects')).sort((a, b) => a.data.importance - b.data.importance);
+const projects = (await getCollection('projects', (p) => !p.data.unlisted)).sort((a, b) => a.data.importance - b.data.importance);
 const featured = projects.slice(0, 6);
 const news = (await getCollection('news')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 5);
 const selectedPapers = papers.filter((p) => p.selected);
