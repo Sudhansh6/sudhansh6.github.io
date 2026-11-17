@@ -39,7 +39,7 @@ const canonical = new URL(Astro.url.pathname, 'https://sudhansh6.github.io').toS
       //   ?ff=pet,-other        enable/disable several        ?ff=reset  back to defaults
       // Each enabled flag sets data-ff-<name> on <html>; scripts read window.__ff.
       (function () {
-        var DEFAULTS = { pet: true };
+        var DEFAULTS = { pet: true, brain: true }; // brain: the pet's on-device model, where the browser has one
         var KEY = 'ff';
         var saved = {};
         try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) {}

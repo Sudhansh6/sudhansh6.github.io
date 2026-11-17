@@ -7,6 +7,10 @@
     <span class="pet-speech" id="site-moss-pet-speech" aria-live="polite"></span>
     <span class="pet-reaction" id="site-moss-pet-reaction" aria-hidden="true">♥</span>
     <button class="pet-hide" id="site-moss-pet-hide" type="button" aria-label="Hide Moss" title="Hide pet (press p to bring back)">×</button>
+    <button class="pet-ask-btn" id="site-moss-pet-ask-btn" type="button" aria-label="Ask Moss a question" title="Ask Moss (runs on your device)" hidden>?</button>
+    <form class="pet-ask" id="site-moss-pet-ask" hidden>
+      <input id="site-moss-pet-ask-input" type="text" maxlength="200" autocomplete="off" spellcheck="false" placeholder="ask the invader…" aria-label="Ask Moss" />
+    </form>
   </div>
 </div>
 
@@ -16,6 +20,7 @@
   // can be clicked, dragged and thrown, and can sit inside any `[data-text-flow]` paragraph,
   // where Pretext reflows the words around it.
   import { flowTargetAt, scanFlowTargets, setFlowObstacle, visibleFlowTargets } from '../scripts/text-flow';
+  import { ask, brainReady, hush, remark } from '../scripts/pet-brain';
 
   (() => {
     const host = window as any;
@@ -36,9 +41,9 @@
     if (!layer || !anchor || !avatar || !canvas || !ctx) return;
 
     const S = 80; // canvas size (CSS px)
-    const P = 3.5; // invader pixel size (CSS px)
-    const COLS = 12;
-    const ROWS = 12;
+    const P = 2.05; // invader pixel size (CSS px)
+    const COLS = 20; // 18 × 15 body pixels plus a one-pixel outline all round
+    const ROWS = 17;
     const BODY_H = ROWS * P;
     const BODY_DY = 70 - BODY_H / 2 - S / 2; // drawn body centre sits this far below the avatar centre
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -49,62 +54,52 @@
     const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 
     // ---------- 👾 sprite ----------
-    // Traced from the 👾 emoji (12 × 12): claw tips at the top corners, ears with a notch between
-    // them, tall eye slots, arms that bracket the body and join it low down, two legs, feet set wide.
-    // The second frame flicks the claws out and tucks the feet in, so it marches.
-    const BODY = ['X.XXX..XXX.X', 'X.XXXXXXXX.X', 'X.XXXXXXXX.X', 'X.X.XXXX.X.X', 'X.X.XXXX.X.X', '.XXXXXXXXXX.', '..XXXXXXXX..', '...XX..XX...'];
-    const FRAMES = [
-      ['.X........X.', '.X.X....X.X.', ...BODY, '..X......X..', '.X........X.'],
-      ['X..........X', '.X.X....X.X.', ...BODY, '...X....X...', '..X......X..'],
-    ].map((rows) => rows.map((r) => [...r].map((ch) => ch === 'X')));
-    const EYE_COLS = [3, 8];
-    const EYE_ROW = 5; // the eye slots span rows 5–6
+    // Sampled cell by cell from Apple's 👾 glyph: 18 × 15 body pixels. Claw tips and feet float, and
+    // the one-pixel dark outline (every cell touching the body) is what holds them on, as in the
+    // emoji. Frame B is the arcade second step: claws drop a row, legs and feet swing out.
+    const SHAPES = [
+      ['...X..........X...', '......X....X......', '..XX..X....X..XX..', '..X..XXXXXXXX..X..', 'X...XXXXXXXXXX...X',
+       'X..XXXXXXXXXXXX..X', 'X..XX..XXXX..XX..X', 'X..XX..XXXX..XX..X', '.XXXX..XXXX..XXXX.', '...XXXXXXXXXXXX...',
+       '...XXXXXXXXXXXX...', '.....XX....XX.....', '.....XX....XX.....', '..................', '...X..........X...'],
+      ['..................', '...X..X....X..X...', '..X...X....X...X..', '..XX.XXXXXXXX.XX..', 'X...XXXXXXXXXX...X',
+       'X..XXXXXXXXXXXX..X', 'X..XX..XXXX..XX..X', 'X..XX..XXXX..XX..X', '.XXXX..XXXX..XXXX.', '...XXXXXXXXXXXX...',
+       '...XXXXXXXXXXXX...', '.....XX....XX.....', '....XX......XX....', '..................', '..X............X..'],
+    ];
+    // Eye holes are 2 × 3 cells (full-grid rows 7–9, cols 6–7 and 12–13); a white bar sits in each.
+    const EYE_X = [7, 13];
+    const EYE_Y = 8.5;
     const GX = (-COLS / 2) * P; // sprite origin relative to the body centre
     const GY = -BODY_H / 2;
-    // Fleece sampled from Sudhansh's olive hoodie (median rgb(27,29,28), tips up to rgb(75,81,69)),
-    // lifted a little so it reads on the dark theme. Eyes are the original white ones.
-    const FUR = ['#20271d', '#2c3628', '#3a4634', '#4f5c46', '#6c785f']; // dark → light
+    // Hoodie olive: a lighter top half and darker bottom, as in the emoji's two-tone shading.
+    const FUR = ['#20271d', '#2c3628', '#3a4634', '#4f5c46', '#5f6c55']; // dark → light
+    const OUTLINE = '#181d16';
     const NUB = '#9aa48a';
     const EYE = { white: '#eef1e6' };
-    const isOn = (g: boolean[][], r: number, c: number) => r >= 0 && r < g.length && c >= 0 && c < COLS && g[r][c];
-    // Sherpa fleece, like the hoodie: dense short curls with light nubbly tips and a soft, uneven
-    // outline. Everything is scattered at random, so no edge or row repeats a pattern.
-    type Strand = { x: number; y: number; a: number; l: number; ph: number; r: number };
-    type Curl = { x: number; y: number; rad: number; a: number; span: number; ph: number; r: number };
-    type Bump = { x: number; y: number; rad: number; r: number };
-    const furOf = (grid: boolean[][]) => {
-      const strands: Strand[][] = FUR.map(() => []);
-      const curls: Curl[][] = FUR.map(() => []);
-      const bumps: Bump[] = [];
-      const nubs: { x: number; y: number; rad: number; r: number }[] = [];
-      const tone = (r: number) => clamp(Math.round(2.6 - (r / ROWS) * 1.4 + rand(-0.7, 0.7)), 1, 3);
-      grid.forEach((row, r) => row.forEach((v, c) => {
-        if (!v) return;
-        const px = GX + c * P;
-        const py = GY + r * P;
-        for (const [dc, dr, ang] of [[0, -1, -Math.PI / 2], [0, 1, Math.PI / 2], [-1, 0, Math.PI], [1, 0, 0]]) {
-          if (isOn(grid, r + dr, c + dc)) continue;
-          if (dr > 0 && r >= 8 && c > 1 && c < 10) continue; // keep the gaps between the legs clean
-          const along = () => rand(0.1, 0.9) * P;
-          const edge = () => ({
-            x: dc === 0 ? px + along() : px + (dc > 0 ? P : 0),
-            y: dr === 0 ? py + along() : py + (dr > 0 ? P : 0),
-          });
-          if (Math.random() < 0.7) { const e = edge(); bumps.push({ x: e.x, y: e.y, rad: rand(0.7, 1.3), r }); }
-          if (Math.random() < 0.45) {
-            const e = edge();
-            strands[tone(r)].push({ x: e.x, y: e.y, a: ang + rand(-0.9, 0.9), l: rand(0.6, 1.4), ph: rand(0, 6.28), r });
-          }
-        }
-        const n = 3 + Math.floor(Math.random() * 5);
-        for (let k = 0; k < n; k++) {
-          curls[tone(r)].push({ x: px + rand(0.3, P - 0.3), y: py + rand(0.3, P - 0.3), rad: rand(0.45, 0.85), a: rand(0, 6.28), span: rand(2.4, 4.2), ph: rand(0, 6.28), r });
-        }
-        if (Math.random() < 0.55) nubs.push({ x: px + rand(0.4, P - 0.4), y: py + rand(0.4, P - 0.4), rad: rand(0.35, 0.6), r });
-      }));
-      return { strands, curls, bumps, nubs };
-    };
-    const FURS = FRAMES.map(furOf);
+
+    // Each frame becomes a list of cells: 1 = body, 2 = outline. Body cells get a random fleece shade
+    // and, sometimes, a light nub, so the texture never repeats as a pattern. Every cell also gets a
+    // random scatter vector for the pixel warp.
+    type Cell = { r: number; c: number; kind: 1 | 2; shade: number; nub: [number, number] | null; sx: number; sy: number };
+    const FRAMES: Cell[][] = SHAPES.map((rows) => {
+      const on = (r: number, c: number) => r >= 1 && r <= 15 && c >= 1 && c <= 18 && rows[r - 1][c - 1] === 'X';
+      const cells: Cell[] = [];
+      for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+        let kind: 0 | 1 | 2 = on(r, c) ? 1 : 0;
+        if (!kind) for (let dr = -1; dr <= 1 && !kind; dr++) for (let dc = -1; dc <= 1; dc++) if (on(r + dr, c + dc)) { kind = 2; break; }
+        if (!kind) continue;
+        const base = r <= 8 ? 3 : 2;
+        const shade = kind === 1 ? clamp(base + (Math.random() < 0.3 ? (Math.random() < 0.5 ? -1 : 1) : 0), 1, 4) : 0;
+        const nub: [number, number] | null = kind === 1 && Math.random() < 0.3 ? [rand(0.25, 0.75), rand(0.25, 0.75)] : null;
+        const a = rand(0, Math.PI * 2);
+        const d = rand(14, 34);
+        cells.push({ r, c, kind, shade, nub, sx: Math.cos(a) * d, sy: Math.sin(a) * d - 6 });
+      }
+      return cells;
+    });
+    // Lint: single fleece pixels shed when it is shaken or thrown (sprite-local coordinates).
+    const lint: { x: number; y: number; vx: number; vy: number; life: number; shade: number }[] = [];
+    let lastDraw = 0;
+    let assembleAt = performance.now(); // it arrives as a cloud of pixels that pulls together
 
     // ---------- state ----------
     type Mode = 'ground' | 'held' | 'air' | 'jump' | 'perched';
@@ -162,7 +157,7 @@
       el: HTMLElement; kind: 'ledge' | 'creep'; dx: number; dy: number; dir: number;
       until: number; nextCreep: number; pauseUntil: number; path: CreepPath | null;
     } | null = null;
-    let jump: { x0: number; y0: number; t0: number; dur: number; to: () => [number, number]; then: () => void; room: boolean } | null = null;
+    let jump: { x0: number; y0: number; t0: number; dur: number; to: () => [number, number]; then: () => void; room: boolean; warp?: boolean } | null = null;
     let held: { id: number; ox: number; oy: number; px: number; py: number; vx: number; vy: number; t: number } | null = null;
     let press: { id: number; x: number; y: number; t: number } | null = null;
     let suppressClick = false;
@@ -184,6 +179,7 @@
     }
     function say(msg: string, ms = 2100) {
       speech.textContent = msg;
+      speech.dataset.long = String(msg.length > 34);
       speech.dataset.visible = 'true';
       positionLabel(speech);
       speechUntil = performance.now() + ms;
@@ -230,8 +226,9 @@
       updateStatus();
     }
 
-    function jumpTo(to: () => [number, number], then: () => void, intoText = false, dur = 760) {
-      jump = { x0: cx, y0: cy, t0: performance.now(), dur, to, then, room: intoText };
+    // warp: instead of an arc, it scatters into pixels, vanishes and pulls itself together at the target
+    function jumpTo(to: () => [number, number], then: () => void, intoText = false, dur = 760, warp = false) {
+      jump = { x0: cx, y0: cy, t0: performance.now(), dur, to, then, room: intoText, warp: warp && !isReduced };
       mode = 'jump';
       task = 'idle';
       trick = null;
@@ -320,8 +317,8 @@
       jumpTo(() => { const q = el.getBoundingClientRect(); return [q.left + dx, q.top + LEDGE_DY]; }, () => {
         const q = el.getBoundingClientRect();
         perchOn(el, q.left + dx, q.top + LEDGE_DY, 'ledge');
-        say(pick(['you are standing on a paragraph.', 'there is a word here.', 'sector acquired', 'patrolling.']));
-      }, false, 820);
+        if (!tryRemark(el)) say(pick(['you are standing on a paragraph.', 'there is a word here.', 'sector acquired', 'patrolling.']));
+      }, false, 820, Math.random() < 0.45);
       return true;
     }
 
@@ -378,6 +375,7 @@
 
     function hidePet(hidden: boolean) {
       petHidden = hidden;
+      if (hidden) { hush(); askForm.hidden = true; }
       layer.hidden = hidden;
       try { localStorage.setItem('pet:hidden', hidden ? 'true' : 'false'); } catch {}
       document.querySelectorAll('[data-pet-toggle]').forEach((b) => {
@@ -434,10 +432,18 @@
       } else if (mode === 'jump' && jump) {
         const t = clamp((now - jump.t0) / jump.dur, 0, 1);
         const [x1, y1] = jump.to();
-        const lift = Math.max(70, (jump.y0 - y1) * 0.28 + 70);
-        cx = jump.x0 + (x1 - jump.x0) * ease(t);
-        cy = jump.y0 + (y1 - jump.y0) * t - lift * 4 * t * (1 - t);
-        rot = Math.sin(t * Math.PI) * 0.25 * Math.sign(x1 - jump.x0);
+        if (jump.warp) {
+          // hold still while scattering, then reappear at the target mid-cloud
+          const there = t >= 0.45;
+          cx = there ? x1 : jump.x0;
+          cy = there ? y1 : jump.y0;
+          rot = 0;
+        } else {
+          const lift = Math.max(70, (jump.y0 - y1) * 0.28 + 70);
+          cx = jump.x0 + (x1 - jump.x0) * ease(t);
+          cy = jump.y0 + (y1 - jump.y0) * t - lift * 4 * t * (1 - t);
+          rot = Math.sin(t * Math.PI) * 0.25 * Math.sign(x1 - jump.x0);
+        }
         if (t >= 1) {
           const done = jump.then;
           jump = null;
@@ -597,66 +603,63 @@
       ctx!.rotate(rot + (hovering && !airborne ? Math.sin(t * 13) * 0.04 : 0));
 
       // marching frame: the arcade two-step, faster on the move and frantic when held
-      const rate = isReduced ? (moving ? 4 : 0) : mode === 'held' ? 10 : moving ? 7 : airborne ? 5 : asleep ? 0.5 : 1.6;
+      const rate = isReduced ? (moving ? 4 : 0) : mode === 'held' || happy ? 9 : moving ? 6 : airborne ? 5 : asleep ? 0.4 : 1.4;
       const frameIdx = Math.floor(t * rate) % 2;
-      const grid = FRAMES[frameIdx];
+      const cells = FRAMES[frameIdx];
       const x0 = GX;
-      const y0 = GY;
-      // a little scanline glitch when it is poked, shaken or thrown
+      // walking bobs the whole sprite by one pixel on the second step
+      const y0 = GY - (moving && frameIdx === 1 ? P * 0.5 : 0);
+      const creeping = mode === 'perched' && perch?.kind === 'creep' && !isReduced;
+      // row offsets: a scanline glitch when poked or thrown, a slither while creeping through text
       const glitch = isReduced ? 0 : furKick;
-      const rowDx = (r: number) => (glitch > 0.2 ? Math.round(Math.sin(t * 47 + r * 2.3) * glitch * 1.6) : 0);
+      const rowDx = (r: number) =>
+        (glitch > 0.2 ? Math.round(Math.sin(t * 47 + r * 2.3) * glitch * 1.6) : 0) +
+        (creeping ? Math.round(Math.sin(t * 7 - r * 0.6) * 2) / 2 : 0);
 
-      // body: the pixel silhouette as a fleece base, then curls, then strands off every open edge
-      const fur = FURS[frameIdx];
-      const jig = (isReduced ? 0 : 0.3) + furKick * 1.2 + (moving ? 0.5 : 0) + (airborne ? 0.6 : 0);
-      const body = ctx!.createLinearGradient(0, y0, 0, y0 + BODY_H);
-      body.addColorStop(0, FUR[3]);
-      body.addColorStop(0.6, FUR[2]);
-      body.addColorStop(1, FUR[1]);
-      ctx!.fillStyle = body;
+      // pixel warp: 0 = assembled, 1 = fully scattered
+      let scatter = 0;
+      if (!isReduced) {
+        if (jump?.warp) {
+          const k = clamp((now - jump.t0) / jump.dur, 0, 1);
+          scatter = k < 0.45 ? ease(k / 0.45) : 1 - ease((k - 0.45) / 0.55);
+        } else if (now - assembleAt < 750) scatter = 1 - ease((now - assembleAt) / 750);
+      }
+
+      const cellXY = (k: Cell): [number, number] => {
+        let x = x0 + k.c * P + rowDx(k.r);
+        let y = y0 + k.r * P;
+        if (dizzy && !isReduced) { x += Math.round(Math.sin(t * 31 + k.r * 7 + k.c * 13)); y += Math.round(Math.sin(t * 29 + k.c * 5 + k.r * 3)) * 0.5; }
+        if (scatter > 0) {
+          // stagger by row so it pours together from the top down
+          const sk = clamp(scatter * 1.25 - (k.r / ROWS) * 0.25, 0, 1);
+          x += k.sx * sk;
+          y += k.sy * sk;
+        }
+        return [x, y];
+      };
+
+      if (scatter > 0) ctx!.globalAlpha = 1 - scatter * 0.55;
+      // outline first, then body pixels batched by shade; slightly oversized so seams never show
+      ctx!.fillStyle = OUTLINE;
       ctx!.beginPath();
-      grid.forEach((row, r) => row.forEach((v, c) => {
-        if (v) ctx!.rect(x0 + c * P + rowDx(r) - 0.2, y0 + r * P - 0.2, P + 0.4, P + 0.4);
-      }));
-      for (const k of fur.bumps) { ctx!.moveTo(k.x + rowDx(k.r) + k.rad, k.y); ctx!.arc(k.x + rowDx(k.r), k.y, k.rad, 0, Math.PI * 2); }
+      for (const k of cells) if (k.kind === 2) { const [x, y] = cellXY(k); ctx!.rect(x - 0.15, y - 0.15, P + 0.3, P + 0.3); }
       ctx!.fill();
-      ctx!.lineCap = 'round';
-      ctx!.lineWidth = 0.75;
-      ctx!.globalAlpha = 0.85;
-      fur.curls.forEach((group, g) => {
+      for (let g = 1; g <= 4; g++) {
+        ctx!.fillStyle = FUR[g];
         ctx!.beginPath();
-        for (const k of group) {
-          const w = jig * 0.2 * Math.sin(t * (moving ? 9 : 2.4) + k.ph);
-          const x = k.x + rowDx(k.r) + w;
-          const y = k.y + w * 0.6;
-          ctx!.moveTo(x + Math.cos(k.a) * k.rad, y + Math.sin(k.a) * k.rad);
-          ctx!.arc(x, y, k.rad, k.a, k.a + k.span);
-        }
-        ctx!.strokeStyle = FUR[g];
-        ctx!.stroke();
-      });
-      ctx!.globalAlpha = 1;
-      ctx!.lineWidth = 0.8;
-      fur.strands.forEach((group, g) => {
-        ctx!.beginPath();
-        for (const k of group) {
-          const a = k.a + Math.sin(t * (moving ? 8 : 2.2) + k.ph) * 0.25 * jig;
-          const x = k.x + rowDx(k.r);
-          ctx!.moveTo(x, k.y);
-          ctx!.lineTo(x + Math.cos(a) * k.l, k.y + Math.sin(a) * k.l);
-        }
-        ctx!.strokeStyle = FUR[g];
-        ctx!.stroke();
-      });
+        for (const k of cells) if (k.kind === 1 && k.shade === g) { const [x, y] = cellXY(k); ctx!.rect(x - 0.15, y - 0.15, P + 0.3, P + 0.3); }
+        ctx!.fill();
+      }
+      // fleece nubs: soft light flecks on some pixels
       ctx!.fillStyle = NUB;
-      ctx!.globalAlpha = 0.32;
+      ctx!.globalAlpha *= 0.3;
       ctx!.beginPath();
-      for (const k of fur.nubs) { ctx!.moveTo(k.x + rowDx(k.r) + k.rad, k.y); ctx!.arc(k.x + rowDx(k.r), k.y, k.rad, 0, Math.PI * 2); }
+      for (const k of cells) if (k.nub) { const [x, y] = cellXY(k); ctx!.rect(x + k.nub[0] * P - 0.5, y + k.nub[1] * P - 0.5, 1, 1); }
       ctx!.fill();
-      ctx!.globalAlpha = 1;
+      ctx!.globalAlpha = scatter > 0 ? 1 - scatter * 0.55 : 1;
 
-      // eyes: small white vertical bars in the row-3 holes, like the emoji; they shift toward the
-      // pointer, squash to a line to blink, and stretch when startled
+      // eyes: white vertical bars in the 2 × 3 holes. They step a whole pixel toward the pointer,
+      // shut to a sliver to blink or sleep, stretch when startled and squint when pleased.
       let lx = 0;
       let ly = 0;
       if (pointerX >= 0 && !dizzy) {
@@ -665,14 +668,37 @@
         if (Math.hypot(dx, dy) < 520) { lx = clamp(dx / 90, -1, 1); ly = clamp(dy / 90, -1, 1); }
       } else if (moving) lx = Math.sign(gvx);
       const wide = airborne || dizzy;
-      const eyeY = y0 + (EYE_ROW + 1) * P;
-      ctx!.fillStyle = EYE.white;
-      for (const col of EYE_COLS) {
-        const ex = x0 + (col + 0.5) * P + rowDx(EYE_ROW) + (dizzy ? Math.sin(t * 14 + col) * 0.8 : lx * 0.8);
-        const w = wide ? 2.4 : 2.1;
-        const h = asleep || blink ? 0.9 : wide ? 6.4 : happy ? 3.6 : 5.2;
-        ctx!.fillRect(ex - w / 2, eyeY - h / 2 + ly * 0.5, w, h);
+      if (scatter < 0.5) {
+        ctx!.fillStyle = EYE.white;
+        const w = P * 1.05;
+        const h = asleep || blink ? P * 0.45 : wide ? P * 2.7 : happy ? P * 1.3 : P * 2.2;
+        for (const col of EYE_X) {
+          const ex = x0 + col * P + rowDx(8) + Math.round(lx) * P * 0.45;
+          const ey = y0 + EYE_Y * P + Math.round(ly) * P * 0.3 + (asleep || blink ? P * 0.6 : 0);
+          ctx!.fillRect(ex - w / 2, ey - h / 2, w, h);
+        }
       }
+      ctx!.globalAlpha = 1;
+
+      // shed lint when shaken, thrown or pleased; it drifts down and fades
+      const fdt = lastDraw ? Math.min(0.05, (now - lastDraw) / 1000) : 0;
+      lastDraw = now;
+      if (!isReduced && lint.length < 14 && Math.random() < furKick * 0.35 + (moving ? 0.01 : 0)) {
+        const k = pick(cells.filter((q) => q.kind === 1));
+        lint.push({ x: x0 + (k.c + 0.5) * P, y: y0 + (k.r + 0.5) * P, vx: rand(-14, 14), vy: rand(-18, 4), life: 1, shade: k.shade });
+      }
+      for (let i = lint.length - 1; i >= 0; i--) {
+        const q = lint[i];
+        q.vy += 60 * fdt;
+        q.x += q.vx * fdt;
+        q.y += q.vy * fdt;
+        q.life -= fdt * 1.4;
+        if (q.life <= 0) { lint.splice(i, 1); continue; }
+        ctx!.globalAlpha = q.life;
+        ctx!.fillStyle = FUR[q.shade];
+        ctx!.fillRect(Math.round(q.x * 2) / 2, Math.round(q.y * 2) / 2, P * 0.6, P * 0.6);
+      }
+      ctx!.globalAlpha = 1;
       ctx!.restore();
 
       if (mode === 'ground' && task === 'working') drawTaskMark(t);
@@ -813,6 +839,49 @@
     }
     avatar.addEventListener('pointerup', release);
     avatar.addEventListener('pointercancel', release);
+    // ---------- brain: the browser's own on-device model, when it is already there ----------
+    const askBtn = $('site-moss-pet-ask-btn');
+    const askForm = $('site-moss-pet-ask') as HTMLFormElement;
+    const askInput = $('site-moss-pet-ask-input') as HTMLInputElement;
+    let brain = false;
+    let nextRemarkAt = 0;
+    const readMs = (t: string) => clamp(1800 + t.length * 55, 2600, 9000);
+    brainReady().then((ok) => { brain = ok; askBtn.hidden = !ok; });
+
+    // A remark about the paragraph it just landed on; at most one every 45 s.
+    function tryRemark(el: HTMLElement) {
+      const now = performance.now();
+      if (!brain || document.hidden || now < nextRemarkAt) return false;
+      nextRemarkAt = now + 45000;
+      say('…', 8000);
+      remark(el.textContent ?? '', (t) => say(t, 60000))
+        .then((t) => (t ? say(t, readMs(t)) : say('there is a word here.')))
+        .catch(() => say('there is a word here.'));
+      return true;
+    }
+
+    function openAsk() {
+      if (!brain) return;
+      wake();
+      askForm.hidden = false;
+      askInput.value = '';
+      askInput.focus();
+    }
+    askBtn.addEventListener('click', (e) => { e.stopPropagation(); openAsk(); });
+    askForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = askInput.value.trim();
+      askForm.hidden = true;
+      if (!q) return;
+      wake();
+      say('…', 30000);
+      ask(q, (t) => { wake(); say(t, 60000); })
+        .then((t) => say(t || 'you hear nothing.', readMs(t)))
+        .catch(() => say('the void does not answer.', 2600));
+    });
+    askInput.addEventListener('keydown', (e) => { if (e.key === 'Escape') { askForm.hidden = true; askBtn.focus(); } });
+    askInput.addEventListener('blur', () => setTimeout(() => { if (document.activeElement !== askInput) askForm.hidden = true; }, 150));
+
     avatar.addEventListener('click', (e) => {
       e.stopPropagation();
       if (suppressClick) { suppressClick = false; return; }
@@ -935,11 +1004,14 @@
   .pet-layer.is-held .pet-avatar { cursor: grabbing; }
   .pet-avatar:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
   .pet-canvas { display: block; width: 80px; height: 80px; }
+  /* --pet-head: the sprite's top edge, measured up from the canvas bottom (feet at 70 of 80px,
+     17 rows × 2.05px tall). Labels hang just above it. Keep in sync with P/ROWS in the script. */
+  .pet { --pet-head: 45px; }
   .pet-status, .pet-speech {
     position: absolute;
     z-index: 1;
     left: var(--pet-label-x, 40px);
-    bottom: 76px;
+    bottom: calc(var(--pet-head) + 4px);
     max-width: min(230px, calc(100vw - 32px));
     padding: 4px 9px;
     border: 1px solid var(--border-strong);
@@ -958,12 +1030,12 @@
     opacity: 1;
     transform: translate(-50%, 0) scale(1);
   }
-  .pet-speech { z-index: 2; bottom: 80px; font: 500 11px/1.3 var(--font-body); }
-  .pet-status[data-visible='true'] ~ .pet-speech[data-visible='true'] { bottom: 104px; }
+  .pet-speech { z-index: 2; bottom: calc(var(--pet-head) + 6px); font: 500 11px/1.3 var(--font-body); }
+  .pet-status[data-visible='true'] ~ .pet-speech[data-visible='true'] { bottom: calc(var(--pet-head) + 30px); }
   .pet-reaction {
     position: absolute;
-    top: 0;
-    left: 54px;
+    bottom: calc(var(--pet-head) - 4px);
+    left: 58px;
     color: #d98a83;
     font-size: 15px;
     opacity: 0;
@@ -974,8 +1046,8 @@
     appearance: none;
     position: absolute;
     z-index: 3;
-    top: 4px;
-    right: 2px;
+    bottom: calc(var(--pet-head) - 6px);
+    right: 6px;
     width: 19px;
     height: 19px;
     padding: 0;
@@ -990,6 +1062,52 @@
     transition: opacity 130ms ease, color 130ms ease;
   }
   .pet:hover .pet-hide, .pet-hide:focus-visible { opacity: 1; }
+  .pet-ask-btn {
+    appearance: none;
+    position: absolute;
+    z-index: 3;
+    bottom: calc(var(--pet-head) - 6px);
+    left: 6px;
+    width: 19px;
+    height: 19px;
+    padding: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--muted);
+    font: 500 11px/17px var(--font-mono);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: auto;
+    transition: opacity 130ms ease, color 130ms ease;
+  }
+  .pet-ask-btn[hidden] { display: none; }
+  .pet:hover .pet-ask-btn, .pet-ask-btn:focus-visible { opacity: 1; }
+  .pet-ask-btn:hover { color: var(--text); }
+  .pet-layer.is-held .pet-ask-btn { opacity: 0; }
+  .pet-ask {
+    position: absolute;
+    z-index: 4;
+    bottom: calc(var(--pet-head) + 6px);
+    left: 40px;
+    transform: translateX(-50%);
+    pointer-events: auto;
+  }
+  .pet-ask[hidden] { display: none; }
+  .pet-ask input {
+    width: 200px;
+    padding: 5px 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--text);
+    font: 500 11px/1.3 var(--font-mono);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.13);
+    outline: none;
+  }
+  .pet-ask input:focus { border-color: var(--accent); }
+  /* longer replies wrap into a small card */
+  .pet-speech[data-long='true'] { white-space: normal; width: max-content; max-width: min(240px, calc(100vw - 32px)); border-radius: 12px; padding: 6px 10px; }
   .pet-layer.is-held .pet-hide { opacity: 0; }
   .pet-hide:hover { color: var(--text); }
   :global(.site-footer .pet-toggle) {
