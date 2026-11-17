@@ -1,0 +1,182 @@
+---
+import '../styles/global.css';
+import Search from '../components/Search.astro';
+import Backdrop from '../components/Backdrop.astro';
+import Pet from '../components/Pet.astro';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description?: string;
+  active?: string;
+  /** Index this page in site search. Listing pages opt out so results point at the content itself. */
+  searchable?: boolean;
+}
+
+const { title, description = 'Sudhansh Peddabomma — software engineer in San Francisco.', active, searchable = true } = Astro.props;
+const canonical = new URL(Astro.url.pathname, 'https://sudhansh6.github.io').toString();
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23448d50'/%3E%3Ctext x='16' y='22' font-family='system-ui' font-size='16' font-weight='700' text-anchor='middle' fill='white'%3ES%3C/text%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <ClientRouter />
+    <script is:inline>
+      // Feature flags. Off by default; turn on from the URL and they stick (localStorage):
+      //   ?pet  or  ?pet=1      enable a flag       ?pet=0     disable it
+      //   ?ff=pet,-other        enable/disable several        ?ff=reset  back to defaults
+      // Each enabled flag sets data-ff-<name> on <html>; scripts read window.__ff.
+      (function () {
+        var DEFAULTS = { pet: false };
+        var KEY = 'ff';
+        var saved = {};
+        try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) {}
+        var q = new URLSearchParams(location.search);
+        var changed = false;
+        (q.get('ff') || '').split(',').forEach(function (t) {
+          t = t.trim();
+          if (!t) return;
+          changed = true;
+          if (t === 'reset') saved = {};
+          else if (t[0] === '-' || t[0] === '!') saved[t.slice(1)] = false;
+          else saved[t] = true;
+        });
+        Object.keys(DEFAULTS).forEach(function (name) {
+          if (!q.has(name)) return;
+          changed = true;
+          saved[name] = !/^(0|false|off|no)$/i.test(q.get(name) || '');
+        });
+        if (changed) try {
+          localStorage.setItem(KEY, JSON.stringify(saved));
+          if (saved.pet) localStorage.removeItem('pet:hidden'); // asking for the pet in the URL un-hides it
+        } catch (e) {}
+        var ff = {};
+        Object.keys(DEFAULTS).forEach(function (n) { ff[n] = n in saved ? !!saved[n] : DEFAULTS[n]; });
+        Object.keys(saved).forEach(function (n) { if (!(n in ff)) ff[n] = !!saved[n]; });
+        window.__ff = ff;
+        function apply(root) {
+          Object.keys(ff).forEach(function (n) { if (ff[n]) root.setAttribute('data-ff-' + n, ''); else root.removeAttribute('data-ff-' + n); });
+        }
+        apply(document.documentElement);
+        // ClientRouter replaces <html> attributes on navigation; put the flags back on the new page.
+        document.addEventListener('astro:before-swap', function (e) { apply(e.newDocument.documentElement); });
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          document.documentElement.dataset.theme = t === 'light' || t === 'dark' ? t
+            : matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <Backdrop />
+    <header class="site-header" transition:persist="site-header">
+      <div class="inner">
+        <a class="brand" href="/">sudhansh<span class="dot">.</span></a>
+        <nav class="nav-links" aria-label="Primary">
+          <span class="nav-active-pill" aria-hidden="true" transition:name="primary-nav-active"></span>
+          <a href="/projects" class={active === 'projects' ? 'active' : ''}>Projects</a>
+          <a href="/papers" class={active === 'papers' ? 'active' : ''}>Research</a>
+          <a href="/writing" class={active === 'writing' ? 'active' : ''}>Notes</a>
+          <a href="/about" class={active === 'about' ? 'active' : ''}>About</a>
+          <a href="/cv" class={active === 'cv' ? 'active' : ''}>CV</a>
+          <button class="icon-btn" id="search-open" aria-label="Search" title="Search (/)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </button>
+          <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main data-page={active} data-pagefind-body={searchable ? '' : undefined} transition:name="page-content">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="inner">
+        <span>© {new Date().getFullYear()} Sudhansh Peddabomma</span>
+        <span class="footer-links">
+          <a href="https://github.com/Sudhansh6">GitHub</a><span aria-hidden="true">·</span>
+          <a href="https://www.linkedin.com/in/sudhansh-peddabomma-73a208192">LinkedIn</a><span aria-hidden="true">·</span>
+          <a href="https://scholar.google.com/citations?user=hbnJsNYAAAAJ">Scholar</a><span aria-hidden="true">·</span>
+          <a href="mailto:sudhansh6@gmail.com">Email</a>
+          <span class="footer-pet"><span aria-hidden="true">·</span><button class="pet-toggle" type="button" data-pet-toggle aria-pressed="true" aria-label="Hide the pet">pet</button></span>
+        </span>
+      </div>
+    </footer>
+
+    <Search />
+
+    <script is:inline>
+      (function () {
+        var btn = document.getElementById('theme-toggle');
+        btn && btn.addEventListener('click', function () {
+          var html = document.documentElement;
+          var next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+          html.dataset.theme = next;
+          try { localStorage.setItem('theme', next); } catch (e) {}
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === '/' && !/input|textarea/i.test(document.activeElement.tagName)) {
+            e.preventDefault();
+            document.getElementById('search-open').click();
+          }
+        });
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        if (window.__primaryNavMotionInstalled) return;
+        window.__primaryNavMotionInstalled = true;
+        function syncPrimaryNav() {
+          var nav = document.querySelector('.nav-links');
+          if (!nav) return;
+          var path = location.pathname.replace(/\/+$/, '') || '/';
+          var href = ['/projects', '/papers', '/writing', '/about', '/cv'].find(function (item) {
+            return path === item || path.indexOf(item + '/') === 0;
+          });
+          var active = null;
+          nav.querySelectorAll('a[href]').forEach(function (link) {
+            var isActive = link.getAttribute('href') === href;
+            link.classList.toggle('active', isActive);
+            if (isActive) active = link;
+          });
+          var pill = nav.querySelector('.nav-active-pill');
+          if (!pill) return;
+          if (!active) {
+            pill.style.opacity = '0';
+            return;
+          }
+          pill.style.opacity = '1';
+          pill.style.width = active.offsetWidth + 'px';
+          pill.style.height = active.offsetHeight + 'px';
+          pill.style.transform = 'translate(' + active.offsetLeft + 'px, ' + active.offsetTop + 'px)';
+        }
+        document.addEventListener('astro:page-load', syncPrimaryNav);
+        window.addEventListener('resize', syncPrimaryNav);
+        syncPrimaryNav();
+      })();
+    </script>
+    <Pet />
+  </body>
+</html>

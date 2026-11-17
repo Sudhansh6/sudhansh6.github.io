@@ -1,0 +1,21 @@
+---
+// Old Jekyll permalinks (/blog/<slug>/) redirect to /writing/<slug> so existing links keep working.
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  return (await getCollection('posts')).map((p) => ({ params: { slug: p.id } }));
+}
+const to = `/writing/${Astro.params.slug}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <link rel="canonical" href={new URL(to, Astro.site)} />
+    <meta http-equiv="refresh" content={`0; url=${to}`} />
+    <meta name="robots" content="noindex" />
+  </head>
+  <body><a href={to}>Continue to {to}</a></body>
+</html>

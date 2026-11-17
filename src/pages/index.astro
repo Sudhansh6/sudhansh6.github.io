@@ -1,0 +1,116 @@
+---
+import ProjectMedia from '../components/ProjectMedia.astro';
+import HeroPortrait from '../components/HeroPortrait.astro';
+import Base from '../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+import papers from '../data/papers.json';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.importance - b.data.importance);
+const featured = projects.slice(0, 6);
+const news = (await getCollection('news')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 5);
+const selectedPapers = papers.filter((p) => p.selected);
+
+const socials = [
+  { label: 'GitHub', href: 'https://github.com/Sudhansh6' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/sudhansh-peddabomma-73a208192' },
+  { label: 'Scholar', href: 'https://scholar.google.com/citations?user=hbnJsNYAAAAJ' },
+  { label: 'X', href: 'https://x.com/_sudhansh6' },
+  { label: 'Email', href: 'mailto:sudhansh6@gmail.com' },
+  { label: 'Résumé', href: '/cv' },
+];
+
+function projectHref(p) {
+  return `/projects/${p.id.replace(/\.md$/, '')}`;
+}
+---
+
+<Base title="Sudhansh Peddabomma" active="home" searchable={false}>
+  <div class="wrap">
+    <section class="hero-wave">
+      <HeroPortrait />
+      <div class="hero-wave-inner">
+        <div class="hero-text">
+        <div class="kicker">Hi, I'm</div>
+        <h1>Sudhansh <em>Peddabomma</em></h1>
+        <p class="lede" data-text-flow>
+          I'm a software engineer in San Francisco who loves learning and wandering into new
+          fields. I enjoy connecting ideas across them, from 3D vision and imaging to generative
+          AI, and turning them into things people actually use.
+        </p>
+        <p class="lede" data-text-flow>
+          I studied Computer Science at <strong>IIT Bombay</strong>, with a minor in
+          Entrepreneurship, and at <strong>UC San Diego</strong>. I write long notes about whatever
+          I'm learning. Say hi if you want to talk research, startup ideas, or sitcoms.
+        </p>
+        <div class="social-row">
+          {socials.map((s) => (
+            <a class="pill" href={s.href} target={s.href.startsWith('http') ? '_blank' : undefined} rel="noopener">{s.label}</a>
+          ))}
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span><span class="sec-index">01</span><h2>Projects</h2></span>
+        <a href="/projects">All projects →</a>
+      </div>
+      <div class="card-grid">
+        {featured.map((p) => (
+          <a class="card" href={projectHref(p)}>
+            <ProjectMedia viz={p.data.viz} img={p.data.img} title={p.data.title} />
+            <div class="card-body">
+              <span class="card-cat">{p.data.category}</span>
+              <h3 class="card-title">{p.data.title}</h3>
+              <p class="card-desc">{p.data.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span><span class="sec-index">02</span><h2>Research</h2></span>
+        <a href="/papers">All research →</a>
+      </div>
+      <div>
+        {selectedPapers.map((p) => (
+          <article class="paper">
+            <h3 class="paper-title">{p.title}</h3>
+            <p class="paper-meta">
+              {p.authors.join(', ')}<br />
+              <span class="venue">{p.venue}</span>, {p.year}
+            </p>
+            <div class="paper-links">
+              {p.pdf && <a class="tag" href={p.pdf} target="_blank" rel="noopener">PDF</a>}
+              {p.doi && <a class="tag" href={p.doi} target="_blank" rel="noopener">DOI</a>}
+              {p.url && !p.doi && <a class="tag" href={p.url} target="_blank" rel="noopener">Link</a>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <span><span class="sec-index">03</span><h2>News</h2></span>
+        <a class="section-link" href="/news">All news →</a>
+      </div>
+      <ul class="item-list">
+        {news.map(async (n) => {
+          const { Content } = await render(n);
+          const d = n.data.date;
+          const label = d.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+          return (
+            <li>
+              <span class="item-date">{label}</span>
+              <div><Content /></div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  </div>
+</Base>

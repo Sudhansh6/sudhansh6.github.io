@@ -1,0 +1,59 @@
+---
+import 'katex/dist/katex.min.css';
+import ProjectMedia from '../../components/ProjectMedia.astro';
+import PdfViewer from '../../components/PdfViewer.astro';
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((p) => ({ params: { slug: p.id.replace(/\.md$/, '') }, props: { project: p } }));
+}
+
+const { project } = Astro.props;
+const projectSlug = project.id.replace(/\.md$/, '');
+const { Content } = await render(project);
+const { report, repo, links = [] } = project.data;
+const hasBody = (project.body ?? '').trim().length > 0;
+---
+
+<Base title={`${project.data.title} — Sudhansh Peddabomma`} description={project.data.description} active="projects">
+  <div class="wrap">
+    <section style="padding-top: 56px;">
+      <a class="back-link" href="/projects">← All projects</a>
+      <div class="kicker accent" style="font-size: 0.95rem; font-weight: 500; margin-bottom: 8px;">
+        {project.data.category}
+      </div>
+      <h1 transition:name={`project-title-${projectSlug}`}>{project.data.title}</h1>
+      <p class="lede" style="color: var(--muted); font-size: 1.08rem;">{project.data.description}</p>
+      {(report || repo || links.length > 0) && (
+        <div class="proj-links">
+          {report && <a class="pill" href="#report">Read the report ↓</a>}
+          {repo && <a class="pill" href={repo} target="_blank" rel="noopener">Code on GitHub ↗</a>}
+          {links.map((l) => <a class="pill" href={l.url} target="_blank" rel="noopener">{l.label} ↗</a>)}
+        </div>
+      )}
+      <ProjectMedia
+        viz={project.data.viz}
+        img={project.data.img}
+        title={project.data.title}
+        hero
+        transition:name={`project-media-${projectSlug}`}
+      />
+      {hasBody && <div class="prose"><Content /></div>}
+      {report && <div id="report"><PdfViewer src={report} title={project.data.title} /></div>}
+    </section>
+  </div>
+</Base>
+
+<style>
+  .proj-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  #report { scroll-margin-top: 80px; }
+  .prose :global(h2), .prose :global(h3) { scroll-margin-top: 84px; }
+  .prose :global(.katex-display) { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+  .prose :global(.katex) { font-size: 1.04em; }
+  .prose :global(table) { border-collapse: collapse; display: block; overflow-x: auto; margin: 1.2rem 0 1.6rem; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
+  .prose :global(th), .prose :global(td) { padding: 0.5rem 1.1rem 0.5rem 0; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+  .prose :global(th) { color: var(--muted); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .prose :global(tr:last-child td) { border-bottom: 0; }
+</style>

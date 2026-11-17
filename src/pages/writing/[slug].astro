@@ -1,0 +1,129 @@
+---
+import 'katex/dist/katex.min.css';
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+import { postDate } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((p) => ({ params: { slug: p.id }, props: { post: p } }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const date = postDate(post.filePath);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const words = (post.rendered?.html ?? '').replace(/<[^>]+>/g, ' ').split(/\s+/).length;
+const minutes = Math.max(1, Math.round(words / 230));
+---
+
+<Base title={`${post.data.title} — Sudhansh Peddabomma`} description={post.data.excerpt ?? post.data.description} active="writing">
+  <div class="read-progress" aria-hidden="true"><i></i></div>
+  <div class={`post-layout ${toc.length > 2 ? 'has-toc' : ''}`}>
+    <article class="post-main">
+      <a class="back-link" href="/writing">← All notes</a>
+      <h1 style="margin-bottom: 8px;">{post.data.title}</h1>
+      <p class="post-meta">
+        {date && date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
+        {date && ' · '}{minutes} min read
+      </p>
+      {toc.length > 2 && (
+        <details class="toc-inline">
+          <summary>Contents</summary>
+          <ol>{toc.filter((h) => h.depth === 2).map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+        </details>
+      )}
+      <div class="prose" style="margin-top: 28px;">
+        <Content />
+      </div>
+    </article>
+    {toc.length > 2 && (
+      <nav class="toc" aria-label="Contents">
+        <div class="toc-title">Contents</div>
+        <ol>
+          {toc.map((h) => (
+            <li class={`d${h.depth}`}><a href={`#${h.slug}`} data-slug={h.slug}>{h.text}</a></li>
+          ))}
+        </ol>
+      </nav>
+    )}
+  </div>
+</Base>
+
+<script>
+  // Reading progress plus the table-of-contents entry for the section in view; h3 entries are
+  // shown only under the active h2 so long course notes stay scannable.
+  document.addEventListener('astro:page-load', () => {
+    const bar = document.querySelector<HTMLElement>('.read-progress i');
+    const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc a')];
+    if (!bar) return;
+    const targets = links.map((a) => document.getElementById(a.dataset.slug!)).filter(Boolean) as HTMLElement[];
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+      let i = -1;
+      for (let k = 0; k < targets.length; k++) if (targets[k].getBoundingClientRect().top < 120) i = k;
+      links.forEach((a, k) => a.classList.toggle('is-active', k === i));
+      let parent = i;
+      while (parent > 0 && !links[parent].parentElement!.classList.contains('d2')) parent--;
+      links.forEach((a, k) => {
+        const li = a.parentElement!;
+        if (!li.classList.contains('d3')) return;
+        let p = k;
+        while (p > 0 && !links[p].parentElement!.classList.contains('d2')) p--;
+        li.classList.toggle('is-open', p === parent);
+      });
+      document.querySelector('.toc a.is-active')?.scrollIntoView({ block: 'nearest' });
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('astro:before-swap', () => removeEventListener('scroll', onScroll), { once: true });
+    update();
+  });
+</script>
+
+<style>
+  .read-progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60; pointer-events: none; }
+  .read-progress i { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+  .post-layout { max-width: var(--maxw); margin: 0 auto; padding: 56px 22px 0; }
+  .post-meta { color: var(--faint); font-size: 0.95rem; }
+  .toc { display: none; }
+  .toc-inline { margin-top: 18px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; background: var(--bg-soft); }
+  .toc-inline summary { cursor: pointer; font-weight: 600; font-size: 0.92rem; }
+  .toc-inline ol { margin: 10px 0 2px; padding-left: 20px; font-size: 0.92rem; columns: 2; column-gap: 28px; }
+  .toc-inline a { text-decoration: none; color: var(--muted); }
+
+  @media (min-width: 1180px) {
+    .post-layout.has-toc {
+      max-width: calc(var(--maxw) + 300px); display: grid;
+      grid-template-columns: minmax(0, var(--maxw)) 250px; gap: 50px;
+    }
+    .post-main { min-width: 0; }
+    .toc-inline { display: none; }
+    .toc {
+      display: block; position: sticky; top: 84px; align-self: start;
+      max-height: calc(100vh - 110px); overflow: auto; padding: 4px 4px 20px 0;
+      font-size: 0.83rem; line-height: 1.4; scrollbar-width: thin;
+    }
+    .toc-title { font-size: 0.85rem; font-weight: 600; color: var(--muted); margin-bottom: 10px; }
+    .toc ol { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--border); }
+    .toc li.d3 { display: none; }
+    .toc li.d3.is-open { display: block; }
+    .toc a {
+      display: block; padding: 4px 0 4px 12px; margin-left: -1px; border-left: 2px solid transparent;
+      color: var(--muted); text-decoration: none;
+    }
+    .toc li.d3 a { padding-left: 24px; font-size: 0.79rem; color: var(--faint); }
+    .toc a:hover { color: var(--text); }
+    .toc a.is-active { color: var(--accent-text); border-left-color: var(--accent); }
+  }
+
+  /* KaTeX: long display equations scroll instead of overflowing the column. */
+  .prose :global(.katex-display) { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+  .prose :global(.katex) { font-size: 1.04em; }
+  .prose :global(h2), .prose :global(h3) { scroll-margin-top: 84px; }
+  .prose :global(table) { border-collapse: collapse; display: block; overflow-x: auto; font-size: 0.92rem; }
+  .prose :global(th), .prose :global(td) { border: 1px solid var(--border-strong); padding: 6px 10px; }
+</style>

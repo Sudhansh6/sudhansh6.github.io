@@ -1,0 +1,964 @@
+<div class="pet-layer" id="site-moss-pet" transition:persist="site-moss-pet" aria-label="Moss, the site pet">
+  <div class="pet" id="site-moss-pet-anchor">
+    <button class="pet-avatar" id="site-moss-pet-avatar" type="button" aria-label="Say hello to Moss" title="Moss: click, or drag me into the text">
+      <canvas class="pet-canvas" id="site-moss-pet-canvas" width="80" height="80" aria-hidden="true"></canvas>
+    </button>
+    <span class="pet-status" id="site-moss-pet-status" role="status" aria-live="polite"></span>
+    <span class="pet-speech" id="site-moss-pet-speech" aria-live="polite"></span>
+    <span class="pet-reaction" id="site-moss-pet-reaction" aria-hidden="true">♥</span>
+    <button class="pet-hide" id="site-moss-pet-hide" type="button" aria-label="Hide Moss" title="Hide pet (press p to bring back)">×</button>
+  </div>
+</div>
+
+<script>
+  // Moss: a small sherpa-fleece creature (fur modelled on Sudhansh's olive hoodie) that lives at
+  // the bottom of the viewport and behaves like a tiny agent. It runs little tasks, does tricks,
+  // can be clicked, dragged and thrown, and can sit inside any `[data-text-flow]` paragraph,
+  // where Pretext reflows the words around it.
+  import { flowTargetAt, scanFlowTargets, setFlowObstacle, visibleFlowTargets } from '../scripts/text-flow';
+
+  (() => {
+    const host = window as any;
+    if (!host.__ff?.pet) return; // behind the `pet` feature flag (?pet to enable); see Base.astro
+    if (host.__siteMossPetInstalled) return;
+    host.__siteMossPetInstalled = true;
+
+    const $ = (id: string) => document.getElementById(id) as HTMLElement;
+    const layer = $('site-moss-pet');
+    const anchor = $('site-moss-pet-anchor');
+    const avatar = $('site-moss-pet-avatar') as HTMLButtonElement;
+    const canvas = $('site-moss-pet-canvas') as HTMLCanvasElement;
+    const status = $('site-moss-pet-status');
+    const speech = $('site-moss-pet-speech');
+    const reaction = $('site-moss-pet-reaction');
+    const hideButton = $('site-moss-pet-hide');
+    const ctx = canvas?.getContext('2d');
+    if (!layer || !anchor || !avatar || !canvas || !ctx) return;
+
+    const S = 80; // canvas size (CSS px)
+    const R = 18.5; // body radius
+    const BODY_DY = 70 - R - 4 - S / 2; // drawn body centre sits this far below the avatar centre
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const coarsePointer = matchMedia('(pointer: coarse)');
+    const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
+    const rand = (a: number, b: number) => a + Math.random() * (b - a);
+    const pick = <T,>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
+    const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+
+    // ---------- sherpa fleece ----------
+    // Colours sampled from the hoodie (median rgb(27,29,28), tips rgb(49,60,46)..rgb(75,81,69)),
+    // lifted a little so the pet still reads on the dark theme.
+    const FUR = ['#20271d', '#2c3628', '#3a4634', '#4f5c46', '#6c785f'];
+    const NUB = '#9aa48a';
+    type Curl = { x: number; y: number; r: number; a: number; span: number; ph: number };
+    const curlGroups: Curl[][] = FUR.map(() => []);
+    for (let i = 0; i < 520; i++) {
+      const ang = rand(0, Math.PI * 2);
+      const rad = Math.sqrt(Math.random()) * (R + 2.5);
+      const x = Math.cos(ang) * rad;
+      const y = Math.sin(ang) * rad;
+      const light = (-0.55 * x - 0.8 * y) / R; // lit from the top left
+      const g = clamp(Math.round(2 + light * 1.3 + rand(-0.8, 0.8)), 0, FUR.length - 1);
+      curlGroups[g].push({ x, y, r: rand(0.7, 1.35), a: rand(0, Math.PI * 2), span: rand(2.8, 4.4), ph: rand(0, 6.28) });
+    }
+    const nubs = Array.from({ length: 46 }, () => {
+      const ang = rand(Math.PI * 0.85, Math.PI * 1.95);
+      const rad = Math.sqrt(Math.random()) * R;
+      return { x: Math.cos(ang) * rad, y: Math.sin(ang) * rad, r: rand(0.45, 0.85) };
+    });
+    const bumps = Array.from({ length: 26 }, (_, i) => {
+      const a = (i / 26) * Math.PI * 2 + rand(-0.08, 0.08);
+      return { a, r: rand(3.6, 5.2), d: R + rand(-0.6, 0.9), ph: rand(0, 6.28) };
+    });
+    // two ear tufts
+    bumps.push({ a: -2.05, r: 5.6, d: R + 1.8, ph: 1 }, { a: -1.1, r: 5.6, d: R + 1.8, ph: 2.4 });
+
+    // ---------- state ----------
+    type Mode = 'ground' | 'held' | 'air' | 'jump' | 'perched';
+    let mode: Mode = 'ground';
+    let task: 'idle' | 'walking' | 'working' | 'returning' = 'idle';
+    let width = innerWidth;
+    let height = innerHeight;
+    let dpr = devicePixelRatio || 1;
+    let compact = width <= 640 || coarsePointer.matches;
+    let isReduced = reducedMotion.matches;
+    const floorY = () => height - 48;
+    const minX = () => 48;
+    const maxX = () => width - 50;
+    const homeX = () => (compact ? width - 50 : clamp(width * 0.16, 60, width - 60));
+    let cx = homeX();
+    let cy = floorY();
+    let targetX = cx;
+    let gvx = 0; // ground velocity
+    let vx = 0;
+    let vy = 0; // air velocity
+    let bounceY = 0;
+    let bounceV = 0;
+    let hopPhase = 0;
+    let sq = 0;
+    let sqv = 0; // squash spring (positive = squashed)
+    let rot = 0;
+    let furKick = 0; // extra fur motion
+    let pointerX = -1;
+    let pointerY = -1;
+    let following = false;
+    let hovering = false;
+    let asleep = false;
+    let taskLabel = '';
+    let taskKind = 0;
+    let taskHome = cx;
+    let workUntil = 0;
+    const now0 = performance.now();
+    let nextTaskAt = now0 + rand(9000, 18000);
+    let nextTrickAt = now0 + rand(5000, 11000);
+    let trick: { kind: string; t0: number; dur: number; said?: boolean } | null = null;
+    let lastActivity = now0;
+    let blinkUntil = 0;
+    let nextBlinkAt = now0 + rand(2000, 5000);
+    let speechUntil = 0;
+    let happyUntil = 0;
+    let dizzyUntil = 0;
+    let combo = 0;
+    let lastClickAt = 0;
+    let room = 0;
+    let roomShown = false;
+    let perch: { el: HTMLElement; dx: number; dy: number; until: number } | null = null;
+    let jump: { x0: number; y0: number; t0: number; dur: number; to: () => [number, number]; then: () => void; room: boolean } | null = null;
+    let held: { id: number; ox: number; oy: number; px: number; py: number; vx: number; vy: number; t: number } | null = null;
+    let press: { id: number; x: number; y: number; t: number } | null = null;
+    let suppressClick = false;
+    let lastScrollY = scrollY;
+    let lastScrollT = now0;
+    let bumpCooldown = 0;
+    let petHidden = false;
+    let rafId = 0;
+    let lastFrame = 0;
+    const metrics = { frames: 0, averageFrameCostMs: 0, maxFrameCostMs: 0 };
+    const samples: number[] = [];
+
+    // ---------- labels ----------
+    function positionLabel(el: HTMLElement) {
+      const w = Math.max(48, el.offsetWidth || 48);
+      const left = cx - 40;
+      const centre = clamp(cx, w / 2 + 8, width - w / 2 - 8);
+      el.style.setProperty('--pet-label-x', `${centre - left}px`);
+    }
+    function say(msg: string, ms = 2100) {
+      speech.textContent = msg;
+      speech.dataset.visible = 'true';
+      positionLabel(speech);
+      speechUntil = performance.now() + ms;
+    }
+    function pop(symbol = '♥') {
+      reaction.textContent = symbol;
+      reaction.classList.remove('is-pop');
+      void reaction.offsetWidth;
+      reaction.classList.add('is-pop');
+    }
+    function updateStatus() {
+      let text = '';
+      if (asleep) text = 'Zz';
+      else if (mode === 'ground' && task !== 'idle') text = taskLabel;
+      status.textContent = text;
+      status.dataset.visible = text ? 'true' : 'false';
+      layer.dataset.state = asleep ? 'sleep' : mode === 'ground' ? task : mode;
+      avatar.setAttribute('aria-label', asleep ? 'Wake Moss' : 'Say hello to Moss');
+      positionLabel(status);
+    }
+
+    const pageHeading = () => (document.querySelector('main h1')?.textContent || '').replace(/\s+/g, ' ').trim();
+    function chooseTaskLabel() {
+      const path = location.pathname;
+      const h = pageHeading();
+      const short = (s: string, n: number) => (s.length > n ? `${s.slice(0, n)}…` : `${s}…`);
+      if (h && path.startsWith('/writing/') && path !== '/writing/') return `reading ${short(h, 24)}`;
+      if (h && path.startsWith('/projects/') && path !== '/projects/') return `exploring ${short(h, 20)}`;
+      return pick(['reading the notes…', 'checking links…', 'fetching a paper…', 'running gradient descent…', 'tidying pixels…', 'counting walnuts…']);
+    }
+
+    // ---------- behaviours ----------
+    const canRoam = () => !isReduced && !petHidden && !document.hidden && !asleep;
+
+    function startWalk() {
+      if (!canRoam() || compact || mode !== 'ground') return;
+      task = 'walking';
+      taskLabel = chooseTaskLabel();
+      taskKind = (taskKind + 1) % 3;
+      taskHome = cx;
+      let dest = rand(minX() + 20, maxX() - 20);
+      if (Math.abs(dest - cx) < Math.min(140, width * 0.22)) dest = dest < width / 2 ? maxX() - 20 : minX() + 20;
+      targetX = dest;
+      updateStatus();
+    }
+
+    function jumpTo(to: () => [number, number], then: () => void, intoText = false, dur = 760) {
+      jump = { x0: cx, y0: cy, t0: performance.now(), dur, to, then, room: intoText };
+      mode = 'jump';
+      task = 'idle';
+      trick = null;
+      sqv -= 6; // crouch-and-spring
+      updateStatus();
+    }
+
+    function settleOnGround() {
+      mode = 'ground';
+      task = 'idle';
+      cy = floorY();
+      targetX = cx;
+      gvx = 0;
+      perch = null;
+      updateStatus();
+    }
+
+    function perchOn(el: HTMLElement, x: number, y: number) {
+      const r = el.getBoundingClientRect();
+      perch = { el, dx: x - r.left, dy: y - r.top, until: performance.now() + rand(16000, 32000) };
+      mode = 'perched';
+      task = 'idle';
+      updateStatus();
+    }
+
+    function hopIntoText() {
+      const targets = visibleFlowTargets();
+      if (!targets.length) return false;
+      const el = pick(targets);
+      const r = el.getBoundingClientRect();
+      const dx = rand(70, r.width - 70);
+      const dy = clamp(r.height * rand(0.3, 0.7), 22, r.height - 14);
+      jumpTo(() => { const q = el.getBoundingClientRect(); return [q.left + dx, q.top + dy]; }, () => {
+        const q = el.getBoundingClientRect();
+        perchOn(el, q.left + dx, q.top + dy);
+        say(pick(['scooch over, words', 'comfy.', 'pardon me', 'room for one?']));
+      }, true, 820);
+      return true;
+    }
+
+    function hopDown() {
+      const x = clamp(cx + rand(-160, 160), minX(), maxX());
+      perch = null;
+      jumpTo(() => [x, floorY()], () => { settleOnGround(); say(pick(['bye, words', 'hop!', 'ok that was fun'])); }, false, 700);
+    }
+
+    function startTrick(kind?: string) {
+      const kinds = compact ? ['spin', 'hophop', 'wiggle'] : ['spin', 'hophop', 'wiggle', 'peek', 'spin', 'hophop'];
+      const k = kind || pick(kinds);
+      const dur = { spin: 900, flip: 760, hophop: 1500, wiggle: 900, peek: 2700 }[k] || 900;
+      trick = { kind: k, t0: performance.now(), dur };
+      if (k === 'spin') bounceV = -270;
+      if (k === 'flip') bounceV = -340;
+      if (k === 'wiggle') furKick = 1;
+    }
+
+    function wake() {
+      lastActivity = performance.now();
+      if (asleep) {
+        asleep = false;
+        sqv -= 4;
+        say(pick(['huh? oh hi', '*yawn*', "i wasn't sleeping"]));
+        nextTaskAt = lastActivity + rand(9000, 18000);
+        updateStatus();
+      }
+    }
+
+    function handleClick() {
+      wake();
+      const now = performance.now();
+      combo = now - lastClickAt < 520 ? combo + 1 : 1;
+      lastClickAt = now;
+      happyUntil = now + 1300;
+      if (mode === 'ground' && !trick) bounceV = -170;
+      sqv -= 5;
+      furKick = 1;
+      if (combo >= 5) {
+        dizzyUntil = now + 2300;
+        combo = 0;
+        pop('✦');
+        say('whoa… dizzy');
+      } else if (combo === 3) {
+        if (mode === 'ground') startTrick('flip');
+        pop('✦');
+        say('wheee!');
+      } else if (combo === 1) {
+        pop('♥');
+        say(pick(['hi!', 'boop!', 'hehe', 'need anything?', 'drag me into the text!']));
+      }
+    }
+
+    function hidePet(hidden: boolean) {
+      petHidden = hidden;
+      layer.hidden = hidden;
+      try { localStorage.setItem('pet:hidden', hidden ? 'true' : 'false'); } catch {}
+      document.querySelectorAll('[data-pet-toggle]').forEach((b) => {
+        b.setAttribute('aria-pressed', String(!hidden));
+        b.setAttribute('aria-label', hidden ? 'Show the pet' : 'Hide the pet');
+      });
+      if (hidden) { setFlowObstacle(null); roomShown = false; room = 0; perch = null; if (mode !== 'ground') settleOnGround(); }
+      else { wake(); startLoop(); }
+    }
+
+    // ---------- simulation ----------
+    function update(now: number, dtMs: number) {
+      const dt = dtMs / 1000;
+      if (now >= nextBlinkAt) { blinkUntil = now + 130; nextBlinkAt = now + rand(2400, 6000); }
+      if (speechUntil && now >= speechUntil) { speech.dataset.visible = 'false'; speechUntil = 0; }
+      if (!asleep && now - lastActivity > 60000 && mode !== 'held' && mode !== 'air' && mode !== 'jump') {
+        asleep = true; task = 'idle'; trick = null; targetX = cx; updateStatus();
+      }
+      furKick = Math.max(0, furKick - dt * 1.6);
+
+      // squash spring
+      sqv += (-sq * 320 - sqv * 15) * dt;
+      sq += sqv * dt;
+
+      if (mode === 'held' && held) {
+        const k = 1 - Math.exp(-dt * 32);
+        const tx = held.px + held.ox;
+        const ty = held.py + held.oy;
+        cx += (tx - cx) * k;
+        cy += (ty - cy) * k;
+        rot += (clamp(held.vx * 0.00045, -0.55, 0.55) - rot) * (1 - Math.exp(-dt * 10));
+        furKick = Math.max(furKick, 0.6);
+      } else if (mode === 'air') {
+        vy += 2300 * dt;
+        cx += vx * dt;
+        cy += vy * dt;
+        rot *= Math.exp(-dt * 6);
+        if (cx < minX()) { cx = minX(); vx = Math.abs(vx) * 0.5; sqv += 3; }
+        if (cx > maxX()) { cx = maxX(); vx = -Math.abs(vx) * 0.5; sqv += 3; }
+        if (cy < 40) { cy = 40; vy = Math.abs(vy) * 0.3; }
+        if (cy >= floorY()) {
+          cy = floorY();
+          if (vy > 340 && !isReduced) {
+            sqv += Math.min(14, vy / 120);
+            vy = -vy * 0.36;
+            vx *= 0.72;
+            furKick = 1;
+          } else {
+            const hard = Math.abs(vx) > 500;
+            settleOnGround();
+            if (hard) say(pick(['again!', 'oof', 'nailed it']));
+          }
+        }
+      } else if (mode === 'jump' && jump) {
+        const t = clamp((now - jump.t0) / jump.dur, 0, 1);
+        const [x1, y1] = jump.to();
+        const lift = Math.max(70, (jump.y0 - y1) * 0.28 + 70);
+        cx = jump.x0 + (x1 - jump.x0) * ease(t);
+        cy = jump.y0 + (y1 - jump.y0) * t - lift * 4 * t * (1 - t);
+        rot = Math.sin(t * Math.PI) * 0.25 * Math.sign(x1 - jump.x0);
+        if (t >= 1) {
+          const done = jump.then;
+          jump = null;
+          rot = 0;
+          sqv += 9;
+          furKick = 1;
+          done();
+        }
+      } else if (mode === 'perched' && perch) {
+        if (!perch.el.isConnected) { perch = null; mode = 'air'; vx = 0; vy = 0; }
+        else {
+          const r = perch.el.getBoundingClientRect();
+          cx = r.left + perch.dx;
+          cy = r.top + perch.dy;
+          rot *= Math.exp(-dt * 6);
+          if (cy < 70 || cy > height - 40) { perch = null; mode = 'air'; vx = 0; vy = 0; say('whoa!'); }
+          else if (!asleep && !isReduced && now > perch.until) hopDown();
+        }
+      } else {
+        // ground
+        cy = floorY();
+        if (asleep || isReduced) targetX = compact ? homeX() : cx;
+        else if (compact) targetX = homeX();
+        else if (task === 'idle' && following) targetX = clamp(pointerX, minX(), maxX());
+
+        if (task === 'walking' && Math.abs(targetX - cx) < 3 && Math.abs(gvx) < 6) {
+          task = 'working'; workUntil = now + rand(2600, 4400); updateStatus();
+        } else if (task === 'working' && now >= workUntil) {
+          task = 'returning'; targetX = compact ? homeX() : taskHome; updateStatus();
+        } else if (task === 'returning' && Math.abs(targetX - cx) < 3 && Math.abs(gvx) < 6) {
+          task = 'idle'; taskLabel = ''; nextTaskAt = now + rand(12000, 26000); updateStatus();
+        }
+
+        if (task === 'idle' && !trick && canRoam()) {
+          if (now >= nextTaskAt) {
+            nextTaskAt = now + rand(12000, 26000);
+            if (compact || !(Math.random() < 0.5 && hopIntoText())) startWalk();
+          } else if (now >= nextTrickAt) {
+            nextTrickAt = now + rand(7000, 15000);
+            startTrick();
+          }
+        }
+
+        const acc = (targetX - cx) * 26 - gvx * 9.5;
+        gvx += acc * dt;
+        cx += gvx * dt;
+        cx = clamp(cx, minX(), maxX());
+        const moving = Math.abs(gvx) > 14 && !isReduced;
+        hopPhase = moving ? hopPhase + dt * 13 : 0;
+        if (moving && Math.abs(Math.sin(hopPhase)) < 0.12) sqv += 0.6;
+
+        // click / trick bounces
+        bounceV += 1500 * dt;
+        bounceY += bounceV * dt;
+        if (bounceY > 0) {
+          if (bounceV > 220) sqv += Math.min(8, bounceV / 70);
+          bounceY = 0;
+          bounceV = 0;
+        }
+        let trickY = 0;
+        if (trick) {
+          const t = clamp((now - trick.t0) / trick.dur, 0, 1);
+          if (trick.kind === 'spin') rot = Math.PI * 2 * ease(t);
+          else if (trick.kind === 'flip') rot = -Math.PI * 2 * ease(t);
+          else if (trick.kind === 'wiggle') rot = Math.sin(t * 46) * 0.14 * (1 - t);
+          else if (trick.kind === 'hophop' && bounceY === 0 && t < 0.85) bounceV = -190;
+          else if (trick.kind === 'peek') {
+            trickY = t < 0.22 ? 52 * ease(t / 0.22) : t < 0.6 ? 52 : t < 0.7 ? 52 - 62 * ease((t - 0.6) / 0.1) : -10 * (1 - ease((t - 0.7) / 0.3));
+            if (t > 0.62 && !trick.said) { trick.said = true; say('boo!'); sqv -= 6; }
+          }
+          if (t >= 1) { trick = null; rot = 0; }
+        } else rot *= Math.exp(-dt * 8);
+        cy = floorY() + bounceY + trickY - (moving ? Math.abs(Math.sin(hopPhase)) * 6 : 0);
+      }
+
+      // text room: grows while the pet sits in (or is held over, or is landing in) a paragraph
+      const wantRoom =
+        mode === 'perched' ||
+        (mode === 'held' && !!flowTargetAt(cx, cy)) ||
+        (mode === 'jump' && !!jump?.room && now - jump.t0 > jump.dur * 0.5);
+      room += ((wantRoom ? 1 : 0) - room) * (1 - Math.exp(-dt * (wantRoom ? 9 : 12)));
+      if (room > 0.03) { setFlowObstacle({ x: cx, y: cy + BODY_DY, r: 31 * room }); roomShown = true; }
+      else if (roomShown) { setFlowObstacle(null); roomShown = false; }
+
+      anchor.style.setProperty('--pet-x', `${(cx - 40).toFixed(2)}px`);
+      anchor.style.setProperty('--pet-y', `${(cy - floorY()).toFixed(2)}px`);
+      if (status.dataset.visible === 'true') positionLabel(status);
+      if (speech.dataset.visible === 'true') positionLabel(speech);
+    }
+
+    // ---------- drawing ----------
+    function draw(now: number) {
+      const t = now / 1000;
+      ctx!.clearRect(0, 0, S, S);
+      const airborne = mode === 'air' || mode === 'jump' || mode === 'held';
+      const moving = mode === 'ground' && Math.abs(gvx) > 14 && !isReduced;
+      const happy = now < happyUntil;
+      const dizzy = now < dizzyUntil;
+      const blink = now < blinkUntil && !airborne;
+      const breath = asleep ? Math.sin(t * 1.5) * 0.025 : Math.sin(t * 2.2) * 0.008;
+
+      // shadow on the floor (or on the text when perched)
+      const above = mode === 'perched' ? 0 : Math.max(0, floorY() - cy);
+      if (above < 40) {
+        const k = 1 - above / 40;
+        ctx!.fillStyle = `rgba(0,0,0,${(0.2 * k).toFixed(3)})`;
+        ctx!.beginPath();
+        ctx!.ellipse(40, 73, 17 * (0.6 + 0.4 * k), 3.2 * k + 0.5, 0, 0, Math.PI * 2);
+        ctx!.fill();
+      }
+
+      // squash & stretch, pivoting on the feet
+      let s = sq;
+      if (mode === 'air') s -= clamp(Math.hypot(vx, vy) / 4200, 0, 0.18);
+      if (mode === 'held') s -= 0.08;
+      s = clamp(s, -0.25, 0.32);
+      const sx = 1 + s * 0.85 + breath;
+      const sy = 1 - s + breath;
+
+      ctx!.save();
+      ctx!.translate(40, 70);
+      ctx!.scale(sx, sy);
+      ctx!.translate(0, -R - 4);
+      ctx!.rotate(rot + (hovering && !airborne ? Math.sin(t * 13) * 0.04 : 0));
+
+      // feet
+      const step = moving ? Math.sin(hopPhase * 2) * 2.4 : 0;
+      const kick = mode === 'held' ? Math.sin(t * 17) * 2.2 : 0;
+      ctx!.fillStyle = FUR[0];
+      ctx!.beginPath();
+      ctx!.ellipse(-8 + step, R + 1 + (mode === 'held' ? 3 + kick : 0), 5, 3.4, -0.15, 0, Math.PI * 2);
+      ctx!.ellipse(8 - step, R + 1 + (mode === 'held' ? 3 - kick : 0), 5, 3.4, 0.15, 0, Math.PI * 2);
+      ctx!.fill();
+
+      // fleece silhouette: a disc plus puffy bumps, shaded for volume
+      const jig = (isReduced ? 0 : 0.35) + furKick * 1.1 + (moving ? 0.5 : 0) + (airborne ? 0.5 : 0);
+      const body = ctx!.createRadialGradient(-6, -9, 2, 0, 0, R + 6);
+      body.addColorStop(0, FUR[3]);
+      body.addColorStop(0.55, FUR[2]);
+      body.addColorStop(1, FUR[1]);
+      ctx!.fillStyle = body;
+      ctx!.beginPath();
+      ctx!.arc(0, 0, R, 0, Math.PI * 2);
+      for (const b of bumps) {
+        const d = b.d + Math.sin(t * 5 + b.ph) * jig * 0.5;
+        const bx = Math.cos(b.a) * d;
+        const by = Math.sin(b.a) * d;
+        ctx!.moveTo(bx + b.r, by);
+        ctx!.arc(bx, by, b.r, 0, Math.PI * 2);
+      }
+      ctx!.fill();
+
+      // curls
+      ctx!.lineCap = 'round';
+      ctx!.lineWidth = 0.9;
+      for (let g = 0; g < curlGroups.length; g++) {
+        ctx!.beginPath();
+        for (const c of curlGroups[g]) {
+          const w = jig * Math.sin(t * (moving ? 11 : 3) + c.ph);
+          const x = c.x + w * 0.5;
+          const y = c.y + w * 0.35;
+          ctx!.moveTo(x + Math.cos(c.a) * c.r, y + Math.sin(c.a) * c.r);
+          ctx!.arc(x, y, c.r, c.a, c.a + c.span);
+        }
+        ctx!.strokeStyle = FUR[g];
+        ctx!.stroke();
+      }
+      ctx!.fillStyle = NUB;
+      ctx!.globalAlpha = 0.55;
+      ctx!.beginPath();
+      for (const n of nubs) { ctx!.moveTo(n.x + n.r, n.y); ctx!.arc(n.x, n.y, n.r, 0, Math.PI * 2); }
+      ctx!.fill();
+      ctx!.globalAlpha = 1;
+
+      // face
+      let lx = 0;
+      let ly = 0;
+      if (pointerX >= 0 && !dizzy) {
+        const dx = pointerX - cx;
+        const dy = pointerY - cy;
+        const d = Math.hypot(dx, dy);
+        if (d < 520) { lx = clamp(dx / 60, -1.6, 1.6); ly = clamp(dy / 60, -1.4, 1.2); }
+      } else if (moving) lx = Math.sign(gvx) * 1.2;
+      if (hovering) ly = -1.2;
+      const eyeY = -3;
+      const wide = airborne || dizzy;
+      ctx!.strokeStyle = '#0e130d';
+      ctx!.lineWidth = 1.9;
+      if (asleep || blink) {
+        ctx!.beginPath();
+        for (const ex of [-7.5, 7.5]) {
+          ctx!.moveTo(ex + 3 * Math.cos(Math.PI * 0.15), eyeY - 1 + 3 * Math.sin(Math.PI * 0.15));
+          ctx!.arc(ex, eyeY - 1, 3, Math.PI * 0.15, Math.PI * 0.85);
+        }
+        ctx!.strokeStyle = '#c9d0bb';
+        ctx!.stroke();
+      } else if (happy && !wide) {
+        ctx!.strokeStyle = '#e8ecdf';
+        ctx!.lineWidth = 2;
+        ctx!.beginPath();
+        for (const ex of [-7.5, 7.5]) {
+          ctx!.moveTo(ex + 2.6 * Math.cos(Math.PI * 1.1), eyeY + 1 + 2.6 * Math.sin(Math.PI * 1.1));
+          ctx!.arc(ex, eyeY + 1, 2.6, Math.PI * 1.1, Math.PI * 1.9);
+        }
+        ctx!.stroke();
+      } else {
+        const ry = wide ? 5 : 4.4;
+        ctx!.fillStyle = '#eef1e6';
+        ctx!.beginPath();
+        ctx!.ellipse(-7.5, eyeY, 3.9, ry, 0, 0, Math.PI * 2);
+        ctx!.ellipse(7.5, eyeY, 3.9, ry, 0, 0, Math.PI * 2);
+        ctx!.fill();
+        if (dizzy) {
+          ctx!.strokeStyle = '#141a12';
+          ctx!.lineWidth = 1.1;
+          for (const ex of [-7.5, 7.5]) {
+            ctx!.beginPath();
+            for (let i = 0; i <= 24; i++) {
+              const a = i * 0.55 + t * 9 * Math.sign(ex);
+              const rr = (i / 24) * 3.2;
+              const px = ex + Math.cos(a) * rr;
+              const py = eyeY + Math.sin(a) * rr;
+              if (i) ctx!.lineTo(px, py); else ctx!.moveTo(px, py);
+            }
+            ctx!.stroke();
+          }
+        } else {
+          const pr = wide ? 1.9 : 2.3;
+          ctx!.fillStyle = '#10150f';
+          ctx!.beginPath();
+          ctx!.arc(-7.5 + lx, eyeY + ly, pr, 0, Math.PI * 2);
+          ctx!.arc(7.5 + lx, eyeY + ly, pr, 0, Math.PI * 2);
+          ctx!.fill();
+          ctx!.fillStyle = '#fff';
+          ctx!.beginPath();
+          ctx!.arc(-8.3 + lx, eyeY + ly - 1.1, 0.8, 0, Math.PI * 2);
+          ctx!.arc(6.7 + lx, eyeY + ly - 1.1, 0.8, 0, Math.PI * 2);
+          ctx!.fill();
+        }
+      }
+
+      // mouth
+      ctx!.lineWidth = 1.5;
+      ctx!.strokeStyle = '#e8ecdf';
+      ctx!.beginPath();
+      if (wide && !dizzy) {
+        ctx!.fillStyle = '#10150f';
+        ctx!.ellipse(0, 5.5, 2, 2.5, 0, 0, Math.PI * 2);
+        ctx!.fill();
+      } else if (happy) {
+        ctx!.fillStyle = '#10150f';
+        ctx!.arc(0, 4.2, 3.2, 0.1, Math.PI - 0.1);
+        ctx!.closePath();
+        ctx!.fill();
+        ctx!.fillStyle = '#d98a83';
+        ctx!.beginPath();
+        ctx!.ellipse(0, 6.3, 1.6, 0.9, 0, 0, Math.PI * 2);
+        ctx!.fill();
+      } else if (!asleep) {
+        ctx!.moveTo(-2.6, 4.6);
+        ctx!.quadraticCurveTo(-1.3, 6.2, 0, 4.9);
+        ctx!.quadraticCurveTo(1.3, 6.2, 2.6, 4.6);
+        ctx!.stroke();
+      }
+      ctx!.fillStyle = 'rgba(232, 146, 136, 0.45)';
+      ctx!.beginPath();
+      ctx!.ellipse(-12.5, 3.6, 2.8, 1.6, 0, 0, Math.PI * 2);
+      ctx!.ellipse(12.5, 3.6, 2.8, 1.6, 0, 0, Math.PI * 2);
+      ctx!.fill();
+      ctx!.restore();
+
+      if (mode === 'ground' && task === 'working') drawTaskMark(t);
+      if (asleep) {
+        ctx!.fillStyle = NUB;
+        ctx!.font = '600 11px system-ui, sans-serif';
+        ctx!.fillText('z', 58, 16 + Math.sin(t * 1.2) * 1.2);
+        ctx!.font = '600 8px system-ui, sans-serif';
+        ctx!.fillText('z', 66, 10 + Math.sin(t * 1.2 + 1) * 1.2);
+      }
+    }
+
+    function drawTaskMark(t: number) {
+      ctx!.save();
+      ctx!.lineWidth = 1.6;
+      ctx!.lineCap = 'round';
+      ctx!.strokeStyle = NUB;
+      ctx!.fillStyle = NUB;
+      if (taskKind === 0) {
+        ctx!.beginPath();
+        ctx!.arc(62, 16, 5.2, 0, Math.PI * 2);
+        ctx!.moveTo(66, 20);
+        ctx!.lineTo(71, 25);
+        ctx!.stroke();
+      } else if (taskKind === 1) {
+        const lift = Math.sin(t * 5) * 2;
+        ctx!.fillRect(59, 11 + lift, 8, 8);
+      } else {
+        for (let i = 0; i < 3; i++) {
+          const a = t * 5 + (i * Math.PI * 2) / 3;
+          ctx!.globalAlpha = 0.42 + i * 0.22;
+          ctx!.beginPath();
+          ctx!.arc(63 + Math.cos(a) * 5, 16 + Math.sin(a) * 5, 1.5, 0, Math.PI * 2);
+          ctx!.fill();
+        }
+      }
+      ctx!.restore();
+    }
+
+    function frame(now: number) {
+      rafId = 0;
+      if (document.hidden || petHidden) return;
+      const c0 = performance.now();
+      // fixed substeps keep the physics frame-rate independent (slow devices, throttled tabs)
+      let elapsed = Math.min(lastFrame ? now - lastFrame : 16.7, 120);
+      while (elapsed > 0.5) { const step = Math.min(elapsed, 1000 / 60); update(now - elapsed + step, step); elapsed -= step; }
+      lastFrame = now;
+      draw(now);
+      const cost = performance.now() - c0;
+      samples.push(cost);
+      if (samples.length > 120) samples.shift();
+      metrics.frames++;
+      metrics.averageFrameCostMs = samples.reduce((a, b) => a + b, 0) / samples.length;
+      metrics.maxFrameCostMs = Math.max(metrics.maxFrameCostMs, cost);
+      rafId = requestAnimationFrame(frame);
+    }
+    function startLoop() {
+      if (!rafId && !document.hidden && !petHidden) { lastFrame = 0; rafId = requestAnimationFrame(frame); }
+    }
+
+    function resize() {
+      width = innerWidth;
+      height = innerHeight;
+      dpr = devicePixelRatio || 1;
+      compact = width <= 640 || coarsePointer.matches;
+      canvas.width = Math.round(S * dpr);
+      canvas.height = Math.round(S * dpr);
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cx = clamp(cx, minX(), maxX());
+      targetX = compact ? homeX() : clamp(targetX, minX(), maxX());
+      if (mode === 'ground') cy = floorY();
+    }
+
+    // ---------- input ----------
+    avatar.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      press = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now() };
+      try { avatar.setPointerCapture(e.pointerId); } catch {}
+    });
+    avatar.addEventListener('pointermove', (e) => {
+      if (held && e.pointerId === held.id) {
+        const now = performance.now();
+        const dt = Math.max(1, now - held.t) / 1000;
+        held.vx = held.vx * 0.4 + ((e.clientX - held.px) / dt) * 0.6;
+        held.vy = held.vy * 0.4 + ((e.clientY - held.py) / dt) * 0.6;
+        held.px = e.clientX;
+        held.py = e.clientY;
+        held.t = now;
+        return;
+      }
+      if (press && e.pointerId === press.id && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 5) {
+        wake();
+        held = { id: e.pointerId, ox: cx - e.clientX, oy: cy - e.clientY, px: e.clientX, py: e.clientY, vx: 0, vy: 0, t: performance.now() };
+        press = null;
+        mode = 'held';
+        task = 'idle';
+        trick = null;
+        jump = null;
+        perch = null;
+        bounceY = 0;
+        bounceV = 0;
+        layer.classList.add('is-held');
+        updateStatus();
+        say(pick(['wheee', 'up we go!', 'hey!', 'where are we going?']), 1400);
+      }
+    });
+    function release(e: PointerEvent) {
+      if (press && e.pointerId === press.id) press = null;
+      if (!held || e.pointerId !== held.id) return;
+      const throwVx = clamp(held.vx, -2600, 2600);
+      const throwVy = clamp(held.vy, -2600, 2600);
+      held = null;
+      suppressClick = true;
+      setTimeout(() => { suppressClick = false; }, 0);
+      layer.classList.remove('is-held');
+      const target = flowTargetAt(cx, cy);
+      if (target && Math.hypot(throwVx, throwVy) < 1400) {
+        perchOn(target, cx, cy);
+        sqv += 7;
+        say(pick(['comfy.', 'excuse me, words', 'i live here now', 'reading along']));
+      } else if (isReduced) {
+        settleOnGround();
+      } else {
+        mode = 'air';
+        vx = throwVx * 0.9;
+        vy = throwVy * 0.9;
+        updateStatus();
+      }
+    }
+    avatar.addEventListener('pointerup', release);
+    avatar.addEventListener('pointercancel', release);
+    avatar.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (suppressClick) { suppressClick = false; return; }
+      handleClick();
+    });
+    avatar.addEventListener('pointerenter', () => { hovering = true; furKick = Math.max(furKick, 0.5); wake(); });
+    avatar.addEventListener('pointerleave', () => { hovering = false; });
+    hideButton.addEventListener('click', (e) => { e.stopPropagation(); hidePet(true); });
+
+    document.addEventListener('click', (e) => {
+      if ((e.target as Element)?.closest?.('[data-pet-toggle]')) { e.preventDefault(); hidePet(!petHidden); }
+    });
+    document.addEventListener('keydown', (e) => {
+      const el = e.target as HTMLElement;
+      const typing = el?.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el?.tagName || '');
+      if (!typing && e.key.toLowerCase() === 'p' && !e.metaKey && !e.ctrlKey && !e.altKey) hidePet(!petHidden);
+      wake();
+    });
+    document.addEventListener('pointermove', (e) => {
+      wake();
+      if (e.pointerType === 'touch') return;
+      pointerX = e.clientX;
+      pointerY = e.clientY;
+      following = !compact && e.clientY > height - 230 && !(e.target as Element)?.closest?.('#site-moss-pet');
+    }, { passive: true });
+    document.addEventListener('pointerleave', () => { pointerX = -1; following = false; });
+    ['pointerdown', 'touchstart'].forEach((n) => document.addEventListener(n, wake, { passive: true }));
+    addEventListener('scroll', () => {
+      wake();
+      const now = performance.now();
+      const speed = Math.abs(scrollY - lastScrollY) / Math.max(16, now - lastScrollT) * 1000;
+      lastScrollY = scrollY;
+      lastScrollT = now;
+      if (speed > 2600 && mode === 'ground' && !trick && now > bumpCooldown && !isReduced) {
+        bumpCooldown = now + 5000;
+        bounceV = -230;
+        furKick = 1;
+        if (Math.random() < 0.45) say(pick(['whoa!', 'slow down!', 'wheee']), 1300);
+      }
+    }, { passive: true });
+
+    document.addEventListener('astro:before-swap', () => { setFlowObstacle(null); roomShown = false; room = 0; });
+    document.addEventListener('astro:page-load', () => {
+      scanFlowTargets();
+      if (mode === 'perched' && perch && !perch.el.isConnected) { perch = null; mode = 'air'; vx = 0; vy = 0; }
+      if (mode === 'ground' && task !== 'idle' && /^\/(writing|projects)\/./.test(location.pathname)) {
+        taskLabel = chooseTaskLabel();
+        updateStatus();
+      }
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { if (rafId) cancelAnimationFrame(rafId); rafId = 0; }
+      else startLoop();
+    });
+    addEventListener('resize', resize, { passive: true });
+    reducedMotion.addEventListener?.('change', (e) => { isReduced = e.matches; });
+    coarsePointer.addEventListener?.('change', resize);
+
+    try { petHidden = localStorage.getItem('pet:hidden') === 'true'; } catch {}
+    layer.hidden = petHidden;
+    document.querySelectorAll('[data-pet-toggle]').forEach((b) => b.setAttribute('aria-pressed', String(!petHidden)));
+    scanFlowTargets();
+    resize();
+    updateStatus();
+    startLoop();
+
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      host.__petDebug = {
+        metrics,
+        click: handleClick,
+        trick: startTrick,
+        hopIntoText,
+        hopDown,
+        walk: startWalk,
+        sleep() { asleep = true; updateStatus(); },
+        place(x: number, y: number) { const el = flowTargetAt(x, y); cx = x; cy = y; if (el) perchOn(el, x, y); },
+        get state() { return { mode, task, asleep, cx, cy, room }; },
+      };
+    }
+  })();
+</script>
+
+<style>
+  .pet-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .pet-layer[hidden] { display: none !important; }
+  :global(html:not([data-ff-pet])) .pet-layer, :global(html:not([data-ff-pet]) .footer-pet) { display: none !important; }
+  :global(.footer-pet) { display: inline-flex; gap: 0.45em; }
+  .pet {
+    position: absolute;
+    left: 0;
+    bottom: 8px;
+    width: 80px;
+    height: 80px;
+    transform: translate3d(var(--pet-x, 40px), var(--pet-y, 0), 0);
+    will-change: transform;
+    pointer-events: none;
+  }
+  .pet-avatar {
+    appearance: none;
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: grab;
+    pointer-events: auto;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pet-layer.is-held .pet-avatar { cursor: grabbing; }
+  .pet-avatar:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+  .pet-canvas { display: block; width: 80px; height: 80px; }
+  .pet-status, .pet-speech {
+    position: absolute;
+    z-index: 1;
+    left: var(--pet-label-x, 40px);
+    bottom: 76px;
+    max-width: min(230px, calc(100vw - 32px));
+    padding: 4px 9px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    color: var(--text);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.13);
+    font: 500 10px/1.35 var(--font-mono);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 4px) scale(0.96);
+    transition: opacity 140ms ease, transform 160ms ease;
+  }
+  .pet-status[data-visible='true'], .pet-speech[data-visible='true'] {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  .pet-speech { z-index: 2; bottom: 80px; font: 500 11px/1.3 var(--font-body); }
+  .pet-status[data-visible='true'] ~ .pet-speech[data-visible='true'] { bottom: 104px; }
+  .pet-reaction {
+    position: absolute;
+    top: 0;
+    left: 54px;
+    color: #d98a83;
+    font-size: 15px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .pet-reaction.is-pop { animation: pet-pop 850ms cubic-bezier(.16,.8,.3,1) both; }
+  .pet-hide {
+    appearance: none;
+    position: absolute;
+    z-index: 3;
+    top: 4px;
+    right: 2px;
+    width: 19px;
+    height: 19px;
+    padding: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--muted);
+    font: 400 14px/16px var(--font-body);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: auto;
+    transition: opacity 130ms ease, color 130ms ease;
+  }
+  .pet:hover .pet-hide, .pet-hide:focus-visible { opacity: 1; }
+  .pet-layer.is-held .pet-hide { opacity: 0; }
+  .pet-hide:hover { color: var(--text); }
+  :global(.site-footer .pet-toggle) {
+    appearance: none;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  :global(.site-footer .pet-toggle:hover) { color: var(--accent-text); }
+
+  /* Pretext text flow (src/scripts/text-flow.ts) */
+  :global(.text-flow) { position: relative; transition: height 220ms cubic-bezier(.2,.7,.2,1); }
+  :global(.text-flow .flow-lines) { position: absolute; inset: 0 auto auto 0; width: 100%; pointer-events: none; }
+  :global(.text-flow .flow-line) { position: absolute; top: 0; left: 0; white-space: pre; will-change: transform; }
+  :global(.text-flow .flow-line a) { pointer-events: auto; }
+  :global(.text-flow.is-flowing > .flow-src) { opacity: 0; }
+
+  @keyframes pet-pop {
+    0% { opacity: 0; transform: translateY(7px) scale(.55) rotate(-12deg); }
+    18% { opacity: 1; transform: translateY(-4px) scale(1.25) rotate(8deg); }
+    70% { opacity: 1; transform: translateY(-18px) scale(1) rotate(0); }
+    100% { opacity: 0; transform: translateY(-25px) scale(.82); }
+  }
+  @media (max-width: 640px) {
+    .pet { bottom: 10px; }
+    .pet-hide { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pet-status, .pet-speech, .pet-hide { transition: none; }
+    .pet-reaction.is-pop { animation-duration: 1ms; }
+    :global(.text-flow) { transition: none; }
+  }
+</style>

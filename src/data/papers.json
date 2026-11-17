@@ -1,0 +1,57 @@
+[
+  {
+    "id": "BANERJEE2024109349",
+    "title": "A likelihood based method for compressive signal recovery under Gaussian and saturation noise",
+    "authors": [
+      "Shuvayan Banerjee",
+      "Sudhansh Peddabomma",
+      "Radhendushka Srivastava",
+      "Ajit Rajwade"
+    ],
+    "venue": "Signal Processing",
+    "year": 2024,
+    "doi": "https://doi.org/10.1016/j.sigpro.2023.109349",
+    "url": "",
+    "pdf": "https://www.sciencedirect.com/science/article/pii/S0165168423004231",
+    "abstract": "Practical sensing systems have a limited dynamic range, which gives rise to saturation noise in signal acquisition if the signal attains values outside this range at certain locations. Despite rapid advances in compressed sensing theory and systems over the years, the effect of saturation on compressed sensing measurements, especially in the presence of additive Gaussian noise, has often been overlooked in many existing approaches.  In this paper, we propose a novel maximum likelihood based estimator for compressive reconstruction in the presence of both Gaussian and saturation noise.",
+    "selected": true,
+    "preview": "https://sudhansh6.github.io/video/lm.gif"
+  },
+  {
+    "id": "banerjee2025permutation",
+    "title": "Identification and Correction of Permutation Errors in Compressed Sensing-Based Group Testing",
+    "authors": [
+      "Shuvayan Banerjee",
+      "Sudhansh Peddabomma",
+      "Radhendushka Srivastava",
+      "James Saunderson",
+      "Ajit Rajwade"
+    ],
+    "venue": "IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)",
+    "year": 2025,
+    "doi": "https://doi.org/10.1109/ICASSP49660.2025.10888147",
+    "url": "https://ieeexplore.ieee.org/document/10888147",
+    "pdf": "",
+    "abstract": "Compressed sensing, which involves reconstruction of sparse signals from an under-determined linear system, has been recently applied to problems in group testing to save on the number of tests administered during a pandemic or other resource-constrained scenarios. In practical group testing in time-constrained situations, the results of two different groups can sometimes be mistakenly exchanged by a technician. This is called ‘permutation noise’. We present a method, based on a debiased form of the robust LASSO estimator, that identifies the unhealthy subjects and the pooled measurements corrupted by permutation noise, then corrects the permutations and reconstructs the signal from the corrected measurements.",
+    "selected": true,
+    "preview": ""
+  },
+  {
+    "id": "hu2024planningtabletopobjectrearrangement",
+    "title": "Planning for Tabletop Object Rearrangement",
+    "authors": [
+      "Jiaming Hu",
+      "Jan Szczekulski",
+      "Sudhansh Peddabomma",
+      "Henrik I. Christensen"
+    ],
+    "venue": "IEEE International Conference on Robotics and Automation (ICRA)",
+    "year": 2025,
+    "doi": "",
+    "url": "https://arxiv.org/abs/2411.10899",
+    "pdf": "https://arxiv.org/pdf/2411.10899.pdf",
+    "abstract": "Finding a high-quality solution for the tabletop object rearrangement planning is a challenging problem. Compared to determining a goal arrangement, rearrangement planning is challenging due to the dependencies between objects and the buffer capacity available to hold objects. Although orla* has proposed an A* based searching strategy with lazy evaluation for the high-quality solution, it is not scalable, with the success rate decreasing as the number of objects increases. To overcome this limitation, we propose an enhanced A*-based algorithm that improves state representation and employs incremental goal attempts with lazy evaluation at each iteration. This approach aims to enhance scalability while maintaining solution quality. Our evaluation demonstrates that our algorithm can provide superior solutions compared to orla*, in a shorter time, for both stationary and mobile robots.",
+    "selected": true,
+    "preview": ""
+  }
+]

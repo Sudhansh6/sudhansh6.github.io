@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+const news = (await getCollection('news')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const years = [...new Set(news.map((n) => n.data.date.getUTCFullYear()))];
+---
+
+<Base title="News — Sudhansh Peddabomma" description="Updates from Sudhansh Peddabomma." active="">
+  <div class="wrap">
+    <section class="hero" style="padding-top: 60px;">
+      <h1>News</h1>
+      <p class="lede">Papers, roles, talks, and other milestones.</p>
+    </section>
+    {years.map((y) => (
+      <section class="section">
+        <h2 style="margin-top: 0;">{y}</h2>
+        <ul class="item-list">
+          {news.filter((n) => n.data.date.getUTCFullYear() === y).map(async (n) => {
+            const { Content } = await render(n);
+            return (
+              <li>
+                <span class="item-date">{n.data.date.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' })}</span>
+                <div><Content /></div>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    ))}
+  </div>
+</Base>

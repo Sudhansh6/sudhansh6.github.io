@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import PdfViewer from '../components/PdfViewer.astro';
+---
+
+<Base title="CV — Sudhansh Peddabomma" description="Résumé and CV of Sudhansh Peddabomma." active="cv" searchable={false}>
+  <div class="wrap">
+    <section class="hero" style="padding-top: 60px; padding-bottom: 0;">
+      <h1>CV</h1>
+      <p class="lede">A one-page résumé, and the longer CV with every paper, project, and award.</p>
+      <div class="cv-tabs" role="tablist" aria-label="Document">
+        <button type="button" role="tab" aria-selected="true" data-cv-tab="resume">Résumé</button>
+        <button type="button" role="tab" aria-selected="false" data-cv-tab="cv">Full CV</button>
+      </div>
+    </section>
+    <div data-cv-panel="resume"><PdfViewer src="/assets/pdf/SudhanshPeddabommaResume.pdf" title="Résumé" /></div>
+    <div data-cv-panel="cv" hidden><PdfViewer src="/assets/pdf/SudhanshPeddabommaCV.pdf" title="CV" /></div>
+  </div>
+</Base>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('[data-cv-tab]');
+    tabs.forEach((tab) =>
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+        document.querySelectorAll<HTMLElement>('[data-cv-panel]').forEach((p) => (p.hidden = p.dataset.cvPanel !== tab.dataset.cvTab));
+      })
+    );
+  });
+</script>

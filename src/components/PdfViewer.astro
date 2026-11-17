@@ -1,0 +1,219 @@
+---
+// Inline report reader. Pages are rendered with PDF.js so they follow the site theme: in dark mode
+// text, vector art, and page background are recolored to the site palette; raster images are
+// pasted back from the untouched render so photos keep their original colors. Pages render lazily as they scroll into view.
+interface Props { src: string; title: string }
+const { src, title } = Astro.props;
+const href = encodeURI(src);
+const name = decodeURIComponent(src.split('/').pop() ?? 'report.pdf');
+---
+
+<section class="pdf" data-pdf={href} aria-label={`${title} report`}>
+  <div class="pdf-bar">
+    <span class="pdf-name"><span class="pdf-ico" aria-hidden="true">PDF</span>{name}<span class="pdf-pages" data-pdf-pages></span></span>
+    <span class="pdf-actions">
+      <button type="button" class="pdf-btn" data-pdf-expand>Expand</button>
+      <a class="pdf-btn" href={href} download>Download</a>
+      <a class="pdf-btn" href={href} target="_blank" rel="noopener">Open ↗</a>
+    </span>
+  </div>
+  <div class="pdf-scroll" data-pdf-scroll>
+    <p class="pdf-status" data-pdf-status>Loading report…</p>
+  </div>
+</section>
+
+<script>
+  import type { PDFDocumentProxy } from 'pdfjs-dist';
+
+  type Page = { el: HTMLDivElement; canvas: HTMLCanvasElement; n: number; ratio: number; drawn: string };
+
+  type RGB = [number, number, number];
+
+  // Paper and ink colors for the dark theme; `null` keeps the PDF's own colors (light theme).
+  function pageColors(): { background: RGB; foreground: RGB; key: string } | null {
+    if (document.documentElement.dataset.theme !== 'dark') return null;
+    const s = getComputedStyle(document.documentElement);
+    const rgb = (v: string): RGB => {
+      const c = document.createElement('canvas').getContext('2d')!;
+      c.fillStyle = v.trim();
+      const hex = c.fillStyle.slice(1);
+      return [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16)) as RGB;
+    };
+    const background = rgb(s.getPropertyValue('--surface')), foreground = rgb(s.getPropertyValue('--text'));
+    return { background, foreground, key: `${background}|${foreground}` };
+  }
+
+  // Invert lightness while keeping hue and saturation (white paper -> background, black ink ->
+  // foreground, colored lines stay their color family).
+  function darken(px: Uint8ClampedArray, { background: bg, foreground: fg }: { background: RGB; foreground: RGB }) {
+    for (let i = 0; i < px.length; i += 4) {
+      const r = px[i], g = px[i + 1], b = px[i + 2];
+      const shift = 255 - Math.max(r, g, b) - Math.min(r, g, b);
+      px[i] = bg[0] + ((r + shift) * (fg[0] - bg[0])) / 255;
+      px[i + 1] = bg[1] + ((g + shift) * (fg[1] - bg[1])) / 255;
+      px[i + 2] = bg[2] + ((b + shift) * (fg[2] - bg[2])) / 255;
+    }
+  }
+
+  async function mount(root: HTMLElement) {
+    if (root.dataset.ready) return;
+    root.dataset.ready = '1';
+    const scroll = root.querySelector<HTMLElement>('[data-pdf-scroll]')!;
+    const status = root.querySelector<HTMLElement>('[data-pdf-status]')!;
+    const expand = root.querySelector<HTMLButtonElement>('[data-pdf-expand]')!;
+    if (!document.fullscreenEnabled) expand.hidden = true;
+    expand.onclick = () => (document.fullscreenElement ? document.exitFullscreen() : root.requestFullscreen());
+    root.onfullscreenchange = () => { expand.textContent = document.fullscreenElement === root ? 'Exit' : 'Expand'; };
+
+    let doc: PDFDocumentProxy;
+    let pdfjs: typeof import('pdfjs-dist');
+    try {
+      pdfjs = await import('pdfjs-dist');
+      pdfjs.GlobalWorkerOptions.workerSrc = (await import('pdfjs-dist/build/pdf.worker.min.mjs?url')).default;
+      doc = await pdfjs.getDocument({ url: root.dataset.pdf! }).promise;
+    } catch (err) {
+      console.error('PDF viewer failed', err);
+      status.dataset.error = String(err);
+      status.textContent = 'Could not load the report here. Use Open to view it.';
+      return;
+    }
+    status.remove();
+    root.querySelector('[data-pdf-pages]')!.textContent = ` · ${doc.numPages} pages`;
+
+    const pages: Page[] = [];
+    for (let n = 1; n <= doc.numPages; n++) {
+      const vp = (await doc.getPage(n)).getViewport({ scale: 1 });
+      const el = document.createElement('div');
+      el.className = 'pdf-page';
+      el.style.aspectRatio = `${vp.width} / ${vp.height}`;
+      const canvas = document.createElement('canvas');
+      el.append(canvas);
+      scroll.append(el);
+      pages.push({ el, canvas, n, ratio: vp.height / vp.width, drawn: '' });
+    }
+
+
+    // Device-space boxes of raster images on a page, found by replaying the transforms in its
+    // operator list. Images are painted into the unit square of the current transform.
+    function imageRects(ops: { fnArray: number[]; argsArray: any[] }, base: number[]) {
+      const { OPS, Util } = pdfjs;
+      const rects: number[][] = [];
+      const stack: number[][] = [];
+      let ctm = base;
+      ops.fnArray.forEach((fn, i) => {
+        const args = ops.argsArray[i];
+        if (fn === OPS.save) stack.push(ctm);
+        else if (fn === OPS.restore || fn === OPS.paintFormXObjectEnd) ctm = stack.pop() ?? base;
+        else if (fn === OPS.transform) ctm = Util.transform(ctm, args);
+        else if (fn === OPS.paintFormXObjectBegin) { stack.push(ctm); if (args?.[0]) ctm = Util.transform(ctm, args[0]); }
+        else if (fn === OPS.paintImageXObject || fn === OPS.paintInlineImageXObject) {
+          const xs: number[] = [], ys: number[] = [];
+          for (const [u, v] of [[0, 0], [1, 0], [0, 1], [1, 1]]) {
+            xs.push(ctm[0] * u + ctm[2] * v + ctm[4]);
+            ys.push(ctm[1] * u + ctm[3] * v + ctm[5]);
+          }
+          const x = Math.floor(Math.min(...xs)), y = Math.floor(Math.min(...ys));
+          const w = Math.ceil(Math.max(...xs)) - x, h = Math.ceil(Math.max(...ys)) - y;
+          if (w > 2 && h > 2) rects.push([x, y, w, h]);
+        }
+      });
+      return rects;
+    }
+
+    const visible = new Set<Page>();
+    let busy = false, queued = false;
+    async function renderVisible() {
+      if (busy) { queued = true; return; }
+      busy = true;
+      const colors = pageColors();
+      for (const p of [...visible].sort((a, b) => a.n - b.n)) {
+        const width = p.el.clientWidth;
+        const key = `${width}|${colors?.key ?? 'paper'}`;
+        if (!width || p.drawn === key) continue;
+        const page = await doc.getPage(p.n);
+        const scale = (width * Math.min(2, devicePixelRatio || 1)) / page.getViewport({ scale: 1 }).width;
+        const viewport = page.getViewport({ scale });
+        const out = document.createElement('canvas');
+        out.width = Math.floor(viewport.width); out.height = Math.floor(viewport.height);
+        const ctx = out.getContext('2d', { willReadFrequently: !!colors })!;
+        await page.render({ canvas: out, canvasContext: ctx, viewport }).promise;
+        if (colors) {
+          // Recolor text, vector art, and paper for the dark theme, then restore raster images
+          // (photos, figures) from the untouched render so they keep their real colors.
+          const rects = imageRects(await page.getOperatorList(), viewport.transform);
+          const plain = rects.length ? ctx.getImageData(0, 0, out.width, out.height) : null;
+          const img = ctx.getImageData(0, 0, out.width, out.height);
+          darken(img.data, colors);
+          ctx.putImageData(img, 0, 0);
+          for (const [x, y, w, h] of rects) ctx.putImageData(plain!, 0, 0, x, y, w, h);
+        }
+        p.canvas.width = out.width; p.canvas.height = out.height;
+        p.canvas.getContext('2d')!.drawImage(out, 0, 0);
+
+        p.drawn = key;
+      }
+      busy = false;
+      if (queued) { queued = false; renderVisible(); }
+    }
+
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        const p = pages.find((q) => q.el === e.target)!;
+        if (e.isIntersecting) visible.add(p); else visible.delete(p);
+      }
+      renderVisible();
+    }, { root: scroll, rootMargin: '600px 0px' });
+    pages.forEach((p) => io.observe(p.el));
+
+    let t = 0;
+    new ResizeObserver(() => { clearTimeout(t); t = window.setTimeout(renderVisible, 150); }).observe(scroll);
+    const mo = new MutationObserver(() => renderVisible());
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    document.addEventListener('astro:before-swap', () => { io.disconnect(); mo.disconnect(); doc.destroy(); }, { once: true });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLElement>('[data-pdf]').forEach((root) => {
+      // Load the PDF only once the reader is close to the viewport.
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); mount(root); } }, { rootMargin: '400px' });
+      io.observe(root);
+    });
+  });
+</script>
+
+<style>
+  .pdf {
+    margin: 30px 0; border: 1px solid var(--border-strong); border-radius: var(--radius);
+    overflow: hidden; background: var(--bg-soft); display: flex; flex-direction: column;
+  }
+  .pdf-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 8px 10px 8px 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap;
+  }
+  .pdf-name { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: var(--muted); min-width: 0; }
+  .pdf-pages { color: var(--faint); margin-left: -4px; }
+  .pdf-ico {
+    font: 600 0.66rem/1 var(--font-body); letter-spacing: 0.04em; color: var(--accent-text);
+    border: 1px solid var(--accent); border-radius: 4px; padding: 4px 5px;
+  }
+  .pdf-actions { display: flex; gap: 6px; }
+  .pdf-btn {
+    font: 500 0.8rem var(--font-body); color: var(--text); background: var(--surface);
+    border: 1px solid var(--border-strong); border-radius: 7px; padding: 5px 10px;
+    text-decoration: none; cursor: pointer;
+  }
+  .pdf-btn:hover { border-color: var(--accent); color: var(--accent-text); }
+  .pdf-scroll {
+    height: min(82vh, 980px); overflow: auto; padding: 18px; display: flex; flex-direction: column;
+    gap: 14px; align-items: center; scrollbar-width: thin;
+  }
+  .pdf-scroll :global(.pdf-page) {
+    width: min(100%, 860px); flex: none; background: var(--surface); border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), 0 8px 24px -12px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+  }
+  .pdf-scroll :global(.pdf-page canvas) { width: 100%; height: 100%; display: block; }
+  .pdf-status { margin: auto; color: var(--muted); font-size: 0.92rem; }
+  .pdf:fullscreen { border-radius: 0; border: 0; }
+  .pdf:fullscreen .pdf-scroll { height: auto; flex: 1; }
+</style>

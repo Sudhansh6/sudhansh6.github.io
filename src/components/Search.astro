@@ -1,0 +1,114 @@
+---
+// Pagefind-powered search dialog. The index is built post-build (`pagefind --site dist`).
+// Degrades gracefully in dev when the index doesn't exist yet.
+---
+
+<dialog class="search-dialog" id="search-dialog" aria-label="Site search">
+  <div class="search-box">
+    <input id="search-input" type="search" placeholder="Search projects, papers, notes…" autocomplete="off" />
+  </div>
+  <div class="search-results" id="search-results">
+    <div class="search-empty">Type to search the whole site.</div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById('search-dialog');
+  const input = document.getElementById('search-input');
+  const results = document.getElementById('search-results');
+  const openBtn = document.getElementById('search-open');
+  let pagefind = null;
+  let loading = null;
+
+  async function ensureIndex() {
+    if (pagefind) return pagefind;
+    if (!loading) {
+      loading = import(/* @vite-ignore */ '/pagefind/pagefind.js')
+        .then(async (m) => {
+          // Course notes are long pages; don't let length bury an exact match inside them.
+          await m.options({ excerptLength: 22, ranking: { pageLength: 0.15, termSaturation: 1.8 } });
+          pagefind = m;
+          return m;
+        })
+        .catch(() => null);
+    }
+    return loading;
+  }
+
+  function esc(s) {
+    return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  let timer = null;
+  async function run(query) {
+    const pf = await ensureIndex();
+    if (!pf) {
+      results.innerHTML = '<div class="search-empty">Search index isn’t built in dev mode — it works on the live site.</div>';
+      return;
+    }
+    if (!query.trim()) {
+      results.innerHTML = '<div class="search-empty">Type to search the whole site.</div>';
+      return;
+    }
+    const search = await pf.search(query);
+    if (input.value !== query) return; // a newer query is in flight
+    // Pagefind stems words ("mips" and "mip" index the same), so put pages that contain the exact
+    // words typed first, keeping Pagefind's order otherwise.
+    const words = query.toLowerCase().match(/[\p{L}\p{N}]+/gu) || [];
+    const exactIn = (text) => words.length > 0 && words.every((w) => new RegExp(`(^|[^\\p{L}\\p{N}])${w}($|[^\\p{L}\\p{N}])`, 'iu').test(text));
+    const all = await Promise.all(search.results.slice(0, 24).map((r) => r.data()));
+    if (input.value !== query) return;
+    const hits = all
+      .map((h, i) => ({ h, i, exact: exactIn(h.content) }))
+      .sort((a, b) => Number(b.exact) - Number(a.exact) || a.i - b.i)
+      .slice(0, 10)
+      .map(({ h }) => h);
+    if (!hits.length) {
+      results.innerHTML = '<div class="search-empty">Nothing found. Try different words.</div>';
+      return;
+    }
+    // Pagefind excerpts are plain text with <mark> around matches; escape everything else.
+    const excerpt = (s) => esc(s).replace(/&lt;mark&gt;/g, '<mark>').replace(/&lt;\/mark&gt;/g, '</mark>');
+    results.innerHTML = hits
+      .map((h) => {
+        // Jump to the best-matching section of long pages (e.g. one chapter of a course's notes).
+        const subs = (h.sub_results || []).filter((s) => s.url !== h.url && s.title && s.title !== h.meta.title);
+        const sub = subs.find((s) => exactIn(s.excerpt.replace(/<\/?mark>/g, ''))) || subs[0];
+        const href = sub ? sub.url : h.url;
+        const where = `${kind(h.url)}${sub ? ` · ${esc(sub.title)}` : ''}`;
+        return `<a class="search-hit" href="${esc(href)}"><div class="t">${esc(h.meta.title || h.url)}</div><div class="u">${where}</div><p class="x">${excerpt(sub ? sub.excerpt : h.excerpt)}</p></a>`;
+      })
+      .join('');
+  }
+
+  function kind(url) {
+    if (url.startsWith('/writing/')) return 'Notes';
+    if (url.startsWith('/projects/')) return 'Project';
+    if (url.startsWith('/papers')) return 'Research';
+    if (url.startsWith('/news')) return 'News';
+    return 'Page';
+  }
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const first = results.querySelector('.search-hit');
+    if (first) { e.preventDefault(); first.click(); }
+  });
+
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => run(input.value), 160);
+  });
+
+  openBtn.addEventListener('click', () => {
+    dialog.showModal();
+    input.value = '';
+    results.innerHTML = '<div class="search-empty">Type to search the whole site.</div>';
+    setTimeout(() => input.focus(), 30);
+    ensureIndex();
+  });
+
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+</script>

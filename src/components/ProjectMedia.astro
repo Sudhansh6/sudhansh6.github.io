@@ -1,0 +1,126 @@
+---
+// Project visual for cards and project pages. Kinds are defined in src/data/viz.ts.
+import { VIZ } from '../data/viz';
+
+interface Props { viz?: string; img?: string; title: string; hero?: boolean }
+const { viz, img, title, hero = false } = Astro.props;
+const v = viz ? VIZ[viz] : undefined;
+const cls = ['card-media', 'pm', v ? `pm-${v.kind}` : '', hero ? 'pm-hero' : ''].join(' ');
+---
+
+{v ? (
+  <div
+    class={cls}
+    data-viz={v.kind}
+    data-scene={v.kind === 'canvas' ? v.scene : undefined}
+    data-tone={v.kind === 'compare' ? v.tone ?? 'dark' : undefined}
+    data-fit={v.kind === 'compare' ? v.fit ?? 'cover' : undefined}
+    data-options={v.kind === 'compare' ? JSON.stringify(v.b) : undefined}
+    data-scrub={v.kind === 'video' ? String(!!v.scrub) : undefined}
+    data-vfit={v.kind === 'video' ? v.fit ?? 'cover' : undefined}
+    data-chips={v.kind === 'video' ? v.chips : undefined}
+    data-sprite={v.kind === 'frames' ? v.sprite : undefined}
+    data-frames={v.kind === 'frames' ? v.frames : undefined}
+    data-size={v.kind === 'frames' ? v.size : undefined}
+    role="img"
+    aria-label={`${title}: ${v.caption}`}
+  >
+    {v.kind === 'compare' && (
+      <>
+        <img class="pm-b" src={v.b[0].src} alt="" loading="lazy" decoding="async" />
+        <img class="pm-a" src={v.a.src} alt="" loading="lazy" decoding="async" />
+        <div class="pm-divider" aria-hidden="true"></div>
+        <span class="pm-lbl pm-lbl-a" aria-hidden="true">{v.a.label}</span>
+        <span class="pm-lbl pm-lbl-b" aria-hidden="true" title={v.b.length > 1 ? 'Click to switch' : undefined}>{v.b[0].label}</span>
+      </>
+    )}
+    {v.kind === 'video' && (
+      <>
+        <video data-src={v.src} poster={v.poster} muted loop playsinline preload="none" aria-hidden="true"></video>
+        <div class="pm-progress" aria-hidden="true"><i></i></div>
+      </>
+    )}
+    {v.kind === 'frames' && (
+      <>
+        <canvas aria-hidden="true"></canvas>
+        <div class="pm-progress" aria-hidden="true"><i></i></div>
+        <span class="pm-lbl pm-lbl-a" aria-hidden="true">{v.from}</span>
+        <span class="pm-lbl pm-lbl-b" aria-hidden="true">{v.to}</span>
+      </>
+    )}
+    {v.kind === 'canvas' && <canvas aria-hidden="true"></canvas>}
+    <span class="pm-caption">{v.caption}</span>
+    <span class="pm-hint" aria-hidden="true">{v.hint}</span>
+  </div>
+) : img ? (
+  <div class={cls}><img src={img} alt={title} loading="lazy" /></div>
+) : null}
+
+<script>
+  import { initViz } from '../scripts/viz';
+  document.addEventListener('astro:page-load', initViz);
+</script>
+
+<style is:global>
+  :root { --viz-cool: #93b4d6; --viz-good: #8fc79c; --viz-bad: #e3907a; }
+  [data-theme='light'] { --viz-cool: #3c6894; --viz-good: #3d8a55; --viz-bad: #bd5a40; }
+
+  .pm { position: relative; isolation: isolate; user-select: none; -webkit-user-select: none; }
+  .pm.pm-hero { border-radius: var(--radius); border: 1px solid var(--border); margin: 26px 0; }
+  .pm canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .pm video { position: absolute; inset: 0; }
+  .pm[data-vfit='contain'] video { object-fit: contain; transform: none !important; }
+  .pm[data-chips='top'] .pm-caption { bottom: auto; left: auto; top: 10px; right: 10px; }
+  .pm[data-chips='top'] .pm-hint { bottom: auto; right: auto; top: 10px; left: 10px; transform: translateY(-3px); }
+
+  /* Chips: one caption (what) and one hint (how), same on every visual. */
+  .pm-caption, .pm-hint, .pm-lbl {
+    position: absolute; z-index: 3;
+    font: 500 0.72rem/1 var(--font-body);
+    padding: 5px 7px; border-radius: 6px; white-space: nowrap;
+    color: #eef1ea; background: rgba(15, 19, 16, 0.66);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    pointer-events: none;
+  }
+  .pm-caption { left: 10px; bottom: 10px; }
+  .pm-hint { right: 10px; bottom: 10px; opacity: 0; transform: translateY(3px); transition: opacity 0.2s, transform 0.2s; }
+  .pm-hint::before { content: '◐ '; color: var(--accent-text); }
+  .card:hover .pm-hint, .pm:hover .pm-hint { opacity: 1; transform: none; }
+  .pm-hero .pm-caption, .pm-hero .pm-hint, .pm-hero .pm-lbl { font-size: 0.74rem; padding: 6px 9px; }
+
+  /* Compare slider */
+  .pm-compare { --x: 50%; }
+  .pm-compare[data-tone='light'] { background: #fff; }
+  .pm-compare[data-tone='dark'] { background: #000; }
+  .pm-compare img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: none !important; }
+  .pm-compare[data-fit='contain'] img { object-fit: contain; }
+  .pm-compare .pm-a { clip-path: inset(0 calc(100% - var(--x)) 0 0); }
+  .pm-divider { position: absolute; top: 0; bottom: 0; left: var(--x); width: 0; z-index: 2; }
+  .pm-divider::before { content: ''; position: absolute; top: 0; bottom: 0; left: -1px; width: 2px; background: var(--accent); box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.6); }
+  .pm-divider::after {
+    content: '‹ ›'; position: absolute; top: 50%; left: 0; transform: translate(-50%, -50%);
+    width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--on-accent);
+    font: 600 12px/26px var(--font-body); text-align: center; letter-spacing: -1px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+  /* Method labels sit in fixed corners and fade out as the divider covers their side. */
+  .pm-lbl { top: 10px; transition: opacity 0.15s; }
+  .pm-lbl-a { left: 10px; }
+  .pm-lbl-b { right: 10px; }
+  .pm-compare .pm-lbl-a::before { content: '● '; color: var(--accent-text); }
+  .pm-frames .pm-lbl { opacity: 0.35; }
+  .pm-frames .pm-lbl.is-on { opacity: 1; }
+  .pm-lbl-b.is-switch { pointer-events: auto; cursor: pointer; }
+  .pm-lbl-b.is-switch::after { content: ' ⇄'; color: var(--accent-text); }
+  .pm-lbl-b.is-switch:hover { background: rgba(15, 19, 16, 0.88); }
+
+  /* Timeline for scrubbable media */
+  .pm-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; z-index: 3; background: rgba(255, 255, 255, 0.12); }
+  .pm-progress i { position: absolute; inset: 0; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+  .pm-frames, .pm-video { background: #000; }
+  .pm-canvas { background: var(--bg-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pm-hint { transition: none; }
+  }
+</style>

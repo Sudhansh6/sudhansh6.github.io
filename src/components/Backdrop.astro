@@ -1,0 +1,286 @@
+---
+// Site-wide 3D backdrop: a field of sage points on a slowly breathing surface, seen in
+// perspective: an optimisation surface that periodically resolves into pixels. The pointer raises a soft swell and a click drops a ripple. Full strength behind
+// the home hero, faint elsewhere; persisted across client-side navigation.
+---
+
+<canvas class="backdrop" aria-hidden="true" transition:persist="backdrop"></canvas>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('canvas.backdrop')!;
+  const ctx = canvas.getContext('2d')!;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+
+  let W = 0, H = 0, dpr = 1, f = 1;
+  let grid: Float32Array = new Float32Array(0); // x, z pairs
+  let rgb = '121, 195, 129';
+  let home = false, base = 1;
+  const CAM_Y = 2.3, CAM_Z = -3.2, PITCH = 0.36;
+  const cp = Math.cos(PITCH), sp = Math.sin(PITCH);
+
+  function layout() {
+    dpr = Math.min(2, devicePixelRatio || 1);
+    W = innerWidth; H = innerHeight;
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    f = Math.max(W, H * 1.3) * 0.62;
+    const small = W < 700;
+    const nx = small ? 60 : 110, nz = small ? 24 : 34;
+    NX = nx;
+    grid = new Float32Array(nx * nz * 2);
+    let k = 0;
+    for (let j = 0; j < nz; j++) for (let i = 0; i < nx; i++) {
+      grid[k++] = -9 + (18 * i) / (nx - 1);
+      grid[k++] = -0.5 + (11 * j) / (nz - 1);
+    }
+  }
+
+  // Pointer swell (smoothed) and click ripples, all on the y = 0 plane.
+  const swell = { x: 0, z: 3, a: 0, ta: 0 };
+  const ripples: { x: number; z: number; t0: number }[] = [];
+  let yaw = 0;
+
+  function toPlane(sx: number, sy: number) {
+    const dx = (sx - W / 2) / f, dy = -(sy - H * 0.42) / f;
+    const y = dy * cp - sp, z1 = dy * sp + cp; // undo pitch for a camera-space ray (dx, dy, 1)
+    const c = Math.cos(yaw), s = Math.sin(yaw);
+    const wx = dx * c + z1 * s, wz = -dx * s + z1 * c;
+    if (y >= -1e-3) return null;
+    const t = -CAM_Y / y;
+    return { x: wx * t, z: CAM_Z + wz * t };
+  }
+
+  function height(x: number, z: number, t: number) {
+    let y = 0.26 * Math.sin(0.5 * x + 0.45 * t) * Math.cos(0.38 * z - 0.3 * t)
+      + 0.14 * Math.sin(0.8 * (x + z) - 0.6 * t)
+      + 0.06 * Math.sin(1.7 * x - 1.1 * z + 0.9 * t);
+    if (swell.a > 0.01) {
+      const d2 = (x - swell.x) ** 2 + (z - swell.z) ** 2;
+      y += swell.a * 0.55 * Math.exp(-d2 / 2.2);
+    }
+    for (const r of ripples) {
+      const age = t - r.t0, front = 2.4 * age;
+      const d = Math.hypot(x - r.x, z - r.z) - front;
+      y += 0.45 * Math.exp(-age / 1.6) * Math.exp(-(d * d) / 0.9) * Math.cos(3.2 * d);
+    }
+    return y;
+  }
+
+  // Two readings of the same surface:
+  //   wave  - contour lines of a loss surface, with particles running gradient descent on it
+  //           (always on);
+  //   pixel - the surface rasterised into a posterised pixel mosaic (image processing), fading in
+  //           as an overlay every other period.
+  // `?bd=wave|pixel` pins one reading (handy for screenshots).
+  let NX = 0;
+  let SX = new Float32Array(0), SY = new Float32Array(0), ZC = new Float32Array(0), HY = new Float32Array(0);
+  const PERIOD = 12, FADE = 3;
+  const pinned = ['wave', 'pixel'].indexOf(new URLSearchParams(location.search).get('bd') ?? '');
+  function weights(t: number): [number, number] {
+    if (pinned >= 0) return [pinned === 0 ? 1 : 0, pinned === 1 ? 1 : 0];
+    const ss = (x: number) => { const m = Math.min(1, Math.max(0, x)); return m * m * (3 - 2 * m); };
+    const u = t % (2 * PERIOD);                       // wave alone for one period, then pixels
+    const pixel = u < PERIOD ? ss((u - (PERIOD - FADE)) / FADE) : 1 - ss((u - (2 * PERIOD - FADE)) / FADE);
+    return [1 - 0.3 * pixel, pixel];
+  }
+
+  // Gradient-descent particles living on the surface (world x, z), with short trails.
+  const MOVERS = 4, TRAIL = 46;
+  const movers = Array.from({ length: MOVERS }, (_, i) => ({ x: 0, z: 0, vx: 0, vz: 0, trail: new Float32Array(TRAIL * 2), n: 0, age: 0, seed: i * 1.7 }));
+  function respawn(m: typeof movers[number], t: number) {
+    m.x = -6 + 12 * ((Math.sin(t * 3.1 + m.seed * 9.3) + 1) / 2);
+    m.z = 1.2 + 6 * ((Math.cos(t * 2.3 + m.seed * 4.1) + 1) / 2);
+    m.vx = m.vz = 0; m.n = 0; m.age = 0;
+  }
+  movers.forEach((m, i) => respawn(m, i * 2.9));
+  let lastT = 0;
+  function stepMovers(t: number) {
+    const dt = Math.min(0.05, Math.max(0, t - lastT)); lastT = t;
+    for (const m of movers) {
+      const h = 0.04;
+      const gx = (height(m.x + h, m.z, t) - height(m.x - h, m.z, t)) / (2 * h);
+      const gz = (height(m.x, m.z + h, t) - height(m.x, m.z - h, t)) / (2 * h);
+      m.vx = 0.92 * m.vx - 2.6 * gx * dt; m.vz = 0.92 * m.vz - 2.6 * gz * dt; // momentum SGD
+      m.x += m.vx; m.z += m.vz; m.age += dt;
+      if (m.n === 0 || Math.hypot(m.x - m.trail[((m.n - 1) % TRAIL) * 2], m.z - m.trail[((m.n - 1) % TRAIL) * 2 + 1]) > 0.06) {
+        m.trail[(m.n % TRAIL) * 2] = m.x; m.trail[(m.n % TRAIL) * 2 + 1] = m.z; m.n++;
+      }
+      if (m.age > 14 || Math.abs(m.x) > 8.5 || m.z < 0.6 || m.z > 9.5) respawn(m, t);
+    }
+  }
+
+  let cosY = 1, sinY = 0;
+  const P = { x: 0, y: 0, z: 0 };
+  function project(x: number, y: number, z: number) {
+    const px = x, pz = z - CAM_Z, py = y - CAM_Y;
+    const x1 = px * cosY - pz * sinY, z1 = px * sinY + pz * cosY;
+    const yc = py * cp + z1 * sp, zc = -py * sp + z1 * cp;
+    P.z = zc; P.x = W / 2 + (f * x1) / zc; P.y = H * 0.42 - (f * yc) / zc;
+    return zc > 0.4;
+  }
+  const fog = (zc: number) => Math.min(1, Math.max(0, (13 - zc) / 9));
+
+  const CELL = 12;
+  let cells = new Float32Array(0), cols = 0, rowsC = 0;
+
+  function draw(t: number) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    yaw = 0.12 * Math.sin(t * 0.05);
+    cosY = Math.cos(yaw); sinY = Math.sin(yaw);
+    swell.a += (swell.ta - swell.a) * 0.05;
+    while (ripples.length && t - ripples[0].t0 > 7) ripples.shift();
+    const [wWave, wPixel] = weights(t);
+    const N = grid.length / 2, rows = N / NX;
+    if (SX.length !== N) { SX = new Float32Array(N); SY = new Float32Array(N); ZC = new Float32Array(N); HY = new Float32Array(N); }
+    for (let k = 0; k < N; k++) {
+      const x = grid[k * 2], z = grid[k * 2 + 1], y = height(x, z, t);
+      HY[k] = y;
+      if (project(x, y, z)) { SX[k] = P.x; SY[k] = P.y; ZC[k] = P.z; } else ZC[k] = 0;
+    }
+
+    // 1. Loss surface: contour rows with crest dots.
+    if (wWave > 0.01) {
+      ctx.lineWidth = 1;
+      for (let j = rows - 1; j >= 0; j--) {
+        let started = false, fr = 0;
+        ctx.beginPath();
+        for (let i = 0; i < NX; i++) {
+          const k = j * NX + i;
+          if (!ZC[k]) { started = false; continue; }
+          fr = fog(ZC[k]);
+          if (started) ctx.lineTo(SX[k], SY[k]); else { ctx.moveTo(SX[k], SY[k]); started = true; }
+        }
+        if (fr < 0.02) continue;
+        ctx.strokeStyle = `rgba(${rgb}, ${(0.26 * fr * wWave).toFixed(3)})`;
+        ctx.stroke();
+        for (let i = 0; i < NX; i++) {
+          const k = j * NX + i, y = HY[k];
+          if (!ZC[k] || y <= 0.18) continue;
+          const r = Math.max(1, Math.min(2.8, 5 / ZC[k]));
+          ctx.fillStyle = `rgba(${rgb}, ${(Math.min(0.9, fr * (0.35 + 1.2 * (y - 0.18))) * wWave).toFixed(3)})`;
+          ctx.fillRect(SX[k] - r / 2, SY[k] - r / 2, r, r);
+        }
+      }
+    }
+
+    // 2. Pixels: rasterise the surface into screen cells, shade by height, posterise.
+    if (wPixel > 0.01) {
+      const c2 = Math.ceil(W / CELL), r2 = Math.ceil(H / CELL);
+      if (c2 !== cols || r2 !== rowsC) { cols = c2; rowsC = r2; cells = new Float32Array(cols * rowsC); }
+      cells.fill(0);
+      for (let k = 0; k < N; k++) {
+        if (!ZC[k]) continue;
+        const fr = fog(ZC[k]);
+        if (fr < 0.03) continue;
+        const v = fr * Math.min(1, Math.max(0.08, 0.42 + 1.1 * HY[k]));
+        const rad = Math.max(0, Math.floor((f * 0.09) / ZC[k] / CELL));
+        const cx = Math.floor(SX[k] / CELL), cy = Math.floor(SY[k] / CELL);
+        for (let yy = cy - rad; yy <= cy + rad; yy++) {
+          if (yy < 0 || yy >= rowsC) continue;
+          for (let xx = cx - rad; xx <= cx + rad; xx++) {
+            if (xx < 0 || xx >= cols) continue;
+            const q = yy * cols + xx;
+            if (v > cells[q]) cells[q] = v;
+          }
+        }
+      }
+      ctx.fillStyle = `rgb(${rgb})`;
+      for (let q = 0; q < cells.length; q++) {
+        const v = cells[q];
+        if (v < 0.05) continue;
+        ctx.globalAlpha = (Math.round(v * 5) / 5) * 0.3 * wPixel; // 5 grey levels
+        ctx.fillRect((q % cols) * CELL + 1, Math.floor(q / cols) * CELL + 1, CELL - 2, CELL - 2);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // Optimisation never stops: descent particles show in every reading, brightest on the surface.
+    stepMovers(t);
+    const mAlpha = 0.35 + 0.65 * wWave;
+    for (const m of movers) {
+      const count = Math.min(m.n, TRAIL);
+      ctx.lineWidth = 1.4; ctx.lineCap = 'round';
+      let px = 0, py = 0, have = false;
+      for (let q = 0; q < count; q++) {
+        const idx = ((m.n - count + q) % TRAIL) * 2;
+        const x = m.trail[idx], z = m.trail[idx + 1];
+        if (!project(x, height(x, z, t) + 0.02, z)) { have = false; continue; }
+        if (have) {
+          ctx.strokeStyle = `rgba(${rgb}, ${((q / count) * 0.55 * fog(P.z) * mAlpha).toFixed(3)})`;
+          ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(P.x, P.y); ctx.stroke();
+        }
+        px = P.x; py = P.y; have = true;
+      }
+      if (project(m.x, height(m.x, m.z, t) + 0.02, m.z)) {
+        const fr = fog(P.z) * mAlpha, r = Math.max(1.6, Math.min(4, 9 / P.z));
+        ctx.fillStyle = `rgba(${rgb}, ${(0.18 * fr).toFixed(3)})`;
+        ctx.beginPath(); ctx.arc(P.x, P.y, r * 3.2, 0, 7); ctx.fill();
+        ctx.fillStyle = `rgba(${rgb}, ${(0.9 * fr).toFixed(3)})`;
+        ctx.beginPath(); ctx.arc(P.x, P.y, r, 0, 7); ctx.fill();
+      }
+    }
+  }
+
+  let raf = 0, running = false;
+  const t0 = performance.now();
+  const now = () => (performance.now() - t0) / 1000;
+  function frame() {
+    raf = 0;
+    if (!running) return;
+    draw(now());
+    raf = requestAnimationFrame(frame);
+  }
+  function sync() {
+    running = !reduce.matches && !document.hidden;
+    if (running && !raf) raf = requestAnimationFrame(frame);
+    if (!running) draw(reduce.matches ? 4 : now());
+  }
+
+  function opacity() {
+    const fade = home ? Math.min(1, scrollY / (innerHeight * 0.9)) : 1;
+    canvas.style.opacity = String(home ? 1 - 0.72 * fade : base);
+  }
+  function readTheme() {
+    rgb = getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim() || rgb;
+    if (!running) draw(now());
+  }
+
+  addEventListener('resize', () => { layout(); if (!running) draw(now()); });
+  addEventListener('scroll', opacity, { passive: true });
+  addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    const p = toPlane(e.clientX, e.clientY);
+    if (p) { swell.x = p.x; swell.z = p.z; swell.ta = 1; } else swell.ta = 0;
+  }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => { swell.ta = 0; });
+  addEventListener('pointerdown', (e) => {
+    const el = e.target as Element;
+    if (el.closest('a, button, input, textarea, select, summary, label, iframe, video, [data-viz], .card, .prose, .toc')) return;
+    const p = toPlane(e.clientX, e.clientY);
+    if (!p) return;
+    ripples.push({ x: p.x, z: p.z, t0: now() });
+    if (ripples.length > 6) ripples.shift();
+  });
+  document.addEventListener('visibilitychange', sync);
+  reduce.addEventListener('change', sync);
+  new MutationObserver(readTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  document.addEventListener('astro:page-load', () => {
+    home = location.pathname === '/' || location.pathname === '/index.html';
+    base = 0.32;
+    opacity();
+    readTheme();
+  });
+
+  layout();
+  readTheme();
+  sync();
+</script>
+
+<style>
+  .backdrop {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: -1;
+    pointer-events: none; transition: opacity 0.5s ease;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 24%, #000 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 24%, #000 100%);
+  }
+</style>

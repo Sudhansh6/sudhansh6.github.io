@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { postDate } from '../lib/posts';
+import { ELSEWHERE } from '../data/elsewhere';
+
+const posts = new Map((await getCollection('posts')).map((p) => [p.id, { p, date: postDate(p.filePath) }]));
+const pick = (ids: string[]) => ids.flatMap((id) => (posts.has(id) ? [posts.get(id)!] : []));
+
+// Course notes, clustered by subject so the page reads as a short shelf instead of a long feed.
+const shelves = [
+  { title: 'AI & machine learning', ids: ['Advanced-Computer-Vision', 'rl-theory', 'ai-agents', 'Statistical-NLP', 'data-systems-for-ml', 'machine-learning-systems', 'brains-and-ai', 'Machine-Learning-Cheatsheet'] },
+  { title: 'Computer science', ids: ['Design-and-Analysis-of-Algorithms', 'operating-systems', 'dbms', 'automata', 'ipl', 'NumAn', 'programming'] },
+  { title: 'Math & beyond', ids: ['Lattices-in-Cryptography', 'Mathematics-for-Finance', 'philosophy'] },
+].map((s) => ({ ...s, items: pick(s.ids) }));
+const older = pick(['Windows-11', 'Fix-Python-Ubuntu']);
+const shelved = new Set([...shelves.flatMap((s) => s.ids), ...older.map(({ p }) => p.id)]);
+const explainers = [...posts.values()]
+  .filter(({ p }) => !shelved.has(p.id))
+  .sort((a, b) => (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0));
+
+// One line per entry: the post's own excerpt, trimmed to its first sentence.
+const FALLBACK: Record<string, string> = {
+  'Advanced-Computer-Vision': 'NeRFs, 3D reconstruction, texture synthesis, and generative models for vision.',
+  'GANs-for-Compressed-Sensing': 'Using generative models instead of sparsity as the prior for compressed sensing.',
+};
+const blurb = (p: { id: string; data: { excerpt?: string; description?: string } }) => {
+  const text = (p.data.excerpt || p.data.description || FALLBACK[p.id] || '').trim();
+  const first = text.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? text;
+  return first.length > 150 ? first.slice(0, 147).replace(/\s+\S*$/, '') + '…' : first;
+};
+const year = (d?: Date) => (d ? String(d.getUTCFullYear()) : '');
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+---
+
+<Base title="Notes — Sudhansh Peddabomma" description="Course notes and explainers by Sudhansh Peddabomma." active="writing" searchable={false}>
+  <div class="wrap">
+    <section class="hero" style="padding-top: 60px;">
+      <h1>Notes</h1>
+      <p class="lede">Things I've learned and wanted to write down properly. Press <kbd>/</kbd> to search inside all of them.</p>
+    </section>
+
+    <section class="section">
+      <h2 class="notes-h">Course notes</h2>
+      <div class="shelves">
+        {shelves.map((s) => (
+          <div class="shelf">
+            <h3>{s.title}</h3>
+            <ul>
+              {s.items.map(({ p, date }) => (
+                <li><a href={`/writing/${p.id}`}>{p.data.title}</a><span>{year(date)}</span>{blurb(p) && <p>{blurb(p)}</p>}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="notes-h">Explainers</h2>
+      <ul class="explainers">
+        {explainers.map(({ p, date }) => (
+          <li><a href={`/writing/${p.id}`}>{p.data.title}</a><span>{year(date)}</span>{blurb(p) && <p>{blurb(p)}</p>}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2 class="notes-h">Published elsewhere</h2>
+      <ul class="explainers">
+        {ELSEWHERE.map((e) => (
+          <li><a href={e.url} target="_blank" rel="noopener">{e.title} <span class="ext">↗</span></a><span>{e.venue} · {fmt(e.date)}</span><p>{e.blurb}</p></li>
+        ))}
+      </ul>
+      {older.length > 0 && (
+        <details class="older">
+          <summary>Older posts</summary>
+          <ul class="explainers">
+            {older.map(({ p, date }) => (
+              <li><a href={`/writing/${p.id}`}>{p.data.title}</a><span>{year(date)}</span></li>
+            ))}
+          </ul>
+        </details>
+      )}
+    </section>
+  </div>
+</Base>
+
+<style>
+  .notes-h { font-size: 1.5rem; margin-bottom: 18px; }
+  .shelves { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px 36px; }
+  .shelf h3 {
+    font: 500 0.8rem var(--font-body); letter-spacing: 0.04em; color: var(--accent-text);
+    margin: 0 0 6px; text-transform: uppercase;
+  }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 2px 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  li p { flex-basis: 100%; margin: 0; font-size: 0.86rem; line-height: 1.45; color: var(--muted); }
+  li a { color: var(--text); text-decoration: none; font-weight: 500; }
+  li a:hover { color: var(--accent-text); }
+  li span { color: var(--faint); font-size: 0.82rem; white-space: nowrap; }
+  li .ext { font-size: 0.8em; }
+  .explainers { columns: 2 300px; column-gap: 36px; }
+  .explainers li { break-inside: avoid; }
+  .older { margin-top: 22px; }
+  .older summary { cursor: pointer; color: var(--muted); font-size: 0.9rem; margin-bottom: 8px; }
+  kbd {
+    font: 0.8em var(--font-mono); border: 1px solid var(--border-strong); border-radius: 4px;
+    padding: 1px 5px; color: var(--text);
+  }
+</style>

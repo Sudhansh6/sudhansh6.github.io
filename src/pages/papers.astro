@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import papers from '../data/papers.json';
+
+const sorted = [...papers].sort((a, b) => b.year - a.year);
+---
+
+<Base title="Research — Sudhansh Peddabomma" description="Publications by Sudhansh Peddabomma." active="papers">
+  <div class="wrap">
+    <section class="hero" style="padding-top: 60px;">
+      <h1>Research</h1>
+      <p class="lede">Published work in computational imaging, compressed sensing, and robotics.</p>
+    </section>
+
+    <section class="section">
+      {sorted.map((p) => (
+        <article class="paper">
+          <h3 class="paper-title">{p.title}</h3>
+          <p class="paper-meta">
+            {p.authors.join(', ')}<br />
+            <span class="venue">{p.venue}</span>, {p.year}
+          </p>
+          {p.abstract && <p style="font-size: 0.93rem; color: var(--muted);">{p.abstract}</p>}
+          <div class="paper-links">
+            {p.pdf && <a class="tag" href={p.pdf} target="_blank" rel="noopener">PDF</a>}
+            {p.doi && <a class="tag" href={p.doi} target="_blank" rel="noopener">DOI</a>}
+            {p.url && !p.doi && <a class="tag" href={p.url} target="_blank" rel="noopener">Link</a>}
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <section class="section">
+      <p style="color: var(--faint); font-size: 0.9rem;">
+        Also on <a href="https://scholar.google.com/citations?user=hbnJsNYAAAAJ">Google Scholar</a>.
+      </p>
+    </section>
+  </div>
+</Base>
