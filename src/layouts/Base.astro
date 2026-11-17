@@ -136,12 +136,7 @@ const canonical = new URL(Astro.url.pathname, 'https://sudhansh6.github.io').toS
           html.dataset.theme = next;
           try { localStorage.setItem('theme', next); } catch (e) {}
         });
-        document.addEventListener('keydown', function (e) {
-          if (e.key === '/' && !/input|textarea/i.test(document.activeElement.tagName)) {
-            e.preventDefault();
-            document.getElementById('search-open').click();
-          }
-        });
+        // "/" and Cmd/Ctrl+K are handled by Search.astro, whose script runs once.
       })();
     </script>
     <script is:inline>

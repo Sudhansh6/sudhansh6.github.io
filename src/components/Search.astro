@@ -3,7 +3,7 @@
 // Degrades gracefully in dev when the index doesn't exist yet.
 ---
 
-<dialog class="search-dialog" id="search-dialog" aria-label="Site search">
+<dialog class="search-dialog" id="search-dialog" aria-label="Site search" transition:persist="site-search">
   <div class="search-box">
     <input id="search-input" type="search" placeholder="Search projects, papers, notes…" autocomplete="off" />
   </div>
@@ -13,10 +13,12 @@
 </dialog>
 
 <script>
+  // This script runs once, and the dialog persists across client-side navigation, so these nodes
+  // stay valid. The header's search button is swapped on every navigation, so it is reached
+  // through a delegated listener instead of being bound directly.
   const dialog = document.getElementById('search-dialog');
   const input = document.getElementById('search-input');
   const results = document.getElementById('search-results');
-  const openBtn = document.getElementById('search-open');
   let pagefind = null;
   let loading = null;
 
@@ -100,13 +102,32 @@
     timer = setTimeout(() => run(input.value), 160);
   });
 
-  openBtn.addEventListener('click', () => {
+  function openSearch() {
+    if (dialog.open) { input.focus(); return; }
     dialog.showModal();
     input.value = '';
     results.innerHTML = '<div class="search-empty">Type to search the whole site.</div>';
     setTimeout(() => input.focus(), 30);
     ensureIndex();
+  }
+
+  document.addEventListener('click', (e) => {
+    if (e.target.closest?.('#search-open')) openSearch();
   });
+
+  // "/" opens search, as does Cmd/Ctrl+K, unless the visitor is typing somewhere.
+  document.addEventListener('keydown', (e) => {
+    const el = document.activeElement;
+    const typing = el?.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el?.tagName || '');
+    const slash = e.key === '/' && !typing && !e.metaKey && !e.ctrlKey && !e.altKey;
+    const cmdK = e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey) && !e.altKey;
+    if (!slash && !cmdK) return;
+    e.preventDefault();
+    openSearch();
+  });
+
+  // Following a result navigates client-side; close the dialog so it does not carry over.
+  document.addEventListener('astro:before-swap', () => { if (dialog.open) dialog.close(); });
 
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) dialog.close();
