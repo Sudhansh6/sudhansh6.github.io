@@ -10,7 +10,7 @@ links:
     url: https://icms.ac.uk/wp-content/uploads/archive/downloads/MARTA-BETCKE.pdf
 ---
 
-Joint work with Marta M. Betcke, Andreas Hauptmann, WonTek Hong, Elliott Macneil and Francesc (Kiko) Rullan. We wrote most of a paper, *Learned Stochastic Primal Dual for large scale and fully 3D tomographic reconstruction*, but never finished it. This page pulls the draft's ideas and results together; the numbers are from our experiments and have not been peer reviewed. Marta presented the method at ICMS ([abstract](https://icms.ac.uk/wp-content/uploads/archive/downloads/MARTA-BETCKE.pdf)).
+Joint work with Marta M. Betcke, Andreas Hauptmann, WonTek Hong, Elliott Macneil and Francesc (Kiko) Rullan. This page summarizes the method and results from our manuscript, *Learned Stochastic Primal Dual for large scale and fully 3D tomographic reconstruction*. The results come from our experiments and have not been peer reviewed. Marta presented the method at ICMS ([abstract](https://icms.ac.uk/wp-content/uploads/archive/downloads/MARTA-BETCKE.pdf)).
 
 ## The problem
 
