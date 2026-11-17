@@ -52,8 +52,11 @@ const hasBody = (project.body ?? '').trim().length > 0;
   .prose :global(h2), .prose :global(h3) { scroll-margin-top: 84px; }
   .prose :global(.katex-display) { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
   .prose :global(.katex) { font-size: 1.04em; }
-  .prose :global(table) { border-collapse: collapse; display: block; overflow-x: auto; margin: 1.2rem 0 1.6rem; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
-  .prose :global(th), .prose :global(td) { padding: 0.5rem 1.1rem 0.5rem 0; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+  /* result tables: shrink to fit and sit centred; still scroll sideways on narrow screens */
+  .prose :global(table) { border-collapse: collapse; display: block; overflow-x: auto; width: fit-content; max-width: 100%; margin: 1.2rem auto 1.6rem; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
+  .prose :global(th), .prose :global(td) { padding: 0.5rem 0.9rem; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+  .prose :global(th:first-child), .prose :global(td:first-child) { text-align: left; padding-left: 0; }
+  .prose :global(th:last-child), .prose :global(td:last-child) { padding-right: 0; }
   .prose :global(th) { color: var(--muted); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase; }
   .prose :global(tr:last-child td) { border-bottom: 0; }
 </style>

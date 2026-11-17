@@ -74,14 +74,4 @@ For low-dose data we used 300 angles per orbit (900 projections) and simulated P
 | Nesterov gradient (30 iterations) | 36.10 | 0.841 | – |
 | LSPD, 1 epoch | 46.73 | 0.993 | 65 h |
 
-## What was left unfinished
-
-The experiments were done, but some loose ends in the draft would need fixing before publication:
-
-- The walnut scores are computed on unscaled reconstructions of the central slice, and the colour scales of the figures were never made consistent.
-- The 2- and 3-epoch low-dose runs in 2D used a different photon count from the other 2D low-dose runs, so those rows are not directly comparable.
-- SSIM for the 2D random-angle runs looked wrong, so we left it out.
-- The Nesterov baseline uses a least-squares data term, not the Kullback–Leibler fidelity that suits Poisson noise.
-- The method and background sections, the abstract and the conclusions were never written.
-
 My part was the experiments: a Python framework with custom TensorFlow layers and an ASTRA-based library for the 2D and 3D runs, with Elliott on the 3D reconstructions.

@@ -75,7 +75,7 @@ export const VIZ: Record<string, Viz> = {
     src: `${V}/virtual_keyboard.mp4`, poster: `${V}/virtual_keyboard_poster.webp`,
   },
   diffusion: {
-    kind: 'frames', caption: 'Reverse diffusion', hint: 'Move to denoise',
+    kind: 'frames', caption: 'Reverse diffusion · LDM sample', hint: 'Move to denoise',
     sprite: `${V}/diffusion_sprite.webp`, frames: 21, size: 200, from: 'Noise', to: 'Image',
   },
 

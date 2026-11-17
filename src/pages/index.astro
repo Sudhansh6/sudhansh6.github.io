@@ -4,6 +4,7 @@ import HeroPortrait from '../components/HeroPortrait.astro';
 import Base from '../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
 import papers from '../data/papers.json';
+import { ELSEWHERE as articles } from '../data/elsewhere';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.importance - b.data.importance);
 const featured = projects.slice(0, 6);
@@ -72,8 +73,8 @@ function projectHref(p) {
 
     <section class="section">
       <div class="section-head">
-        <span><span class="sec-index">02</span><h2>Research</h2></span>
-        <a href="/papers">All research →</a>
+        <span><span class="sec-index">02</span><h2>Publications</h2></span>
+        <a href="/papers">All publications →</a>
       </div>
       <div>
         {selectedPapers.map((p) => (
@@ -88,6 +89,15 @@ function projectHref(p) {
               {p.doi && <a class="tag" href={p.doi} target="_blank" rel="noopener">DOI</a>}
               {p.url && !p.doi && <a class="tag" href={p.url} target="_blank" rel="noopener">Link</a>}
             </div>
+          </article>
+        ))}
+        {[...articles].sort((a, b) => b.date.localeCompare(a.date)).map((a) => (
+          <article class="paper">
+            <h3 class="paper-title"><a href={a.url} target="_blank" rel="noopener">{a.title}</a></h3>
+            <p class="paper-meta">
+              {a.authors.join(', ')}<br />
+              <span class="venue">{a.venue}</span>, {a.date.slice(0, 4)}
+            </p>
           </article>
         ))}
       </div>

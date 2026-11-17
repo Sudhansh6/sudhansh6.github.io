@@ -301,6 +301,10 @@ a:hover { color: var(--accent-text); text-decoration-color: var(--accent-text); 
   border-radius: var(--radius-sm); padding: 16px; overflow: auto; font-size: 0.86rem;
 }
 .prose code { font-family: var(--font-mono); font-size: 0.88em; }
+/* Shiki emits both themes as CSS variables (defaultColor: false); follow the site theme. */
+.astro-code { background-color: var(--code-bg) !important; }
+.astro-code, .astro-code span { color: var(--shiki-dark); font-style: var(--shiki-dark-font-style); font-weight: var(--shiki-dark-font-weight); }
+[data-theme="light"] .astro-code, [data-theme="light"] .astro-code span { color: var(--shiki-light); font-style: var(--shiki-light-font-style); font-weight: var(--shiki-light-font-weight); }
 .prose :not(pre) > code { background: var(--code-bg); padding: 2px 6px; border-radius: 5px; }
 .back-link { display: inline-block; margin-bottom: 22px; color: var(--muted); text-decoration: none; font-size: 0.92rem; }
 .back-link:hover { color: var(--accent-text); }

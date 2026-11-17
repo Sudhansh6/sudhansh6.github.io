@@ -11,5 +11,8 @@ export default defineConfig({
     // Notes were written for Jekyll/kramdown: `$$...$$` is math (inline or display), single `$` is text.
     remarkPlugins: [remarkInclude, [remarkMath, { singleDollarTextMath: false }]],
     rehypePlugins: [[rehypeKatex, { throwOnError: false, strict: false }]],
+    // Earthy dual themes that sit with the sage palette; global.css picks one per site theme and
+    // paints the block with the site's own --code-bg.
+    shikiConfig: { themes: { light: 'everforest-light', dark: 'everforest-dark' }, defaultColor: false },
   },
 });

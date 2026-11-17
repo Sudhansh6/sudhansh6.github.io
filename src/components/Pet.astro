@@ -11,8 +11,8 @@
 </div>
 
 <script>
-  // Moss: a small sherpa-fleece creature (fur modelled on Sudhansh's olive hoodie) that lives at
-  // the bottom of the viewport and behaves like a tiny agent. It runs little tasks, does tricks,
+  // Moss: a little 👾 pixel invader that lives at the bottom of the viewport and behaves like a
+  // tiny agent. It runs little tasks, does tricks,
   // can be clicked, dragged and thrown, and can sit inside any `[data-text-flow]` paragraph,
   // where Pretext reflows the words around it.
   import { flowTargetAt, scanFlowTargets, setFlowObstacle, visibleFlowTargets } from '../scripts/text-flow';
@@ -36,8 +36,11 @@
     if (!layer || !anchor || !avatar || !canvas || !ctx) return;
 
     const S = 80; // canvas size (CSS px)
-    const R = 18.5; // body radius
-    const BODY_DY = 70 - R - 4 - S / 2; // drawn body centre sits this far below the avatar centre
+    const P = 3.5; // invader pixel size (CSS px)
+    const COLS = 12;
+    const ROWS = 12;
+    const BODY_H = ROWS * P;
+    const BODY_DY = 70 - BODY_H / 2 - S / 2; // drawn body centre sits this far below the avatar centre
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     const coarsePointer = matchMedia('(pointer: coarse)');
     const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
@@ -45,33 +48,63 @@
     const pick = <T,>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)];
     const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 
-    // ---------- sherpa fleece ----------
-    // Colours sampled from the hoodie (median rgb(27,29,28), tips rgb(49,60,46)..rgb(75,81,69)),
-    // lifted a little so the pet still reads on the dark theme.
-    const FUR = ['#20271d', '#2c3628', '#3a4634', '#4f5c46', '#6c785f'];
+    // ---------- 👾 sprite ----------
+    // Traced from the 👾 emoji (12 × 12): claw tips at the top corners, ears with a notch between
+    // them, tall eye slots, arms that bracket the body and join it low down, two legs, feet set wide.
+    // The second frame flicks the claws out and tucks the feet in, so it marches.
+    const BODY = ['X.XXX..XXX.X', 'X.XXXXXXXX.X', 'X.XXXXXXXX.X', 'X.X.XXXX.X.X', 'X.X.XXXX.X.X', '.XXXXXXXXXX.', '..XXXXXXXX..', '...XX..XX...'];
+    const FRAMES = [
+      ['.X........X.', '.X.X....X.X.', ...BODY, '..X......X..', '.X........X.'],
+      ['X..........X', '.X.X....X.X.', ...BODY, '...X....X...', '..X......X..'],
+    ].map((rows) => rows.map((r) => [...r].map((ch) => ch === 'X')));
+    const EYE_COLS = [3, 8];
+    const EYE_ROW = 5; // the eye slots span rows 5–6
+    const GX = (-COLS / 2) * P; // sprite origin relative to the body centre
+    const GY = -BODY_H / 2;
+    // Fleece sampled from Sudhansh's olive hoodie (median rgb(27,29,28), tips up to rgb(75,81,69)),
+    // lifted a little so it reads on the dark theme. Eyes are the original white ones.
+    const FUR = ['#20271d', '#2c3628', '#3a4634', '#4f5c46', '#6c785f']; // dark → light
     const NUB = '#9aa48a';
-    type Curl = { x: number; y: number; r: number; a: number; span: number; ph: number };
-    const curlGroups: Curl[][] = FUR.map(() => []);
-    for (let i = 0; i < 520; i++) {
-      const ang = rand(0, Math.PI * 2);
-      const rad = Math.sqrt(Math.random()) * (R + 2.5);
-      const x = Math.cos(ang) * rad;
-      const y = Math.sin(ang) * rad;
-      const light = (-0.55 * x - 0.8 * y) / R; // lit from the top left
-      const g = clamp(Math.round(2 + light * 1.3 + rand(-0.8, 0.8)), 0, FUR.length - 1);
-      curlGroups[g].push({ x, y, r: rand(0.7, 1.35), a: rand(0, Math.PI * 2), span: rand(2.8, 4.4), ph: rand(0, 6.28) });
-    }
-    const nubs = Array.from({ length: 46 }, () => {
-      const ang = rand(Math.PI * 0.85, Math.PI * 1.95);
-      const rad = Math.sqrt(Math.random()) * R;
-      return { x: Math.cos(ang) * rad, y: Math.sin(ang) * rad, r: rand(0.45, 0.85) };
-    });
-    const bumps = Array.from({ length: 26 }, (_, i) => {
-      const a = (i / 26) * Math.PI * 2 + rand(-0.08, 0.08);
-      return { a, r: rand(3.6, 5.2), d: R + rand(-0.6, 0.9), ph: rand(0, 6.28) };
-    });
-    // two ear tufts
-    bumps.push({ a: -2.05, r: 5.6, d: R + 1.8, ph: 1 }, { a: -1.1, r: 5.6, d: R + 1.8, ph: 2.4 });
+    const EYE = { white: '#eef1e6' };
+    const isOn = (g: boolean[][], r: number, c: number) => r >= 0 && r < g.length && c >= 0 && c < COLS && g[r][c];
+    // Sherpa fleece, like the hoodie: dense short curls with light nubbly tips and a soft, uneven
+    // outline. Everything is scattered at random, so no edge or row repeats a pattern.
+    type Strand = { x: number; y: number; a: number; l: number; ph: number; r: number };
+    type Curl = { x: number; y: number; rad: number; a: number; span: number; ph: number; r: number };
+    type Bump = { x: number; y: number; rad: number; r: number };
+    const furOf = (grid: boolean[][]) => {
+      const strands: Strand[][] = FUR.map(() => []);
+      const curls: Curl[][] = FUR.map(() => []);
+      const bumps: Bump[] = [];
+      const nubs: { x: number; y: number; rad: number; r: number }[] = [];
+      const tone = (r: number) => clamp(Math.round(2.6 - (r / ROWS) * 1.4 + rand(-0.7, 0.7)), 1, 3);
+      grid.forEach((row, r) => row.forEach((v, c) => {
+        if (!v) return;
+        const px = GX + c * P;
+        const py = GY + r * P;
+        for (const [dc, dr, ang] of [[0, -1, -Math.PI / 2], [0, 1, Math.PI / 2], [-1, 0, Math.PI], [1, 0, 0]]) {
+          if (isOn(grid, r + dr, c + dc)) continue;
+          if (dr > 0 && r >= 8 && c > 1 && c < 10) continue; // keep the gaps between the legs clean
+          const along = () => rand(0.1, 0.9) * P;
+          const edge = () => ({
+            x: dc === 0 ? px + along() : px + (dc > 0 ? P : 0),
+            y: dr === 0 ? py + along() : py + (dr > 0 ? P : 0),
+          });
+          if (Math.random() < 0.7) { const e = edge(); bumps.push({ x: e.x, y: e.y, rad: rand(0.7, 1.3), r }); }
+          if (Math.random() < 0.45) {
+            const e = edge();
+            strands[tone(r)].push({ x: e.x, y: e.y, a: ang + rand(-0.9, 0.9), l: rand(0.6, 1.4), ph: rand(0, 6.28), r });
+          }
+        }
+        const n = 3 + Math.floor(Math.random() * 5);
+        for (let k = 0; k < n; k++) {
+          curls[tone(r)].push({ x: px + rand(0.3, P - 0.3), y: py + rand(0.3, P - 0.3), rad: rand(0.45, 0.85), a: rand(0, 6.28), span: rand(2.4, 4.2), ph: rand(0, 6.28), r });
+        }
+        if (Math.random() < 0.55) nubs.push({ x: px + rand(0.4, P - 0.4), y: py + rand(0.4, P - 0.4), rad: rand(0.35, 0.6), r });
+      }));
+      return { strands, curls, bumps, nubs };
+    };
+    const FURS = FRAMES.map(furOf);
 
     // ---------- state ----------
     type Mode = 'ground' | 'held' | 'air' | 'jump' | 'perched';
@@ -122,7 +155,13 @@
     let lastClickAt = 0;
     let room = 0;
     let roomShown = false;
-    let perch: { el: HTMLElement; dx: number; dy: number; until: number } | null = null;
+    // On a paragraph the pet either patrols its top edge ('ledge') or creeps through the lines
+    // along a smooth path ('creep'), parting the words around it. dx/dy are paragraph-local.
+    type CreepPath = { pts: [number, number][]; segs: number[]; total: number; s: number };
+    let perch: {
+      el: HTMLElement; kind: 'ledge' | 'creep'; dx: number; dy: number; dir: number;
+      until: number; nextCreep: number; pauseUntil: number; path: CreepPath | null;
+    } | null = null;
     let jump: { x0: number; y0: number; t0: number; dur: number; to: () => [number, number]; then: () => void; room: boolean } | null = null;
     let held: { id: number; ox: number; oy: number; px: number; py: number; vx: number; vy: number; t: number } | null = null;
     let press: { id: number; x: number; y: number; t: number } | null = null;
@@ -173,7 +212,7 @@
       const short = (s: string, n: number) => (s.length > n ? `${s.slice(0, n)}…` : `${s}…`);
       if (h && path.startsWith('/writing/') && path !== '/writing/') return `reading ${short(h, 24)}`;
       if (h && path.startsWith('/projects/') && path !== '/projects/') return `exploring ${short(h, 20)}`;
-      return pick(['reading the notes…', 'checking links…', 'fetching a paper…', 'running gradient descent…', 'tidying pixels…', 'counting walnuts…']);
+      return pick(['scanning the archives…', 'probing links…', 'retrieving a paper…', 'descending the gradient…', 'recalibrating pixels…', 'consulting the grue…']);
     }
 
     // ---------- behaviours ----------
@@ -210,33 +249,86 @@
       updateStatus();
     }
 
-    function perchOn(el: HTMLElement, x: number, y: number) {
+    const FEET = 30; // feet sit this far below the avatar centre
+    const LEDGE_DY = -FEET + 6; // stand on the first line's glyph tops, not its line box
+    const lineHeightOf = (el: HTMLElement) => {
+      const cs = getComputedStyle(el);
+      return parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.6;
+    };
+
+    function creepPath(el: HTMLElement, x0: number, y0: number): CreepPath {
       const r = el.getBoundingClientRect();
-      perch = { el, dx: x - r.left, dy: y - r.top, until: performance.now() + rand(16000, 32000) };
+      const lh = lineHeightOf(el);
+      const inY = (v: number) => clamp(v, lh * 0.55, Math.max(lh * 0.55, r.height - lh * 0.55));
+      const inX = (v: number) => clamp(v, 30, r.width - 30);
+      let dir = Math.random() < 0.5 ? -1 : 1;
+      let x = inX(x0);
+      const pts: [number, number][] = [[x0, y0]];
+      if (y0 < 0) pts.push([inX(x + dir * 26), inY(lh * 0.6)]); // dive in from the top edge
+      const n = 2 + Math.floor(Math.random() * 2);
+      for (let i = 0; i < n; i++) {
+        x = inX(x + dir * rand(70, 170));
+        if (x <= 31 || x >= r.width - 31) dir = -dir;
+        pts.push([x, inY(rand(lh * 0.6, r.height - lh * 0.6))]);
+      }
+      const xe = inX(x + dir * 30);
+      pts.push([xe, inY(lh * 0.5)], [xe, LEDGE_DY]); // climb back out on top
+      const segs = pts.slice(1).map((q, i) => Math.hypot(q[0] - pts[i][0], q[1] - pts[i][1]));
+      return { pts, segs, total: segs.reduce((a, b) => a + b, 0), s: 0 };
+    }
+
+    function pathAt(p: CreepPath): [number, number] {
+      let i = 0;
+      let acc = 0;
+      while (i < p.segs.length - 1 && acc + p.segs[i] < p.s) { acc += p.segs[i]; i++; }
+      const t = clamp((p.s - acc) / (p.segs[i] || 1), 0, 1);
+      const P = p.pts;
+      const a = P[Math.max(0, i - 1)], b = P[i], c = P[i + 1], d = P[Math.min(P.length - 1, i + 2)];
+      const cr = (k: 0 | 1) => 0.5 * (2 * b[k] + (-a[k] + c[k]) * t + (2 * a[k] - 5 * b[k] + 4 * c[k] - d[k]) * t * t + (-a[k] + 3 * b[k] - 3 * c[k] + d[k]) * t * t * t);
+      return [cr(0), cr(1)];
+    }
+
+    function perchOn(el: HTMLElement, x: number, y: number, kind: 'ledge' | 'creep' = 'ledge') {
+      const r = el.getBoundingClientRect();
+      const now = performance.now();
+      const dx = clamp(x - r.left, 26, Math.max(26, r.width - 26));
+      const dy = kind === 'ledge' ? LEDGE_DY : y - r.top;
+      perch = {
+        el, kind, dx, dy, dir: Math.random() < 0.5 ? -1 : 1,
+        until: now + rand(22000, 40000), nextCreep: now + rand(3500, 8000), pauseUntil: 0,
+        path: kind === 'creep' ? creepPath(el, dx, dy) : null,
+      };
       mode = 'perched';
       task = 'idle';
       updateStatus();
     }
 
+    // Standing on a paragraph puts the body in the gap above it. That is fine below more prose (it
+    // parts) or open space, but not tucked under a heading or figure that cannot move out of the way.
+    const hasHeadroom = (el: HTMLElement) => {
+      const prev = el.previousElementSibling as HTMLElement | null;
+      if (!prev || prev.tagName === 'P') return true;
+      return el.getBoundingClientRect().top - prev.getBoundingClientRect().bottom > 38;
+    };
+
     function hopIntoText() {
-      const targets = visibleFlowTargets();
+      const targets = visibleFlowTargets().filter(hasHeadroom);
       if (!targets.length) return false;
       const el = pick(targets);
       const r = el.getBoundingClientRect();
       const dx = rand(70, r.width - 70);
-      const dy = clamp(r.height * rand(0.3, 0.7), 22, r.height - 14);
-      jumpTo(() => { const q = el.getBoundingClientRect(); return [q.left + dx, q.top + dy]; }, () => {
+      jumpTo(() => { const q = el.getBoundingClientRect(); return [q.left + dx, q.top + LEDGE_DY]; }, () => {
         const q = el.getBoundingClientRect();
-        perchOn(el, q.left + dx, q.top + dy);
-        say(pick(['scooch over, words', 'comfy.', 'pardon me', 'room for one?']));
-      }, true, 820);
+        perchOn(el, q.left + dx, q.top + LEDGE_DY, 'ledge');
+        say(pick(['you are standing on a paragraph.', 'there is a word here.', 'sector acquired', 'patrolling.']));
+      }, false, 820);
       return true;
     }
 
     function hopDown() {
       const x = clamp(cx + rand(-160, 160), minX(), maxX());
       perch = null;
-      jumpTo(() => [x, floorY()], () => { settleOnGround(); say(pick(['bye, words', 'hop!', 'ok that was fun'])); }, false, 700);
+      jumpTo(() => [x, floorY()], () => { settleOnGround(); say(pick(['you leave the paragraph.', '>JUMP', 'exit: down'])); }, false, 700);
     }
 
     function startTrick(kind?: string) {
@@ -254,7 +346,7 @@
       if (asleep) {
         asleep = false;
         sqv -= 4;
-        say(pick(['huh? oh hi', '*yawn*', "i wasn't sleeping"]));
+        say(pick(['it is pitch black. oh. hi.', '*rebooting*', 'i was not dormant']));
         nextTaskAt = lastActivity + rand(9000, 18000);
         updateStatus();
       }
@@ -273,14 +365,14 @@
         dizzyUntil = now + 2300;
         combo = 0;
         pop('✦');
-        say('whoa… dizzy');
+        say('twisty little passages…');
       } else if (combo === 3) {
         if (mode === 'ground') startTrick('flip');
         pop('✦');
-        say('wheee!');
+        say('>THROW PET');
       } else if (combo === 1) {
         pop('♥');
-        say(pick(['hi!', 'boop!', 'hehe', 'need anything?', 'drag me into the text!']));
+        say(pick(['>HELLO', 'greetings, reader.', 'zork.', 'take me to your reader', 'drag me into the text.']));
       }
     }
 
@@ -336,7 +428,7 @@
           } else {
             const hard = Math.abs(vx) > 500;
             settleOnGround();
-            if (hard) say(pick(['again!', 'oof', 'nailed it']));
+            if (hard) say(pick(['>AGAIN', 'oof.', 'landing: nominal']));
           }
         }
       } else if (mode === 'jump' && jump) {
@@ -358,10 +450,40 @@
         if (!perch.el.isConnected) { perch = null; mode = 'air'; vx = 0; vy = 0; }
         else {
           const r = perch.el.getBoundingClientRect();
+          if (perch.kind === 'ledge') {
+            // patrol the top edge, pausing now and then, and turn at the ends
+            const walking = !asleep && !isReduced && now > perch.pauseUntil;
+            gvx = walking ? perch.dir * 24 : 0;
+            if (walking) {
+              perch.dx += perch.dir * 24 * dt;
+              if (Math.random() < dt * 0.25) perch.pauseUntil = now + rand(700, 1800);
+            }
+            if (perch.dx < 26 || perch.dx > r.width - 26) { perch.dir = perch.dx < 26 ? 1 : -1; perch.dx = clamp(perch.dx, 26, r.width - 26); }
+            perch.dy = LEDGE_DY;
+            rot *= Math.exp(-dt * 6);
+            if (!asleep && !isReduced && now > perch.nextCreep && r.height > 40) {
+              perch.kind = 'creep';
+              perch.path = creepPath(perch.el, perch.dx, perch.dy);
+              say(pick(['descending.', 'going in.', 'you enter the paragraph.']), 1500);
+            }
+          } else if (perch.path) {
+            // creep through the lines; the words part around the body
+            gvx = 0;
+            if (!asleep && !isReduced) perch.path.s += 30 * dt;
+            [perch.dx, perch.dy] = pathAt(perch.path);
+            rot = Math.sin(now / 190) * 0.07;
+            if (perch.path.s >= perch.path.total) {
+              perch.kind = 'ledge';
+              perch.path = null;
+              perch.dy = LEDGE_DY;
+              perch.nextCreep = now + rand(6000, 14000);
+              sqv += 4;
+              say(pick(['you emerge.', 'surfaced.', 'words: inspected']), 1500);
+            }
+          }
           cx = r.left + perch.dx;
           cy = r.top + perch.dy;
-          rot *= Math.exp(-dt * 6);
-          if (cy < 70 || cy > height - 40) { perch = null; mode = 'air'; vx = 0; vy = 0; say('whoa!'); }
+          if (cy < 70 || cy > height - 40) { perch = null; mode = 'air'; vx = 0; vy = 0; say('whoa.'); }
           else if (!asleep && !isReduced && now > perch.until) hopDown();
         }
       } else {
@@ -414,7 +536,7 @@
           else if (trick.kind === 'hophop' && bounceY === 0 && t < 0.85) bounceV = -190;
           else if (trick.kind === 'peek') {
             trickY = t < 0.22 ? 52 * ease(t / 0.22) : t < 0.6 ? 52 : t < 0.7 ? 52 - 62 * ease((t - 0.6) / 0.1) : -10 * (1 - ease((t - 0.7) / 0.3));
-            if (t > 0.62 && !trick.said) { trick.said = true; say('boo!'); sqv -= 6; }
+            if (t > 0.62 && !trick.said) { trick.said = true; say('grue!'); sqv -= 6; }
           }
           if (t >= 1) { trick = null; rot = 0; }
         } else rot *= Math.exp(-dt * 8);
@@ -422,12 +544,15 @@
       }
 
       // text room: grows while the pet sits in (or is held over, or is landing in) a paragraph
+      const creeping = mode === 'perched' && perch?.kind === 'creep';
       const wantRoom =
         mode === 'perched' ||
         (mode === 'held' && !!flowTargetAt(cx, cy)) ||
         (mode === 'jump' && !!jump?.room && now - jump.t0 > jump.dur * 0.5);
       room += ((wantRoom ? 1 : 0) - room) * (1 - Math.exp(-dt * (wantRoom ? 9 : 12)));
-      if (room > 0.03) { setFlowObstacle({ x: cx, y: cy + BODY_DY, r: 31 * room }); roomShown = true; }
+      // On the ledge only the paragraph above can be in the way, so the one underfoot is skipped.
+      const skip = mode === 'perched' && perch?.kind === 'ledge' ? perch.el : null;
+      if (room > 0.03) { setFlowObstacle({ x: cx, y: cy + BODY_DY, r: (creeping ? 26 : 22) * room }, skip); roomShown = true; }
       else if (roomShown) { setFlowObstacle(null); roomShown = false; }
 
       anchor.style.setProperty('--pet-x', `${(cx - 40).toFixed(2)}px`);
@@ -441,14 +566,14 @@
       const t = now / 1000;
       ctx!.clearRect(0, 0, S, S);
       const airborne = mode === 'air' || mode === 'jump' || mode === 'held';
-      const moving = mode === 'ground' && Math.abs(gvx) > 14 && !isReduced;
+      const moving = (mode === 'ground' || (mode === 'perched' && perch?.kind === 'ledge')) && Math.abs(gvx) > 14 && !isReduced;
       const happy = now < happyUntil;
       const dizzy = now < dizzyUntil;
       const blink = now < blinkUntil && !airborne;
       const breath = asleep ? Math.sin(t * 1.5) * 0.025 : Math.sin(t * 2.2) * 0.008;
 
       // shadow on the floor (or on the text when perched)
-      const above = mode === 'perched' ? 0 : Math.max(0, floorY() - cy);
+      const above = mode === 'perched' ? (perch?.kind === 'creep' ? 99 : 0) : Math.max(0, floorY() - cy);
       if (above < 40) {
         const k = 1 - above / 40;
         ctx!.fillStyle = `rgba(0,0,0,${(0.2 * k).toFixed(3)})`;
@@ -468,153 +593,86 @@
       ctx!.save();
       ctx!.translate(40, 70);
       ctx!.scale(sx, sy);
-      ctx!.translate(0, -R - 4);
+      ctx!.translate(0, -BODY_H / 2);
       ctx!.rotate(rot + (hovering && !airborne ? Math.sin(t * 13) * 0.04 : 0));
 
-      // feet
-      const step = moving ? Math.sin(hopPhase * 2) * 2.4 : 0;
-      const kick = mode === 'held' ? Math.sin(t * 17) * 2.2 : 0;
-      ctx!.fillStyle = FUR[0];
-      ctx!.beginPath();
-      ctx!.ellipse(-8 + step, R + 1 + (mode === 'held' ? 3 + kick : 0), 5, 3.4, -0.15, 0, Math.PI * 2);
-      ctx!.ellipse(8 - step, R + 1 + (mode === 'held' ? 3 - kick : 0), 5, 3.4, 0.15, 0, Math.PI * 2);
-      ctx!.fill();
+      // marching frame: the arcade two-step, faster on the move and frantic when held
+      const rate = isReduced ? (moving ? 4 : 0) : mode === 'held' ? 10 : moving ? 7 : airborne ? 5 : asleep ? 0.5 : 1.6;
+      const frameIdx = Math.floor(t * rate) % 2;
+      const grid = FRAMES[frameIdx];
+      const x0 = GX;
+      const y0 = GY;
+      // a little scanline glitch when it is poked, shaken or thrown
+      const glitch = isReduced ? 0 : furKick;
+      const rowDx = (r: number) => (glitch > 0.2 ? Math.round(Math.sin(t * 47 + r * 2.3) * glitch * 1.6) : 0);
 
-      // fleece silhouette: a disc plus puffy bumps, shaded for volume
-      const jig = (isReduced ? 0 : 0.35) + furKick * 1.1 + (moving ? 0.5 : 0) + (airborne ? 0.5 : 0);
-      const body = ctx!.createRadialGradient(-6, -9, 2, 0, 0, R + 6);
+      // body: the pixel silhouette as a fleece base, then curls, then strands off every open edge
+      const fur = FURS[frameIdx];
+      const jig = (isReduced ? 0 : 0.3) + furKick * 1.2 + (moving ? 0.5 : 0) + (airborne ? 0.6 : 0);
+      const body = ctx!.createLinearGradient(0, y0, 0, y0 + BODY_H);
       body.addColorStop(0, FUR[3]);
-      body.addColorStop(0.55, FUR[2]);
+      body.addColorStop(0.6, FUR[2]);
       body.addColorStop(1, FUR[1]);
       ctx!.fillStyle = body;
       ctx!.beginPath();
-      ctx!.arc(0, 0, R, 0, Math.PI * 2);
-      for (const b of bumps) {
-        const d = b.d + Math.sin(t * 5 + b.ph) * jig * 0.5;
-        const bx = Math.cos(b.a) * d;
-        const by = Math.sin(b.a) * d;
-        ctx!.moveTo(bx + b.r, by);
-        ctx!.arc(bx, by, b.r, 0, Math.PI * 2);
-      }
+      grid.forEach((row, r) => row.forEach((v, c) => {
+        if (v) ctx!.rect(x0 + c * P + rowDx(r) - 0.2, y0 + r * P - 0.2, P + 0.4, P + 0.4);
+      }));
+      for (const k of fur.bumps) { ctx!.moveTo(k.x + rowDx(k.r) + k.rad, k.y); ctx!.arc(k.x + rowDx(k.r), k.y, k.rad, 0, Math.PI * 2); }
       ctx!.fill();
-
-      // curls
       ctx!.lineCap = 'round';
-      ctx!.lineWidth = 0.9;
-      for (let g = 0; g < curlGroups.length; g++) {
+      ctx!.lineWidth = 0.75;
+      ctx!.globalAlpha = 0.85;
+      fur.curls.forEach((group, g) => {
         ctx!.beginPath();
-        for (const c of curlGroups[g]) {
-          const w = jig * Math.sin(t * (moving ? 11 : 3) + c.ph);
-          const x = c.x + w * 0.5;
-          const y = c.y + w * 0.35;
-          ctx!.moveTo(x + Math.cos(c.a) * c.r, y + Math.sin(c.a) * c.r);
-          ctx!.arc(x, y, c.r, c.a, c.a + c.span);
+        for (const k of group) {
+          const w = jig * 0.2 * Math.sin(t * (moving ? 9 : 2.4) + k.ph);
+          const x = k.x + rowDx(k.r) + w;
+          const y = k.y + w * 0.6;
+          ctx!.moveTo(x + Math.cos(k.a) * k.rad, y + Math.sin(k.a) * k.rad);
+          ctx!.arc(x, y, k.rad, k.a, k.a + k.span);
         }
         ctx!.strokeStyle = FUR[g];
         ctx!.stroke();
-      }
+      });
+      ctx!.globalAlpha = 1;
+      ctx!.lineWidth = 0.8;
+      fur.strands.forEach((group, g) => {
+        ctx!.beginPath();
+        for (const k of group) {
+          const a = k.a + Math.sin(t * (moving ? 8 : 2.2) + k.ph) * 0.25 * jig;
+          const x = k.x + rowDx(k.r);
+          ctx!.moveTo(x, k.y);
+          ctx!.lineTo(x + Math.cos(a) * k.l, k.y + Math.sin(a) * k.l);
+        }
+        ctx!.strokeStyle = FUR[g];
+        ctx!.stroke();
+      });
       ctx!.fillStyle = NUB;
-      ctx!.globalAlpha = 0.55;
+      ctx!.globalAlpha = 0.32;
       ctx!.beginPath();
-      for (const n of nubs) { ctx!.moveTo(n.x + n.r, n.y); ctx!.arc(n.x, n.y, n.r, 0, Math.PI * 2); }
+      for (const k of fur.nubs) { ctx!.moveTo(k.x + rowDx(k.r) + k.rad, k.y); ctx!.arc(k.x + rowDx(k.r), k.y, k.rad, 0, Math.PI * 2); }
       ctx!.fill();
       ctx!.globalAlpha = 1;
 
-      // face
+      // eyes: small white vertical bars in the row-3 holes, like the emoji; they shift toward the
+      // pointer, squash to a line to blink, and stretch when startled
       let lx = 0;
       let ly = 0;
       if (pointerX >= 0 && !dizzy) {
         const dx = pointerX - cx;
         const dy = pointerY - cy;
-        const d = Math.hypot(dx, dy);
-        if (d < 520) { lx = clamp(dx / 60, -1.6, 1.6); ly = clamp(dy / 60, -1.4, 1.2); }
-      } else if (moving) lx = Math.sign(gvx) * 1.2;
-      if (hovering) ly = -1.2;
-      const eyeY = -3;
+        if (Math.hypot(dx, dy) < 520) { lx = clamp(dx / 90, -1, 1); ly = clamp(dy / 90, -1, 1); }
+      } else if (moving) lx = Math.sign(gvx);
       const wide = airborne || dizzy;
-      ctx!.strokeStyle = '#0e130d';
-      ctx!.lineWidth = 1.9;
-      if (asleep || blink) {
-        ctx!.beginPath();
-        for (const ex of [-7.5, 7.5]) {
-          ctx!.moveTo(ex + 3 * Math.cos(Math.PI * 0.15), eyeY - 1 + 3 * Math.sin(Math.PI * 0.15));
-          ctx!.arc(ex, eyeY - 1, 3, Math.PI * 0.15, Math.PI * 0.85);
-        }
-        ctx!.strokeStyle = '#c9d0bb';
-        ctx!.stroke();
-      } else if (happy && !wide) {
-        ctx!.strokeStyle = '#e8ecdf';
-        ctx!.lineWidth = 2;
-        ctx!.beginPath();
-        for (const ex of [-7.5, 7.5]) {
-          ctx!.moveTo(ex + 2.6 * Math.cos(Math.PI * 1.1), eyeY + 1 + 2.6 * Math.sin(Math.PI * 1.1));
-          ctx!.arc(ex, eyeY + 1, 2.6, Math.PI * 1.1, Math.PI * 1.9);
-        }
-        ctx!.stroke();
-      } else {
-        const ry = wide ? 5 : 4.4;
-        ctx!.fillStyle = '#eef1e6';
-        ctx!.beginPath();
-        ctx!.ellipse(-7.5, eyeY, 3.9, ry, 0, 0, Math.PI * 2);
-        ctx!.ellipse(7.5, eyeY, 3.9, ry, 0, 0, Math.PI * 2);
-        ctx!.fill();
-        if (dizzy) {
-          ctx!.strokeStyle = '#141a12';
-          ctx!.lineWidth = 1.1;
-          for (const ex of [-7.5, 7.5]) {
-            ctx!.beginPath();
-            for (let i = 0; i <= 24; i++) {
-              const a = i * 0.55 + t * 9 * Math.sign(ex);
-              const rr = (i / 24) * 3.2;
-              const px = ex + Math.cos(a) * rr;
-              const py = eyeY + Math.sin(a) * rr;
-              if (i) ctx!.lineTo(px, py); else ctx!.moveTo(px, py);
-            }
-            ctx!.stroke();
-          }
-        } else {
-          const pr = wide ? 1.9 : 2.3;
-          ctx!.fillStyle = '#10150f';
-          ctx!.beginPath();
-          ctx!.arc(-7.5 + lx, eyeY + ly, pr, 0, Math.PI * 2);
-          ctx!.arc(7.5 + lx, eyeY + ly, pr, 0, Math.PI * 2);
-          ctx!.fill();
-          ctx!.fillStyle = '#fff';
-          ctx!.beginPath();
-          ctx!.arc(-8.3 + lx, eyeY + ly - 1.1, 0.8, 0, Math.PI * 2);
-          ctx!.arc(6.7 + lx, eyeY + ly - 1.1, 0.8, 0, Math.PI * 2);
-          ctx!.fill();
-        }
+      const eyeY = y0 + (EYE_ROW + 1) * P;
+      ctx!.fillStyle = EYE.white;
+      for (const col of EYE_COLS) {
+        const ex = x0 + (col + 0.5) * P + rowDx(EYE_ROW) + (dizzy ? Math.sin(t * 14 + col) * 0.8 : lx * 0.8);
+        const w = wide ? 2.4 : 2.1;
+        const h = asleep || blink ? 0.9 : wide ? 6.4 : happy ? 3.6 : 5.2;
+        ctx!.fillRect(ex - w / 2, eyeY - h / 2 + ly * 0.5, w, h);
       }
-
-      // mouth
-      ctx!.lineWidth = 1.5;
-      ctx!.strokeStyle = '#e8ecdf';
-      ctx!.beginPath();
-      if (wide && !dizzy) {
-        ctx!.fillStyle = '#10150f';
-        ctx!.ellipse(0, 5.5, 2, 2.5, 0, 0, Math.PI * 2);
-        ctx!.fill();
-      } else if (happy) {
-        ctx!.fillStyle = '#10150f';
-        ctx!.arc(0, 4.2, 3.2, 0.1, Math.PI - 0.1);
-        ctx!.closePath();
-        ctx!.fill();
-        ctx!.fillStyle = '#d98a83';
-        ctx!.beginPath();
-        ctx!.ellipse(0, 6.3, 1.6, 0.9, 0, 0, Math.PI * 2);
-        ctx!.fill();
-      } else if (!asleep) {
-        ctx!.moveTo(-2.6, 4.6);
-        ctx!.quadraticCurveTo(-1.3, 6.2, 0, 4.9);
-        ctx!.quadraticCurveTo(1.3, 6.2, 2.6, 4.6);
-        ctx!.stroke();
-      }
-      ctx!.fillStyle = 'rgba(232, 146, 136, 0.45)';
-      ctx!.beginPath();
-      ctx!.ellipse(-12.5, 3.6, 2.8, 1.6, 0, 0, Math.PI * 2);
-      ctx!.ellipse(12.5, 3.6, 2.8, 1.6, 0, 0, Math.PI * 2);
-      ctx!.fill();
       ctx!.restore();
 
       if (mode === 'ground' && task === 'working') drawTaskMark(t);
@@ -640,8 +698,8 @@
         ctx!.lineTo(71, 25);
         ctx!.stroke();
       } else if (taskKind === 1) {
-        const lift = Math.sin(t * 5) * 2;
-        ctx!.fillRect(59, 11 + lift, 8, 8);
+        // a blinking terminal cursor: it is typing something
+        if (Math.sin(t * 6) > -0.2) ctx!.fillRect(60, 10, 5, 9);
       } else {
         for (let i = 0; i < 3; i++) {
           const a = t * 5 + (i * Math.PI * 2) / 3;
@@ -707,7 +765,8 @@
       }
       if (press && e.pointerId === press.id && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 5) {
         wake();
-        held = { id: e.pointerId, ox: cx - e.clientX, oy: cy - e.clientY, px: e.clientX, py: e.clientY, vx: 0, vy: 0, t: performance.now() };
+        // Grab offset from where the press began, so the pet stays under the finger.
+        held = { id: e.pointerId, ox: cx - press.x, oy: cy - press.y, px: e.clientX, py: e.clientY, vx: 0, vy: 0, t: performance.now() };
         press = null;
         mode = 'held';
         task = 'idle';
@@ -718,23 +777,31 @@
         bounceV = 0;
         layer.classList.add('is-held');
         updateStatus();
-        say(pick(['wheee', 'up we go!', 'hey!', 'where are we going?']), 1400);
+        say(pick(['>TAKE PET', 'unhand me', 'altitude rising', 'where to, human?']), 1400);
       }
     });
     function release(e: PointerEvent) {
       if (press && e.pointerId === press.id) press = null;
       if (!held || e.pointerId !== held.id) return;
-      const throwVx = clamp(held.vx, -2600, 2600);
-      const throwVy = clamp(held.vy, -2600, 2600);
+      // Velocity is only sampled on pointermove, so fade it once the pointer has stopped:
+      // a drag that pauses before release is a drop, not a throw.
+      const decay = Math.exp(-(performance.now() - held.t) / 60);
+      const throwVx = clamp(held.vx * decay, -2600, 2600);
+      const throwVy = clamp(held.vy * decay, -2600, 2600);
+      // Judge the drop where the pointer put the pet, not where the smoothed body has caught up to.
+      const dropX = held.px + held.ox;
+      const dropY = held.py + held.oy;
       held = null;
       suppressClick = true;
       setTimeout(() => { suppressClick = false; }, 0);
       layer.classList.remove('is-held');
-      const target = flowTargetAt(cx, cy);
-      if (target && Math.hypot(throwVx, throwVy) < 1400) {
-        perchOn(target, cx, cy);
+      const target = flowTargetAt(dropX, dropY);
+      if (target && Math.hypot(throwVx, throwVy) < 2200) {
+        cx = dropX;
+        cy = dropY;
+        perchOn(target, cx, cy, 'creep');
         sqv += 7;
-        say(pick(['comfy.', 'excuse me, words', 'i live here now', 'reading along']));
+        say(pick(['you are in a paragraph.', 'excuse me, words', 'this sector is mine', 'reading. slowly.']));
       } else if (isReduced) {
         settleOnGround();
       } else {
@@ -783,7 +850,7 @@
         bumpCooldown = now + 5000;
         bounceV = -230;
         furKick = 1;
-        if (Math.random() < 0.45) say(pick(['whoa!', 'slow down!', 'wheee']), 1300);
+        if (Math.random() < 0.45) say(pick(['velocity: excessive', 'whoa.', 'slow down, human']), 1300);
       }
     }, { passive: true });
 
@@ -821,7 +888,7 @@
         hopDown,
         walk: startWalk,
         sleep() { asleep = true; updateStatus(); },
-        place(x: number, y: number) { const el = flowTargetAt(x, y); cx = x; cy = y; if (el) perchOn(el, x, y); },
+        place(x: number, y: number, kind: 'ledge' | 'creep' = 'creep') { const el = flowTargetAt(x, y); cx = x; cy = y; if (el) perchOn(el, x, y, kind); },
         get state() { return { mode, task, asleep, cx, cy, room }; },
       };
     }
@@ -940,6 +1007,8 @@
   :global(.site-footer .pet-toggle:hover) { color: var(--accent-text); }
 
   /* Pretext text flow (src/scripts/text-flow.ts) */
+  /* the hoodie olive is dark; lift it a little on the dark theme so it still reads */
+  :global([data-theme="dark"]) .pet-canvas { filter: brightness(1.35); }
   :global(.text-flow) { position: relative; transition: height 220ms cubic-bezier(.2,.7,.2,1); }
   :global(.text-flow .flow-lines) { position: absolute; inset: 0 auto auto 0; width: 100%; pointer-events: none; }
   :global(.text-flow .flow-line) { position: absolute; top: 0; left: 0; white-space: pre; will-change: transform; }

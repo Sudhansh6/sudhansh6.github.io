@@ -1,6 +1,9 @@
 // Live text reflow around a moving circle (the site pet), using Pretext for line breaking.
 //
-// Any `[data-text-flow]` paragraph can host the obstacle. While the obstacle overlaps it, the
+// Any prose paragraph on any page can host the obstacle: `[data-text-flow]` elements and `<p>`
+// inside `<main>`, set up lazily the first time the obstacle reaches them. Paragraphs with math,
+// media or hard line breaks are skipped, since the overlay cannot reproduce them. While the
+// obstacle overlaps a paragraph, the
 // paragraph's original content stays in the DOM (for screen readers and copy) but is made
 // transparent, and an aria-hidden overlay paints Pretext-computed lines that part around the
 // circle, on both sides when there is room. Inline <strong>, <em> and <a> survive the reflow.
@@ -67,25 +70,45 @@ function setup(el: HTMLElement) {
   flows.set(el, { el, src, layer, items: [], prepared: null, natural: 0, active: false, key: '' });
 }
 
-/** Register `[data-text-flow]` targets on the current page and forget ones that left the DOM. */
-export function scanFlowTargets() {
-  flows.forEach((flow, el) => { if (!el.isConnected) flows.delete(el); });
-  document.querySelectorAll<HTMLElement>('[data-text-flow]').forEach(setup);
+const TARGETS = '[data-text-flow], main p';
+const EXCLUDED_AREAS = 'nav, header, footer, pre, table, figure, blockquote, .pet-layer, [data-no-flow]';
+const BLOCKERS = '.katex, math, img, svg, picture, video, canvas, iframe, br, input, button, select, textarea';
+
+/** The flowable paragraph containing `node`, if it is prose the overlay can reproduce. */
+function eligible(node: Element | null): HTMLElement | null {
+  const el = node?.closest<HTMLElement>(TARGETS) ?? null;
+  if (!el || flows.has(el)) return el;
+  if (!el.hasAttribute('data-text-flow')) {
+    if (el.closest(EXCLUDED_AREAS) || el.querySelector(BLOCKERS)) return null;
+    if ((el.textContent ?? '').trim().length < 40 || el.clientWidth < 160) return null;
+  }
+  return el;
 }
 
-/** The flow target under a viewport point, if any. */
-export function flowTargetAt(x: number, y: number): HTMLElement | null {
-  for (const el of flows.keys()) {
-    const r = el.getBoundingClientRect();
-    if (x >= r.left - 6 && x <= r.right + 6 && y >= r.top - 6 && y <= r.bottom + 6) return el;
+function paragraphAt(x: number, y: number): HTMLElement | null {
+  if (x < 0 || y < 0 || x > innerWidth || y > innerHeight) return null;
+  for (const node of document.elementsFromPoint(x, y)) {
+    const el = eligible(node);
+    if (el) { setup(el); return el; }
   }
   return null;
 }
 
-/** Targets comfortably inside the viewport, for the pet to hop into on its own. */
+/** Forget paragraphs that left the DOM (after a client-side navigation). */
+export function scanFlowTargets() {
+  flows.forEach((flow, el) => { if (!el.isConnected) flows.delete(el); });
+}
+
+/** The flowable paragraph under a viewport point, if any. */
+export function flowTargetAt(x: number, y: number): HTMLElement | null {
+  return paragraphAt(x, y) ?? paragraphAt(x, y - 6) ?? paragraphAt(x, y + 6);
+}
+
+/** Paragraphs comfortably inside the viewport, for the pet to hop into on its own. */
 export function visibleFlowTargets(margin = 90): HTMLElement[] {
-  return [...flows.keys()].filter((el) => {
-    const r = el.getBoundingClientRect();
+  return [...document.querySelectorAll<HTMLElement>(TARGETS)].filter((node) => {
+    if (eligible(node) !== node) return false;
+    const r = node.getBoundingClientRect();
     return r.width > 220 && r.top > margin && r.bottom < innerHeight - margin;
   });
 }
@@ -157,9 +180,16 @@ function render(flow: Flow, o: Obstacle, rect: DOMRect) {
   flow.el.style.height = `${Math.max(flow.natural, Math.round((rows - 1) * lh + lh))}px`;
 }
 
-/** Move the obstacle (viewport coordinates), or pass null to restore every paragraph. */
-export function setFlowObstacle(o: Obstacle | null) {
+/**
+ * Move the obstacle (viewport coordinates), or pass null to restore every paragraph. `skip` keeps
+ * one paragraph untouched, such as the one the pet is standing on.
+ */
+export function setFlowObstacle(o: Obstacle | null, skip: HTMLElement | null = null) {
+  // Only paragraphs under the obstacle (set up on demand) and ones still parted need work.
+  const near = new Set(o ? [0, -0.8, 0.8].map((k) => paragraphAt(o.x, o.y + k * o.r)) : []);
   flows.forEach((flow) => {
+    if (flow.el === skip) return deactivate(flow);
+    if (o && !flow.active && !near.has(flow.el)) return;
     if (!o || !fontsReady || !flow.el.isConnected || o.r < 4) return deactivate(flow);
     const rect = flow.el.getBoundingClientRect();
     const bottom = rect.top + (flow.active ? flow.natural : rect.height);

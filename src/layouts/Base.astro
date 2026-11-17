@@ -34,12 +34,12 @@ const canonical = new URL(Astro.url.pathname, 'https://sudhansh6.github.io').toS
     />
     <ClientRouter />
     <script is:inline>
-      // Feature flags. Off by default; turn on from the URL and they stick (localStorage):
+      // Feature flags, with per-flag defaults below; override from the URL and it sticks (localStorage):
       //   ?pet  or  ?pet=1      enable a flag       ?pet=0     disable it
       //   ?ff=pet,-other        enable/disable several        ?ff=reset  back to defaults
       // Each enabled flag sets data-ff-<name> on <html>; scripts read window.__ff.
       (function () {
-        var DEFAULTS = { pet: false };
+        var DEFAULTS = { pet: true };
         var KEY = 'ff';
         var saved = {};
         try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) {}
@@ -94,7 +94,7 @@ const canonical = new URL(Astro.url.pathname, 'https://sudhansh6.github.io').toS
         <nav class="nav-links" aria-label="Primary">
           <span class="nav-active-pill" aria-hidden="true" transition:name="primary-nav-active"></span>
           <a href="/projects" class={active === 'projects' ? 'active' : ''}>Projects</a>
-          <a href="/papers" class={active === 'papers' ? 'active' : ''}>Research</a>
+          <a href="/papers" class={active === 'papers' ? 'active' : ''}>Publications</a>
           <a href="/writing" class={active === 'writing' ? 'active' : ''}>Notes</a>
           <a href="/about" class={active === 'about' ? 'active' : ''}>About</a>
           <a href="/cv" class={active === 'cv' ? 'active' : ''}>CV</a>

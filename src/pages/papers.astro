@@ -1,18 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
 import papers from '../data/papers.json';
+import { ELSEWHERE as articles } from '../data/elsewhere';
 
 const sorted = [...papers].sort((a, b) => b.year - a.year);
+const posts = [...articles].sort((a, b) => b.date.localeCompare(a.date));
+const fmt = (d: string) => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 ---
 
-<Base title="Research — Sudhansh Peddabomma" description="Publications by Sudhansh Peddabomma." active="papers">
+<Base title="Publications — Sudhansh Peddabomma" description="Papers and articles by Sudhansh Peddabomma." active="papers">
   <div class="wrap">
     <section class="hero" style="padding-top: 60px;">
-      <h1>Research</h1>
-      <p class="lede">Published work in computational imaging, compressed sensing, and robotics.</p>
+      <h1>Publications</h1>
+      <p class="lede">Papers in computational imaging, compressed sensing and robotics, and articles on evaluating AI models and on digital twins for robotics.</p>
     </section>
 
     <section class="section">
+      <div class="section-head"><span><h2>Papers</h2></span></div>
       {sorted.map((p) => (
         <article class="paper">
           <h3 class="paper-title">{p.title}</h3>
@@ -25,6 +29,22 @@ const sorted = [...papers].sort((a, b) => b.year - a.year);
             {p.pdf && <a class="tag" href={p.pdf} target="_blank" rel="noopener">PDF</a>}
             {p.doi && <a class="tag" href={p.doi} target="_blank" rel="noopener">DOI</a>}
             {p.url && !p.doi && <a class="tag" href={p.url} target="_blank" rel="noopener">Link</a>}
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <section class="section">
+      <div class="section-head"><span><h2>Articles</h2></span></div>
+      {posts.map((a) => (
+        <article class="paper">
+          <h3 class="paper-title"><a href={a.url} target="_blank" rel="noopener">{a.title}</a></h3>
+          <p class="paper-meta">
+            {a.authors.join(', ')}<br />
+            <span class="venue">{a.venue}</span>, {fmt(a.date)}
+          </p>
+          <div class="paper-links">
+            <a class="tag" href={a.url} target="_blank" rel="noopener">Read</a>
           </div>
         </article>
       ))}
