@@ -1,0 +1,213 @@
+% Shared preamble and content for Sudhansh Peddabomma's résumés.
+% Each profile (SudhanshPeddabomma-AI.tex, SudhanshPeddabomma-Vision.tex) inputs this file and picks
+% which blocks to show and in what order, so every bullet is written once.
+% Layout rule: every bullet fills one line, or runs 1.5 to 2 lines. Check with: python3 check_lines.py <pdf>
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.55in,top=0.5in,bottom=0.45in]{geometry}
+\usepackage[T1]{fontenc}
+% Fonts: \resumefont loads the body font; \headfont styles the name and section titles.
+% Override either before \input{resume-common} to try another pairing.
+% Default: Charter body with Source Sans headings. All-sans alternative:
+%   \def\resumefont{\usepackage[default,semibold]{sourcesanspro}}\def\headfont{}
+\providecommand{\resumefont}{\usepackage[scaled=0.96]{XCharter}\usepackage[semibold,scale=0.96]{sourcesanspro}}
+\providecommand{\headfont}{\sffamily}
+\providecommand{\namefont}{\rmfamily\scshape}
+\resumefont
+\usepackage[final]{microtype}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{fontawesome5}
+\usepackage{etoolbox}
+\usepackage[hidelinks]{hyperref}
+
+% The site's green, darkened for print.
+\definecolor{accent}{HTML}{3A7A45}
+\definecolor{muted}{HTML}{5C675D}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\tabcolsep}{0pt}
+\providecommand{\leading}{1.1}
+\linespread{\leading}
+
+\hypersetup{pdfauthor={Sudhansh Peddabomma}}
+
+% Type scale: name 26pt small caps, section titles 12.5pt caps, entry titles 10.8pt, body 10pt,
+% side notes 9pt.
+\newcommand{\side}[1]{{\fontsize{9}{11}\selectfont\color{muted}#1}}
+\newcommand{\sectitle}[1]{\textls[60]{\MakeUppercase{#1}}}
+\titleformat{\section}{\headfont\color{accent}\bfseries\fontsize{12.5}{14}\selectfont}{}{0pt}{\sectitle}[\vspace{1.5pt}{\color{accent}\titlerule[0.8pt]}\global\firstentrytrue]
+% The first entry after a section title skips \entrygap, so only \rulegap sits under the rule.
+\newif\iffirstentry
+
+% Vertical rhythm, the same idea as the earlier hand-tuned résumés: bullets inside an entry sit
+% tight together, entries are separated by a clear gap, and sections by a larger one. A profile
+% may override these before \input{resume-common} to fit one page.
+\providecommand{\secgap}{12pt}   % above a section title
+\providecommand{\rulegap}{5.5pt}   % section rule to first entry
+\providecommand{\entrygap}{7pt}  % between entries
+\providecommand{\headgap}{1.5pt} % entry heading to its bullets
+\providecommand{\itemgap}{0.6pt} % between bullets of one entry
+\titlespacing*{\section}{0pt}{\secgap}{\rulegap}
+
+\newcommand{\squarebullet}{\raisebox{0.32ex}{\color{accent}\rule{0.5ex}{0.5ex}}}
+\setlist[itemize]{leftmargin=12pt, labelsep=6pt, topsep=\headgap, itemsep=\itemgap, parsep=0pt, partopsep=0pt,
+  label=\squarebullet}
+
+% \entry{Organisation or title}{Role or detail (may be empty)}{Dates}; \sub{Role or detail}{Right-hand note}
+\newcommand{\entry}[3]{%
+  \par\iffirstentry\global\firstentryfalse\else\addvspace{\entrygap}\fi\noindent{\headfont\fontsize{10.8}{13}\selectfont\textbf{#1}}\ifblank{#2}{}{\ {\color{muted}|}\ #2}\hfill\hspace{1em}\side{#3}\par}
+\newcommand{\sub}[2]{%
+  \noindent\textit{#1}\hfill{\color{muted}\textit{#2}}\par}
+\newcommand{\report}[1]{\href{#1}{\color{accent}Report}}
+\newcommand{\me}{\textbf{S. Peddabomma}}
+
+% ---------------------------------------------------------------------------------------------------
+% Header
+\newcommand{\Header}{%
+  \begin{center}
+    {\namefont\fontsize{26}{28}\selectfont Sudhansh Peddabomma}\\[6pt]
+    {\headfont\fontsize{9.5}{11}\selectfont\color{muted}
+      \href{mailto:sudhansh6@gmail.com}{\faEnvelope[regular]\ sudhansh6@gmail.com} \quad
+      \href{https://sudhansh6.github.io}{\faGlobe\ sudhansh6.github.io} \quad
+      \href{https://www.linkedin.com/in/sudhansh-peddabomma-73a208192/}{\faLinkedin\ sudhansh-peddabomma} \quad
+      \href{https://github.com/Sudhansh6}{\faGithub\ Sudhansh6}}
+  \end{center}\vspace{-4pt}}
+
+% ---------------------------------------------------------------------------------------------------
+% Glean bullets, shared by both profiles
+\newcommand{\GleanSlides}{\item Led \textbf{AI slide generation} in Glean Assistant, now creating \textbf{180K decks a week} for \textbf{50K weekly active users} at enterprises}
+\newcommand{\GleanSlidesPerf}{\item Improved the slides harness, raising reliability to \textbf{97\%}, cutting median latency \textbf{26\%} and cost per deck by \textbf{half}
+  in four months}
+\newcommand{\GleanSlidesOrch}{\item Architected a \textbf{slide orchestration system} that reuses relevant slides from a company's existing decks and generates
+  new ones in its brand and template, so teams can refine decks with each other and Glean in full context, without leaving the product}
+\newcommand{\GleanAgents}{\item Moved Glean's \textbf{workflow agents} from one-shot planning to an \textbf{agentic tool-use loop}, greatly improving agentic
+  capabilities and instruction following, with \textbf{18\%} higher answer completeness and \textbf{17\%} fewer tokens}
+\newcommand{\GleanTeamChat}{\item Engineered the core of \textbf{Team chat}, letting teammates work with Glean in one shared conversation and co-edit its artifacts}
+\newcommand{\GleanVideo}{\item Shipped \textbf{video artifacts} end to end, generating narrated videos in chat with streamed playback and admin rollout controls}
+\newcommand{\GleanEvals}{\item Created the \textbf{evaluations and metrics} that guide model choices and rollouts across agents, slides and interactive artifacts}
+
+% ---------------------------------------------------------------------------------------------------
+% Experience
+% \groupbreak separates related groups of bullets inside one long entry (slides, then platform work).
+\providecommand{\groupgap}{3.5pt}
+\newcommand{\groupbreak}{\vspace{\groupgap}}
+\newcommand{\GleanAI}{%
+  \entry{Glean}{Software Engineer}{Apr 2025 -- Present}
+  \begin{itemize}
+    \GleanSlides
+    \GleanSlidesOrch
+    \GleanSlidesPerf \groupbreak
+    \GleanTeamChat
+    \GleanVideo
+    \GleanAgents
+    \GleanEvals
+  \end{itemize}}
+
+\newcommand{\GleanVision}{%
+  \entry{Glean}{Software Engineer}{Apr 2025 -- Present}
+  \begin{itemize}
+    \GleanSlides
+    \GleanSlidesOrch
+    \GleanSlidesPerf \groupbreak
+    \GleanVideo
+    \GleanEvals
+  \end{itemize}}
+
+\newcommand{\Duality}{%
+  \entry{Duality AI}{Computer Vision Intern}{Jun 2024 -- Sep 2024}
+  \begin{itemize}
+    \item Designed automated \textbf{3D reconstruction} techniques for featureless objects, reducing digital-twin generation time
+          by \textbf{40\%}
+    \item Collaborated with \textbf{Autodesk} to validate Unreal Engine simulations for robotics tasks; leveraging structured
+          domain randomization to reduce Sim2Real gap and increase mAP-50 by \textbf{15\%} for object detection and segmentation
+  \end{itemize}}
+
+\newcommand{\Microsoft}{%
+  \entry{Microsoft}{Data and Applied Scientist Intern}{May 2022 -- Jul 2022}
+  \begin{itemize}
+    \item Developed a \textbf{decision-tree ranker} to recommend emails without user queries, improving \textbf{Outlook} search capabilities
+    \item Proposed hierarchical feature-sets for the ranker, reducing latency for recommendations and improving recall
+  \end{itemize}}
+
+% ---------------------------------------------------------------------------------------------------
+% Research
+\newcommand{\HomeRobots}{%
+  \entry{Real-time 3D Perception for Home Robots}{UC San Diego}{Sep 2023 -- Sep 2024}
+  \begin{itemize}
+    \item Investigated real-time dense \textbf{visual SLAM} methods using NeRFs and Gaussian Splatting for indoor robot navigation
+    \item Integrated object segmentation, grasp-pose estimation, and 3D mapping on the Fetch robot via ROS, demonstrating
+          a novel \textbf{tabletop object rearrangement} algorithm that reduced cost by \textbf{20\%} compared to the state-of-the-art
+  \end{itemize}}
+
+\newcommand{\Tomography}{%
+  \entry{3D Tomography with Primal-Dual Neural Networks}{University College London}{May 2021 -- Jul 2023}
+  \begin{itemize}
+    \item Developed a stochastic neural-network architecture of primal-dual algorithm for online reconstruction of 3D
+          volumes from tomographic projections, with \textbf{99.6\,\% structural similarity} in low-dosage conditions
+    \item Built a Python library with custom gradient operators for reconstructing volumes in a single pass, reducing
+          compute requirements by up to \textbf{5x} over SOTA learning-based approaches for cone vector tomography
+  \end{itemize}}
+
+% ---------------------------------------------------------------------------------------------------
+% Projects
+\newcommand{\OOXML}{%
+  \entry{ooxml}{Open-source contributor \textbar\ \href{https://github.com/ChristopherVR/ooxml}{\color{accent}GitHub}}{Sep 2026 -- Present}
+  \begin{itemize}
+    \item Contributed to an open-source \textbf{TypeScript} engine that renders and edits PowerPoint and Word files in the browser,
+          improving editing fidelity, \textbf{real-time collaboration} and load performance across React, Vue and Svelte viewers
+  \end{itemize}}
+
+\newcommand{\MirrorAI}{%
+  \entry{Mirror AI: Deployable Personas}{Honorable mention in Supabase YC Hackathon}{Oct 2024 -- Dec 2024}
+  \begin{itemize}
+    \item Designed an \textbf{agentic LLM architecture} with LangGraph to mirror user personalities, creating interactive digital
+          personas, and deployed it as a full-stack platform on Supabase and Vercel with one-click publishing
+  \end{itemize}}
+
+\newcommand{\LLMReasoning}{%
+  \entry{Improving LLM Reasoning for Numerical Problems}{\report{https://sudhansh6.github.io/assets/pdf/MathPrompter++.pdf}}{Sep 2024 -- Dec 2024}
+  \begin{itemize}
+    \item Enhanced MathPrompter (ACL 2023) with CoT, achieving \textbf{10\% higher accuracy} on Llama 3.1 1B where prior methods failed,
+          and reduced hallucination rates significantly by integrating multi-step validation
+  \end{itemize}}
+
+\newcommand{\InverseRendering}{%
+  \entry{Inverse Rendering with 2D Gaussian Splatting}{\report{https://sudhansh6.github.io/assets/pdf/CSE252D_Report.pdf}}{Mar 2024 -- May 2024}
+  \begin{itemize}
+    \item Developed a novel \textbf{inverse rendering} framework in CUDA to recover PBR properties of a scene using 2D Gaussian
+          Splatting, improving normal map MAE by \textbf{15\%} over the current SOTA methods
+  \end{itemize}}
+
+% ---------------------------------------------------------------------------------------------------
+% Publications: title on the left, venue on the right, one line each.
+\newcommand{\publine}[3]{\par\noindent\href{#1}{#2}\hfill\hspace{1em}\side{#3}\par\addvspace{1.5pt}}
+\newcommand{\PubSaturation}{\publine{https://doi.org/10.1016/j.sigpro.2023.109349}{A likelihood based method for compressive signal recovery under Gaussian and saturation noise}{Signal Processing, 2024}}
+\newcommand{\PubPermutation}{\publine{https://ieeexplore.ieee.org/document/10888147}{Identification and correction of permutation errors in compressed sensing-based group testing}{ICASSP 2025}}
+\newcommand{\PubRearrangement}{\publine{https://arxiv.org/abs/2411.10899}{Planning for tabletop object rearrangement}{ICRA 2025}}
+
+% ---------------------------------------------------------------------------------------------------
+% Education, skills, service
+% Each profile sets \UCSDCourses, \IITBCourses and \SkillRows before \input{resume-common}.
+\providecommand{\UCSDCourses}{}
+\providecommand{\IITBCourses}{}
+\providecommand{\SkillRows}{}
+\newcommand{\coursework}[1]{\ifblank{#1}{}{\par\noindent{\fontsize{9.5}{11.5}\selectfont{\color{muted}Coursework:} #1}\par}}
+\newcommand{\Education}{%
+  \section{Education}
+  \entry{University of California San Diego}{M.S. in Computer Science and Engineering (AI)}{GPA 4.00/4.00 \quad Sep 2023 -- Mar 2025}
+  \coursework{\UCSDCourses}
+  \entry{Indian Institute of Technology Bombay}{B.Tech.\ with Honors in Computer Science}{CPI 9.66/10 \quad Jul 2019 -- Jul 2023}
+  \coursework{\IITBCourses}}
+
+% \skill{Label}{Items} is one row of the skills table.
+\newcommand{\skill}[2]{{\headfont\bfseries #1} & #2 \\[1.5pt]}
+\newcommand{\cpp}{C\kern-0.04em\raisebox{0.06ex}{\small++}}
+\newcommand{\Skills}{%
+  \section{Skills}
+  \begin{tabularx}{\linewidth}{@{}l@{\hspace{12pt}}>{\raggedright\arraybackslash}X@{}}
+    \SkillRows
+  \end{tabularx}}

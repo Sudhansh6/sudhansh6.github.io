@@ -1,0 +1,8 @@
+# LaTeX build output; the compiled PDFs are copied to public/assets/pdf/ when published.
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.pdf
