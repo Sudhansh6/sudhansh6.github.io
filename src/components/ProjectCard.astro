@@ -1,0 +1,20 @@
+---
+// Project card used on the home and projects pages. Its media and title morph into the project
+// page's hero and heading during navigation.
+import type { CollectionEntry } from 'astro:content';
+import ProjectMedia from './ProjectMedia.astro';
+import { projectHref, projectMorph } from '../lib/projects';
+
+interface Props { project: CollectionEntry<'projects'>; showCategory?: boolean }
+const { project, showCategory = false } = Astro.props;
+const { title, description, category, viz, img } = project.data;
+---
+
+<a class="card" href={projectHref(project)}>
+  <ProjectMedia viz={viz} img={img} title={title} {...projectMorph(project, 'media')} />
+  <div class="card-body">
+    {showCategory && <span class="card-cat">{category}</span>}
+    <h3 class="card-title" {...projectMorph(project, 'title')}>{title}</h3>
+    <p class="card-desc">{description}</p>
+  </div>
+</a>

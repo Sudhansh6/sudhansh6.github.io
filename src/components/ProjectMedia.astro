@@ -1,15 +1,19 @@
 ---
 // Project visual for cards and project pages. Kinds are defined in src/data/viz.ts.
+// Extra data attributes (such as the card-to-page morph markers) go on the root.
 import { VIZ } from '../data/viz';
 
-interface Props { viz?: string; img?: string; title: string; hero?: boolean }
-const { viz, img, title, hero = false } = Astro.props;
+interface Props { viz?: string; img?: string; title: string; hero?: boolean; [attr: `data-${string}`]: unknown }
+const { viz, img, title, hero = false, ...attrs } = Astro.props;
+// The hero is above the fold and is where a card morphs to, so load it right away.
+const loading = hero ? 'eager' : 'lazy';
 const v = viz ? VIZ[viz] : undefined;
 const cls = ['card-media', 'pm', v ? `pm-${v.kind}` : '', hero ? 'pm-hero' : ''].join(' ');
 ---
 
 {v ? (
   <div
+    {...attrs}
     class={cls}
     data-viz={v.kind}
     data-scene={v.kind === 'canvas' ? v.scene : undefined}
@@ -27,8 +31,8 @@ const cls = ['card-media', 'pm', v ? `pm-${v.kind}` : '', hero ? 'pm-hero' : '']
   >
     {v.kind === 'compare' && (
       <>
-        <img class="pm-b" src={v.b[0].src} alt="" loading="lazy" decoding="async" />
-        <img class="pm-a" src={v.a.src} alt="" loading="lazy" decoding="async" />
+        <img class="pm-b" src={v.b[0].src} alt="" loading={loading} decoding="async" />
+        <img class="pm-a" src={v.a.src} alt="" loading={loading} decoding="async" />
         <div class="pm-divider" aria-hidden="true"></div>
         <span class="pm-lbl pm-lbl-a" aria-hidden="true">{v.a.label}</span>
         <span class="pm-lbl pm-lbl-b" aria-hidden="true" title={v.b.length > 1 ? 'Click to switch' : undefined}>{v.b[0].label}</span>
@@ -53,7 +57,7 @@ const cls = ['card-media', 'pm', v ? `pm-${v.kind}` : '', hero ? 'pm-hero' : '']
     <span class="pm-hint" aria-hidden="true">{v.hint}</span>
   </div>
 ) : img ? (
-  <div class={cls}><img src={img} alt={title} loading="lazy" /></div>
+  <div {...attrs} class={cls}><img src={img} alt={title} loading={loading} /></div>
 ) : null}
 
 <script>

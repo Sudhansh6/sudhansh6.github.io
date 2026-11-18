@@ -1,0 +1,14 @@
+---
+// Quiet "Download PDF ↓" link that sits beside a <PdfViewer>. Extra attributes (for example a
+// data hook that lets a page swap `href`) pass through to the anchor.
+interface Props { href: string; label?: string; [attr: string]: unknown }
+const { href, label = 'Download PDF', ...attrs } = Astro.props;
+---
+
+<a class="pdf-download" href={encodeURI(href)} download {...attrs}>{label}</a>
+
+<style>
+  .pdf-download { font: 500 0.9rem var(--font-body); color: var(--muted); text-decoration: none; white-space: nowrap; }
+  .pdf-download::after { content: ' ↓'; }
+  .pdf-download:hover { color: var(--accent-text); }
+</style>

@@ -1,15 +1,25 @@
 ---
-import ProjectMedia from '../components/ProjectMedia.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 import HeroPortrait from '../components/HeroPortrait.astro';
 import Base from '../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
 import papers from '../data/papers.json';
 import { ELSEWHERE as articles } from '../data/elsewhere';
+import { projectSlug } from '../lib/projects';
 
-const projects = (await getCollection('projects', (p) => !p.data.unlisted)).sort((a, b) => a.data.importance - b.data.importance);
-const featured = projects.slice(0, 6);
+// The home page shows a small, representative sample; the full lists live on /projects and /papers.
+const FEATURED_PROJECTS = ['ooxml', 'mathprompter', '2dgsir', 'home_robot']; // collection ids (URL slugs)
+const FEATURED_PAPER = 'Planning for Tabletop Object Rearrangement';
+const FEATURED_ARTICLE = 'https://www.glean.com/blog/open-ai-gpt-5';
+
+const projects = await getCollection('projects', (p) => !p.data.unlisted);
+const featured = FEATURED_PROJECTS.map((id) => projects.find((p) => projectSlug(p) === id)).filter((p) => p !== undefined);
 const news = (await getCollection('news')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 5);
-const selectedPapers = papers.filter((p) => p.selected);
+const selectedPapers = papers.filter((p) => p.title === FEATURED_PAPER);
+const featuredArticles = articles.filter((a) => a.url === FEATURED_ARTICLE);
+if (featured.length !== FEATURED_PROJECTS.length || !selectedPapers.length || !featuredArticles.length) {
+  throw new Error('Home page: a featured project, paper or article was not found');
+}
 
 const socials = [
   { label: 'GitHub', href: 'https://github.com/Sudhansh6' },
@@ -19,10 +29,6 @@ const socials = [
   { label: 'Email', href: 'mailto:sudhansh6@gmail.com' },
   { label: 'Résumé', href: '/cv' },
 ];
-
-function projectHref(p) {
-  return `/projects/${p.id.replace(/\.md$/, '')}`;
-}
 ---
 
 <Base title="Sudhansh Peddabomma" active="home" searchable={false}>
@@ -58,16 +64,7 @@ function projectHref(p) {
         <a href="/projects">All projects →</a>
       </div>
       <div class="card-grid">
-        {featured.map((p) => (
-          <a class="card" href={projectHref(p)}>
-            <ProjectMedia viz={p.data.viz} img={p.data.img} title={p.data.title} />
-            <div class="card-body">
-              <span class="card-cat">{p.data.category}</span>
-              <h3 class="card-title">{p.data.title}</h3>
-              <p class="card-desc">{p.data.description}</p>
-            </div>
-          </a>
-        ))}
+        {featured.map((p) => <ProjectCard project={p} showCategory />)}
       </div>
     </section>
 
@@ -91,7 +88,7 @@ function projectHref(p) {
             </div>
           </article>
         ))}
-        {[...articles].sort((a, b) => b.date.localeCompare(a.date)).map((a) => (
+        {featuredArticles.map((a) => (
           <article class="paper">
             <h3 class="paper-title"><a href={a.url} target="_blank" rel="noopener">{a.title}</a></h3>
             <p class="paper-meta">

@@ -1,6 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
 import PdfViewer from '../components/PdfViewer.astro';
+import PdfDownload from '../components/PdfDownload.astro';
+
+// One tab per document; the first is shown by default and the download link follows the active tab.
+const docs = [
+  { id: 'resume', label: 'Résumé', src: '/assets/pdf/SudhanshPeddabomma-AI.pdf' },
+  { id: 'cv', label: 'Full CV', src: '/assets/pdf/SudhanshPeddabommaCV.pdf' },
+];
 ---
 
 <Base title="CV — Sudhansh Peddabomma" description="Résumé and CV of Sudhansh Peddabomma." active="cv" searchable={false}>
@@ -8,23 +15,33 @@ import PdfViewer from '../components/PdfViewer.astro';
     <section class="hero" style="padding-top: 60px; padding-bottom: 0;">
       <h1>CV</h1>
       <p class="lede">A one-page résumé, and the longer CV with every paper, project, and award.</p>
-      <div class="cv-tabs" role="tablist" aria-label="Document">
-        <button type="button" role="tab" aria-selected="true" data-cv-tab="resume">Résumé</button>
-        <button type="button" role="tab" aria-selected="false" data-cv-tab="cv">Full CV</button>
+      <div class="doc-head">
+        <div class="cv-tabs" role="tablist" aria-label="Document">
+          {docs.map((d, i) => (
+            <button type="button" role="tab" aria-selected={String(i === 0)} data-cv-tab={d.id}>{d.label}</button>
+          ))}
+        </div>
+        <PdfDownload href={docs[0].src} data-cv-download />
       </div>
     </section>
-    <div data-cv-panel="resume"><PdfViewer src="/assets/pdf/SudhanshPeddabomma-AI.pdf" title="Résumé" /></div>
-    <div data-cv-panel="cv" hidden><PdfViewer src="/assets/pdf/SudhanshPeddabommaCV.pdf" title="CV" /></div>
+    {docs.map((d, i) => (
+      <div data-cv-panel={d.id} data-src={encodeURI(d.src)} hidden={i !== 0}><PdfViewer src={d.src} title={d.label} /></div>
+    ))}
   </div>
 </Base>
 
 <script>
   document.addEventListener('astro:page-load', () => {
     const tabs = document.querySelectorAll<HTMLButtonElement>('[data-cv-tab]');
+    const panels = document.querySelectorAll<HTMLElement>('[data-cv-panel]');
+    const download = document.querySelector<HTMLAnchorElement>('[data-cv-download]');
     tabs.forEach((tab) =>
       tab.addEventListener('click', () => {
         tabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
-        document.querySelectorAll<HTMLElement>('[data-cv-panel]').forEach((p) => (p.hidden = p.dataset.cvPanel !== tab.dataset.cvTab));
+        panels.forEach((p) => {
+          p.hidden = p.dataset.cvPanel !== tab.dataset.cvTab;
+          if (!p.hidden && download) download.href = p.dataset.src!;
+        });
       })
     );
   });

@@ -388,19 +388,10 @@ body { overflow-x: clip; }
 .card-media img { transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .card:hover .card-media img { transform: scale(1.05); }
 
-/* ---------- view transitions ---------- */
-::view-transition-old(root), ::view-transition-new(root) {
-  animation-duration: 0.22s;
-  animation-timing-function: ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
-}
-
 /* ---------- CV page ---------- */
-.cv-tabs { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--border-strong); border-radius: 999px; margin-top: 8px; }
+/* Row above an embedded PDF: a title or tabs on the left, the download link on the right. */
+.doc-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+.cv-tabs { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--border-strong); border-radius: 999px; }
 .cv-tabs button {
   appearance: none; border: 0; background: transparent; color: var(--muted); cursor: pointer;
   font: 500 0.9rem var(--font-body); padding: 7px 16px; border-radius: 999px;
@@ -428,23 +419,30 @@ body { overflow-x: clip; }
 .nav-links a, .nav-links .icon-btn { position: relative; z-index: 1; }
 .nav-links a.active, .nav-links a.active:hover { background: transparent; }
 
-::view-transition-group(*) {
-  animation-duration: 340ms;
-  animation-timing-function: cubic-bezier(0.22, 0.75, 0.24, 1);
-}
-::view-transition-old(root), ::view-transition-new(root) {
-  animation-duration: 320ms;
-  animation-timing-function: cubic-bezier(0.22, 0.75, 0.24, 1);
-}
-::view-transition-old(page-content) { animation: page-content-out 280ms ease both; }
-::view-transition-new(page-content) { animation: page-content-in 340ms cubic-bezier(0.22, 0.75, 0.24, 1) both; }
+/* ---------- view transitions ----------
+   Navigation is a short crossfade of the viewport, while a project card's media and title morph
+   into the project page's hero and heading (named by src/scripts/project-morph.ts). The page body is not
+   a named element, so it never slides when the old or new page is scrolled. The persistent header
+   and pet are shown live rather than crossfaded, so they never ghost or flicker. */
+.site-header { view-transition-name: site-header; }
+.pet-layer { view-transition-name: site-pet; }
+::view-transition-old(site-header), ::view-transition-old(site-pet) { display: none; }
+::view-transition-group(site-header), ::view-transition-group(site-pet),
+::view-transition-new(site-header), ::view-transition-new(site-pet) { animation: none; }
 
-@keyframes page-content-out {
-  to { opacity: 0; transform: translateY(-5px); }
+::view-transition-group(*) { animation-duration: 360ms; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 220ms; }
+
+/* Scale morphing snapshots without distorting them: media keeps its crop as the box changes
+   shape, and a title scales with its height, anchored top-left. */
+[data-morph-part='media'] { view-transition-class: project-media; }
+[data-morph-part='title'] { view-transition-class: project-title; }
+::view-transition-group(*.project-media) { overflow: clip; border-radius: var(--radius); }
+::view-transition-old(*.project-media), ::view-transition-new(*.project-media) {
+  width: 100%; height: 100%; object-fit: cover;
 }
-@keyframes page-content-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+::view-transition-old(*.project-title), ::view-transition-new(*.project-title) {
+  width: auto; height: 100%; object-position: left top;
 }
 
 .hero-wave, main[data-page='home'] > .wrap > .section {

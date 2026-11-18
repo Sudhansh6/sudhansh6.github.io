@@ -2,16 +2,17 @@
 import 'katex/dist/katex.min.css';
 import ProjectMedia from '../../components/ProjectMedia.astro';
 import PdfViewer from '../../components/PdfViewer.astro';
+import PdfDownload from '../../components/PdfDownload.astro';
 import Base from '../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
+import { projectSlug, projectMorph } from '../../lib/projects';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
-  return projects.map((p) => ({ params: { slug: p.id.replace(/\.md$/, '') }, props: { project: p } }));
+  return projects.map((p) => ({ params: { slug: projectSlug(p) }, props: { project: p } }));
 }
 
 const { project } = Astro.props;
-const projectSlug = project.id.replace(/\.md$/, '');
 const { Content } = await render(project);
 const { report, repo, links = [] } = project.data;
 const hasBody = (project.body ?? '').trim().length > 0;
@@ -30,7 +31,7 @@ const hasBody = (project.body ?? '').trim().length > 0;
       <div class="kicker accent" style="font-size: 0.95rem; font-weight: 500; margin-bottom: 8px;">
         {project.data.category}
       </div>
-      <h1 transition:name={`project-title-${projectSlug}`}>{project.data.title}</h1>
+      <h1 {...projectMorph(project, 'title')}>{project.data.title}</h1>
       <p class="lede" style="color: var(--muted); font-size: 1.08rem;">{project.data.description}</p>
       {(report || repo || links.length > 0) && (
         <div class="proj-links">
@@ -44,17 +45,23 @@ const hasBody = (project.body ?? '').trim().length > 0;
         img={project.data.img}
         title={project.data.title}
         hero
-        transition:name={`project-media-${projectSlug}`}
+        {...projectMorph(project, 'media')}
       />
       {hasBody && <div class="prose"><Content /></div>}
-      {report && <div id="report"><PdfViewer src={report} title={project.data.title} /></div>}
+      {report && (
+        <div id="report" class="report">
+          <div class="doc-head"><h2>Report</h2><PdfDownload href={report} /></div>
+          <PdfViewer src={report} title={`${project.data.title} report`} />
+        </div>
+      )}
     </section>
   </div>
 </Base>
 
 <style>
   .proj-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-  #report { scroll-margin-top: 80px; }
+  #report { scroll-margin-top: 80px; margin-top: 48px; }
+  .report h2 { margin: 0; }
   .prose :global(h2), .prose :global(h3) { scroll-margin-top: 84px; }
   .prose :global(.katex-display) { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
   .prose :global(.katex) { font-size: 1.04em; }

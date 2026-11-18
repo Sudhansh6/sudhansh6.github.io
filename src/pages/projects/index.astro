@@ -1,5 +1,5 @@
 ---
-import ProjectMedia from '../../components/ProjectMedia.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 
@@ -10,10 +10,6 @@ for (const p of projects) {
   const cat = p.data.category || 'Misc';
   if (!byCategory.has(cat)) byCategory.set(cat, []);
   byCategory.get(cat).push(p);
-}
-
-function projectHref(p) {
-  return `/projects/${p.id.replace(/\.md$/, '')}`;
 }
 ---
 
@@ -56,20 +52,7 @@ function projectHref(p) {
       <section class="section" data-category-section={cat}>
         <div class="section-head"><span><span class="sec-index">{String(ci + 1).padStart(2, '0')}</span><h2>{cat}</h2></span></div>
         <div class="card-grid">
-          {items.map((p) => (
-            <a class="card" data-category={cat} href={projectHref(p)}>
-              <ProjectMedia
-                viz={p.data.viz}
-                img={p.data.img}
-                title={p.data.title}
-                transition:name={`project-media-${p.id.replace(/\.md$/, '')}`}
-              />
-              <div class="card-body">
-                <h3 class="card-title" transition:name={`project-title-${p.id.replace(/\.md$/, '')}`}>{p.data.title}</h3>
-                <p class="card-desc">{p.data.description}</p>
-              </div>
-            </a>
-          ))}
+          {items.map((p) => <ProjectCard project={p} />)}
         </div>
       </section>
     ))}
